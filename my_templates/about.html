@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>About Me</title>
+	<link rel="stylesheet" href="../css/style.css">
+  <style>
+     ul {
+       color: #000000;
+    font-size: 35px; /* Set font size for the main list items */
+       list-style-position: inside;
+       text-align: center; /* Center the list items */
+  padding-left: 0;
+  }  ul ul {
+    font-size: 14px; /* Set font size for the nested list items */
+       list-style-position: inside;
+       color: white;
+  }
+    body {
+      background-color: #1a1818;
+      color: white;
+      padding: 0;
+      margin: 0;
+    }
+
+
+    #about {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+      text-align: center;
+    }
+
+    #about img {
+      display: block;
+      margin: 0 auto;
+      max-width: 300px;
+    }
+     .skills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .skill-box {
+    width: 300px;
+    background-color: rgba(5, 171, 231, 0.97);
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: all 0.3s ease-out;
+    filter: blur(0);
+  }
+.skill-box:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 1000rem rgba(0, 0, 0, 1.6);
+  z-index: 1;
+}
+
+  .skill-box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: black;
+  }
+  .skill-box ul {
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
+    text-align: left;
+  }
+  .skill-box li {
+    margin: 5px 0;
+    font-size: 18px;
+  }
+</style>
+
+
+
+</head>
+<body>
+	<header>
+		<nav>
+      <h1>About Me</h1>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="about.html"class="active">About</a></li>
+				<li><a href="projects.html">Projects</a></li>
+				<li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section id="about">
+		<img src="../img/Nick.jpeg" alt="Profile Picture">
+		<p>Hi, I'm Nick! I'm a <span id="typing-text"></span> based in Bethesda, Maryland. I have been self learning for roughly two years now, completed approximately 40 certificates in the field and am constantly trying to improve my skills and form new connections. Feel free to reach out to me at any time regarding anything, am more than appreciative to meet new people. </p>
+		<p>Some of my skills include:</p>
+<div class="skills">
+  <div class="skill-box">
+    <h3>SQL</h3>
+    <ul>
+      <li>Keys</li>
+      <li>Joins</li>
+      <li>Data Definition Statements</li>
+      <li>Data Manipulation Statements</li>
+      <li>Key Elements of Databases</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h3>Python</h3>
+    <ul>
+      <li>Object-Oriented Programming</li>
+      <li>Data Manipulation</li>
+      <li>Machine Learning</li>
+      <li>Artificial Intelligence</li>
+      <li>Games</li>
+      <li>Visualization</li>
+      <li>Automation</li>
+      <li>Pandas</li>
+      <li>Proper Documentation and comments</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h3>HTML</h3>
+    <ul>
+      <li>Semantics</li>
+      <li>Accessibility</li>
+      <li>Forms</li>
+      <li>Effects/Animation</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h3>Java</h3>
+    <ul>
+      <li>General Syntax</li>
+      <li>General Structure</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h3>Excel</h3>
+    <ul>
+      <li>Manipulate Data</li>
+      <li>Create Visualizations</li>
+      <li>Create proper sheets</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h3>Access</h3>
+    <ul>
+      <li>Loading database</li>
+      <li>Query through data to find answers</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h3>Git/Github</h3>
+    <ul>
+      <li>Using and maintaining repositories</li>
+      <li>Proper documentation protocols</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h3>Artificial Intelligence</h3>
+    <ul>
+      <li>Machine Learning</li>
+      <li>Neural Networks</li>
+    </ul>
+  </div>
+</div>
+	</section>
+
+	<script>
+		const typingText = document.getElementById('typing-text');
+		const words = ["Full Stack Developer", "Freelancer", "Youtuber", "Hybrid Database Engineer", "Software Developer"];
+	  const colors = ["red", "blue", "green", "orange", "purple", "yellow"];
+		let wordIndex = 0;
+		let charIndex = 0;
+
+		function type() {
+			if (charIndex < words[wordIndex].length) {
+	      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+	      typingText.style.color = randomColor;
+				typingText.textContent += words[wordIndex].charAt(charIndex);
+				charIndex++;
+				setTimeout(type, 50);
+			} else {
+				setTimeout(erase, 1250);
+			}
+		}
+
+		function erase() {
+			if (charIndex > 0) {
+				typingText.textContent = words[wordIndex].substring(0, charIndex - 1);
+				charIndex--;
+				setTimeout(erase, 50);
+			} else {
+				wordIndex++;
+				if (wordIndex >= words.length) {
+					wordIndex = 0;
+				}
+				setTimeout(type, 1000);
+			}
+		}
+
+		document.addEventListener("DOMContentLoaded", function() {
+			setTimeout(type, 1000);
+		});
+	</script>
+	<script src="script.js"></script>
+</body>
+</html>
+
