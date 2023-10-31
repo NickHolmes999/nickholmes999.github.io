@@ -5,6 +5,83 @@
     <title>Python Projects</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
+      .banner-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .banner {
+            background-color: #f2f2f2;
+            padding: 20px;
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            color: #4CAF50;
+            text-shadow: 2px 2px #555;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #4CAF50;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .banner:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px #4CAF50;
+        }
+
+        /* Game section styles */
+        #games {
+            max-width: 800px;
+            margin: 40px auto 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .game-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .game-image img {
+            max-width: 150px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            margin-right: 20px;
+        }
+
+        .game-details {
+            flex: 1;
+            text-align: left;
+        }
+
+        .game-details h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .game-details p {
+            color: #bbb;
+            margin-bottom: 10px;
+        }
+
+        .game-details a {
+            color: #5DADE2;
+            text-decoration: none;
+            border: 1px solid #5DADE2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .game-details a:hover {
+            background-color: #5DADE2;
+            color: #1a1818;
+        }
         .banner-container {
             display: flex;
             justify-content: center;
@@ -46,6 +123,21 @@
     <div class="banner-container">
         <div class="banner">Python <span style="color: #555;">Projects</span></div>
     </div>
+   <!-- Game Section -->
+    <section id="games">
+        <div class="game-box">
+            <div class="game-image">
+                <img src="img/Screen Shot 2023-10-31 at 12.01.04 PM.png" alt="Time Warp Trials">
+            </div>
+            <div class="game-details">
+                <h3>Time Warp Trials</h3>
+                <p>In "Time Warp Trials," plunge through a vortex to a past holding shadowed secrets and a civilization teetering on extinction. Battle the dark psychic in a mind war, guarding the enigmatic number that could shatter all of time. Scour the ancient world for hidden relics; your only hope is to save those lost in history's void. Brace yourself: every second counts in your quest to survive the trials and rewrite destiny.
+                </p>
+                <a href="https://nickholmes999.itch.io/time-warp-trials">Play Now</a>
+            </div>
+        </div>
+        <!-- You can duplicate the .game-box for more games -->
+    </section>
 </body>
 </html>
 
