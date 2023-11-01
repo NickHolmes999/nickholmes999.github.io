@@ -58,30 +58,40 @@
 	let charIndex = 0;
 
 	function type() {
-		if (charIndex < words[wordIndex].length) {
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      typingText.style.color = randomColor;
-			typingText.textContent += words[wordIndex].charAt(charIndex);
-			charIndex++;
-			setTimeout(type, 50);
-		} else {
-			setTimeout(erase, 1250);
-		}
-	}
+    if (charIndex < words[wordIndex].length) {
+        typingText.innerHTML += words[wordIndex].charAt(charIndex);
+        charIndex++;
+        let typingSpeed = 200 - Math.random() * 100; // Typing speed variation
+        setTimeout(type, typingSpeed);
+    } else {
+        setTimeout(erase, 1250);
+    }
+}
+
+
+
+
+
+
+
+
 
 	function erase() {
-		if (charIndex > 0) {
-			typingText.textContent = words[wordIndex].substring(0, charIndex - 1);
-			charIndex--;
-			setTimeout(erase, 50);
-		} else {
-			wordIndex++;
-			if (wordIndex >= words.length) {
-				wordIndex = 0;
-			}
-			setTimeout(type, 1000);
-		}
-	}
+    if (charIndex > 0) {
+        typingText.innerHTML = words[wordIndex].substring(0, charIndex - 1);
+        charIndex--;
+        let erasingSpeed = 100 - Math.random() * 50; // Erasing speed variation
+        setTimeout(erase, erasingSpeed);
+    } else {
+        wordIndex++;
+        if (wordIndex >= words.length) wordIndex = 0;
+        // Change color smoothly when starting to type a new word
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        typingText.style.transition = "color 0.4s ease-in-out";
+        typingText.style.color = randomColor;
+        setTimeout(type, 200);
+    }
+}
 
 	document.addEventListener("DOMContentLoaded", function() {
 		setTimeout(type, 1000);
@@ -89,32 +99,66 @@
 </script>
 
 	<section id="services">
-		<h2>My Specialties</h2>
-		<ul>
-			<li>
-				<i class="fa fa-code"></i>
-				<h3>Web Development</h3>
-				<p>I can design and develop responsive websites that are optimized for performance and user experience.</p>
-			</li>
-			<li>
-				<i class="fa fa-paint-brush"></i>
-				<h3>Full-Stack</h3>
-				<p>I can create effective full stack applications which meet industry requirements.</p>
-			</li>
-			<li>
-				<i class="fa fa-rocket"></i>
-				<h3>Python Development/AI</h3>
-				<p>I specialize in Python. I can write clean, efficient code that meets industry criteria.</p>
-			</li>
-      <li>
-        <i class="fa fa-rocket"></i>
+  <h2>My Services</h2>
+    <p class="proficiency-note">The highlights in the boxes below represent my proficiency in each skill, indicating how adept I am at one compared to the others.</p>
+  <div class="service-container">
+    <div class="service-bar">
+      <i class="fa fa-code service-icon"></i>
+      <div class="service-text">
+        <h3>Web Development</h3>
+        <p>I can design and develop responsive websites that are optimized for performance and user experience.</p>
+      </div>
+      <div class="service-bar-fill" data-width="90%"></div>
+    </div>
+    <div class="service-bar">
+      <i class="fa fa-paint-brush service-icon"></i>
+      <div class="service-text">
+        <h3>Graphic Design</h3>
+        <p>I can create beautiful and effective designs for logos, branding, marketing materials, and more.</p>
+      </div>
+      <div class="service-bar-fill" data-width="80%"></div>
+    </div>
+    <div class="service-bar">
+      <i class="fa fa-rocket service-icon"></i>
+      <div class="service-text">
+        <h3>Python Development/Machine Learning</h3>
+        <p>I can write clean, efficient code that meets industry criteria.</p>
+      </div>
+      <div class="service-bar-fill" data-width="75%"></div>
+    </div>
+    <div class="service-bar">
+      <i class="fa fa-cogs service-icon"></i>
+      <div class="service-text">
         <h3>Artificial Intelligence</h3>
         <p>I can create AI models to solve business objectives.</p>
-      </li>
-		</ul>
-	</section>
+      </div>
+      <div class="service-bar-fill" data-width="85%"></div>
+    </div>
+  </div>
+</section>
+
+
 
 	<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 	<script src="../js/script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+  <script>
+  // GSAP and ScrollTrigger scripts go here
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray('.service-bar').forEach(bar => {
+    let barFill = bar.querySelector('.service-bar-fill');
+    ScrollTrigger.create({
+      trigger: bar,
+      start: 'top bottom-=100',
+      onEnter: () => gsap.to(barFill, { width: barFill.dataset.width, duration: 1, ease: 'power1.out' }),
+      onLeave: () => gsap.to(barFill, { width: '0%', duration: 1, ease: 'power1.out' }),
+      onEnterBack: () => gsap.to(barFill, { width: barFill.dataset.width, duration: 1, ease: 'power1.out' }),
+      // toggleActions: "restart pause resume pause" // Uncomment this if you want more control over the animations
+    });
+  });
+</script>
+
 </body>
 </html>

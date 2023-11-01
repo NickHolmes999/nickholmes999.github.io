@@ -114,6 +114,49 @@ nav a.active {
   line-height: 1.5;
 }
 
+.service-container {
+  margin-bottom: 20px;
+  overflow: hidden; /* Hide the part of the bar that will animate */
+}
+
+.service-bar {
+  position: relative;
+  padding: 10px;
+  margin-bottom: 20px;
+  background: rgba(5, 171, 231, 0.97);;
+  overflow: hidden;
+}
+
+.service-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%; /* Start with 0% width */
+  height: 100%;
+  background-color: #007bff;
+  z-index: 1;
+  transition: width 0.5s ease-out;
+}
+.proficiency-note {
+  color: grey; /* Set the color to grey */
+  font-size: 0.8em; /* Set a smaller font size */
+  margin-top: 0;
+  margin-bottom: 20px; /* Add some space below the note */
+  text-align: center; /* Center the text if desired */
+}
+
+.service-icon {
+  padding: 10px;
+  color: white;
+}
+
+.service-text {
+  padding: 10px;
+  color: white;
+  z-index: 2; /* This will place the service text above the filled bar */
+  position: relative; /* This ensures that z-index is applied */
+}
+
 header {
   position: relative;
 }
@@ -135,6 +178,7 @@ header h1 {
     display: inline-block;
     padding: 10px 20px;
     color: white;
+    word-wrap: break-word;
 }
 #banner p {
   background-color: black;
@@ -236,7 +280,22 @@ nav {
             color: #1a1818;
         }
 
+/* Add a blinking cursor to the typing text */
+#typing-text::after {
+    content: '|';
+    margin-left: 2px;
+    opacity: 1;
+    animation: blink 1s infinite;
+}
 
+/* Cursor blink effect */
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+}
 
-
-
+/* Ensure that transitions don't affect the cursor blinking */
+#typing-text {
+    display: inline-block;
+    word-wrap: break-word;
+}
