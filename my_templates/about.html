@@ -30,6 +30,110 @@
   text-align: left;
 }
 
+.timeline-container {
+    width: 80%;
+    margin: 50px auto;
+    position: relative;
+    font-family: Arial, sans-serif;
+}
+.timeline-line {
+    height: 800px; /* Adjust this value to your preference */
+    width: 2px; /* Assuming you have a width defined */
+    background-color: black; /* Your chosen color for the line */
+    position: relative;
+    margin: auto; /* Center the line */
+}
+h2 {
+    text-align: center;
+    margin-bottom: 40px;
+   color: rgba(5, 171, 231, 0.97);
+}
+
+.timeline {
+    position: relative;
+    height: 400px;
+}
+.line {
+    position: absolute;
+    width: 4px;
+    height: 800px;
+    background-color: rgba(5, 171, 231, 0.97);
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.point {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    left: 0;
+    top: var(--position);
+    transform: translateY(-50%);
+}
+
+.point .content {
+    width: 40%; /* Reduced width a bit for better control */
+    background: rgba(5, 171, 231, 0.97);
+    padding: 10px;
+    color: black;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.point .content:before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: currentColor;
+    border-radius: 50%;
+    top: 50%;
+    left: -15px;
+    transform: translateY(-50%);
+}
+
+.point:nth-child(even) .content {
+    margin-left: 65%; /* Adjusted margin */
+}
+.point:nth-child(2) .content {
+    margin-top: -80px; /* This will make it appear higher, ensuring non-overlapping */
+}
+.point:nth-child(odd) .content {
+    margin-left: -10%;
+}
+.point:nth-child(odd) .content:before {
+    left: auto;
+    right: -15px;
+}
+.point:nth-child(1) .content {
+    margin-top: -20px; /* Control height for specific data point */
+}
+.point:nth-child(3) .content {
+    margin-top: -20px; /* This will make it appear lower, ensuring non-overlapping */
+}
+.content.coding {
+    border-left: 3px solid #c900ff;
+    color: #c900ff;
+}
+
+.content.internship {
+    border-left: 3px solid #e74c3c;
+    color: #e74c3c;
+}
+
+.content.job {
+    border-left: 3px solid #2ecc71;
+    color: #2ecc71;
+}
+
+.content.promotion {
+    border-left: 3px solid #f39c12;
+    color: #f39c12;
+}
 
 
 
@@ -67,6 +171,24 @@
   transform: scale(1.3);
   box-shadow: 0 0 1000rem rgba(0, 0, 0, 1.6);
   z-index: 1;
+}
+
+.year-label-top, .year-label-bottom {
+    position: absolute;
+    left: 50%; /* Center the text relative to the line */
+    transform: translateX(-50%); /* Centering adjustment */
+    font-size: 14px; /* Adjust font size if necessary */
+    font-weight: bold; /* Make the font bold */
+}
+
+.year-label-top {
+    top: 0;
+    transform: translateX(-50%) translateY(-100%); /* Adjust positioning */
+}
+
+.year-label-bottom {
+    bottom: 0;
+    transform: translateX(-50%) translateY(100%); /* Adjust positioning */
 }
 
   .skill-box h3 {
@@ -257,6 +379,51 @@
     </ul>
   </div>
 </div>
+<div class="timeline-container">
+    <h2>My Tech Journey</h2>
+    <div class="timeline">
+        <div class="line"></div>
+      <div class="timeline-line">
+    <span class="year-label-top">2016</span>
+    <span class="year-label-bottom">Present</span>
+</div>
+
+        <div class="point" style="--position:10%">
+            <div class="content coding">
+                <h4>Started Coding</h4>
+                <span>Feb, 2016</span>
+                <p>Began my journey with Python, creating small projects and learning the basics.</p>
+            </div>
+        </div>
+
+        <div class="point" style="--position:30%">
+            <div class="content internship">
+                <h4>C++ and OOP</h4>
+                <span>August, 2018</span>
+                <p>Stater coding in C++ for my hgih school class. Got into coding structures including object oriented programming.</p>
+            </div>
+        </div>
+
+        <div class="point" style="--position:60%">
+            <div class="content job">
+                <h4>First Python Developer Job</h4>
+                <span>Apr 15, 2023</span>
+                <p>Joined JOS Group as a software engineer, working on front-end solutions data problems</p>
+            </div>
+        </div>
+
+        <div class="point" style="--position:90%">
+            <div class="content promotion">
+                <h4>Promoted to Team Lead</h4>
+                <span>Nov 9, 2023</span>
+                <p>Became the team lead, managing a group of 5 developers and overseeing projects.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 	</section>
 
 	<script>
