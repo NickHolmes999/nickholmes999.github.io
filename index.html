@@ -6,6 +6,19 @@
 	<link rel="stylesheet" href="../css/style.css">
 
 	<style>
+    #skillsPieChart {
+  width: 400px;
+  height: 400px;
+      border: black 10px solid;
+}
+#skills-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(5, 171, 231, 0.97);
+;
+  /* Reduce padding or margin if necessary */
+}
 #banner {
   display: flex;
   background-image: url('../img/coding.gif');
@@ -37,10 +50,10 @@
 			<h1></h1>
 			<ul>
 				<li><a href="#" class="active">Home</a></li>
-				<li><a href="my_templates/about.html">About</a></li>
-				<li><a href="my_templates/projects.html">Projects</a></li>
-				<li><a href="my_templates/contact.html">Contact</a></li>
-        <li><a href="my_templates/certificates.html">Certificates</a></li>
+				<li><a href="about.html">About</a></li>
+				<li><a href="projects.html">Projects</a></li>
+				<li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
 			</ul>
 		</nav>
 	</header>
@@ -116,7 +129,7 @@
         <h3>Graphic Design</h3>
         <p>I can create beautiful and effective designs for logos, branding, marketing materials, and more.</p>
       </div>
-      <div class="service-bar-fill" data-width="80%"></div>
+      <div class="service-bar-fill" data-width="75%"></div>
     </div>
     <div class="service-bar">
       <i class="fa fa-rocket service-icon"></i>
@@ -124,7 +137,7 @@
         <h3>Python Development/Machine Learning</h3>
         <p>I can write clean, efficient code that meets industry criteria.</p>
       </div>
-      <div class="service-bar-fill" data-width="75%"></div>
+      <div class="service-bar-fill" data-width="95%"></div>
     </div>
     <div class="service-bar">
       <i class="fa fa-cogs service-icon"></i>
@@ -134,8 +147,37 @@
       </div>
       <div class="service-bar-fill" data-width="85%"></div>
     </div>
+    <div class="service-bar">
+      <i class="fa fa-code service-icon"></i>
+      <div class="service-text">
+        <h3>SQL</h3>
+        <p>I can query data effectively.</p>
+      </div>
+      <div class="service-bar-fill" data-width="60%"></div>
+    </div>
+    <div class="service-bar">
+      <i class="fa fa-code service-icon"></i>
+      <div class="service-text">
+        <h3>Data Manipulation/Analysis</h3>
+        <p>I can manipulate data strategically. Strong experience in data analysis. </p>
+      </div>
+      <div class="service-bar-fill" data-width="90%"></div>
+    </div>
+    <div class="service-bar">
+      <i class="fa fa-code service-icon"></i>
+      <div class="service-text">
+        <h3>Full-Stack</h3>
+        <p>I can create full stack applications. </p>
+      </div>
+      <div class="service-bar-fill" data-width="80%"></div>
+    </div>
   </div>
 </section>
+  <section id="skills-chart">
+        <h2></h2>
+        <canvas id="skillsPieChart"></canvas>
+    </section>
+
 
 
 
@@ -143,6 +185,8 @@
 	<script src="../js/script.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
   // GSAP and ScrollTrigger scripts go here
   gsap.registerPlugin(ScrollTrigger);
@@ -159,6 +203,93 @@
     });
   });
 </script>
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const skillsData = {
+                labels: [
+                    'Web Development',
+                    'Graphic Design',
+                    'Python Development/Machine Learning',
+                    'Artificial Intelligence',
+                    'SQL',
+                    'Data Manipulation/Analysis',
+                    'Full-Stack'
+                ],
+                datasets: [{
+                    label: 'Skill Proficiency',
+                    data: [90, 75, 95, 85, 60, 90, 80],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(246,0,255,0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(199, 199, 199, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(246,0,255,0.7)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(199, 199, 199, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const config = {
+  type: 'pie',
+  data: skillsData,
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 500 // Speed up the animation
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          color: 'black', // Set the color of the text in the legend
+          font: {
+            size: 14, // Set the font size of the legend labels if needed
+          },
+          padding: 20, // Adjust the padding around the legend labels
+          boxWidth: 20, // Adjust the width of the color box in the legend
+          boxHeight: 20, // Adjust the height of the color box in the legend
+          usePointStyle: true, // Use a point style legend item instead of a box
+        }
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Tooltip background color
+        borderColor: 'black', // Tooltip border color
+        borderWidth: 2, // Tooltip border width
+        titleFont: {
+          size: 16,
+          weight: 'bold',
+        },
+        bodyFont: {
+          size: 14
+        },
+        cornerRadius: 6,
+        displayColors: false,
+      }
+    }
+  },
+};
+
+
+            // Ensure the canvas element is available
+            const ctx = document.getElementById('skillsPieChart').getContext('2d');
+            new Chart(ctx, config);
+        });
+    </script>
+
 
 </body>
 </html>

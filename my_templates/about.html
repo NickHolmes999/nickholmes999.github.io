@@ -37,11 +37,12 @@
     font-family: Arial, sans-serif;
 }
 .timeline-line {
-    height: 800px; /* Adjust this value to your preference */
+    height: 2000px; /* Adjust this value to your preference */
     width: 2px; /* Assuming you have a width defined */
     background-color: black; /* Your chosen color for the line */
     position: relative;
     margin: auto; /* Center the line */
+    z-index: 1;
 }
 h2 {
     text-align: center;
@@ -56,12 +57,13 @@ h2 {
 .line {
     position: absolute;
     width: 4px;
-    height: 800px;
+    height: 2000px;
     background-color: rgba(5, 171, 231, 0.97);
     top: 0;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 1;
 }
 
 .point {
@@ -136,6 +138,96 @@ h2 {
 }
 
 
+/* Tooltip container that wraps the paragraph and the tooltip */
+.preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip styling */
+.preview-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%; /* Adjusted to lift the tooltip higher */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000; /* Black background */
+  padding: 22px; /* Increased padding for a bigger box */
+  border-radius: 5px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  text-align: center;
+  width: 250px; /* Increased width for a bigger box */
+  border: 2px solid #0056b3; /* Blue edges */
+}
+
+/* Image inside tooltip */
+.preview-tooltip img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Text inside tooltip */
+.preview-text {
+  display: block;
+  margin-top: 10px; /* Increased space above the text */
+  font-size: 14px; /* Increased font size */
+  color: #fff; /* White text color */
+}
+
+/* Show the tooltip when hovering over the container */
+.preview-container:hover .preview-tooltip {
+  display: block;
+}
+
+.preview-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  border-width: 10px; /* Size of the arrow */
+  border-style: solid;
+  border-color: #000 transparent transparent transparent; /* Color of the arrow */
+  transform: translateX(-50%);
+}
+.timeline-detail {
+  display: none;
+  background-color: #fff; /* White background for readability */
+  color: #333; /* Dark text for contrast */
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 800px; /* Or adjust to fit your layout */
+  margin: auto; /* Centering the box */
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-detail h3 {
+  font-size: 1.8rem;
+  color: #0056b3; /* Stylish blue for headings */
+  margin-bottom: 15px;
+}
+
+.timeline-detail p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.timeline-detail:target {
+  display: block;
+}
+
+/* Use this class to make images in the detail section look good */
+.detail-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin: 10px 0;
+}
 
 
     #about {
@@ -389,40 +481,163 @@ h2 {
 </div>
 
         <div class="point" style="--position:10%">
-            <div class="content coding">
-                <h4>Started Coding</h4>
-                <span>Feb, 2016</span>
-                <p>Began my journey with Python, creating small projects and learning the basics.</p>
+    <div class="content coding">
+        <h4>Started Coding</h4>
+        <span>Feb, 2016</span>
+        <div class="preview-container">
+            <p>Began my journey with Python, creating small projects and learning the basics.</p>
+            <div class="preview-tooltip">
+                <a href="#python-detail" class="preview-link">
+                    <img src="../img/python_preview.jpg" alt="Python Project Preview">
+                    <span class="preview-text">Click this box to learn more about my experience</span>
+                </a>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="point" style="--position:30%">
-            <div class="content internship">
-                <h4>C++ and OOP</h4>
-                <span>August, 2018</span>
-                <p>Stater coding in C++ for my hgih school class. Got into coding structures including object oriented programming.</p>
+<div class="point" style="--position:30%">
+    <div class="content internship">
+        <h4>C++ and OOP</h4>
+        <span>August, 2018</span>
+        <div class="preview-container">
+            <p>Started coding in C++ for my high school class...</p>
+            <div class="preview-tooltip">
+                <a href="#cpp-detail" class="preview-link">
+                    <img src="../img/cpp_preview.jpg" alt="C++ Project Preview">
+                    <span class="preview-text">Click this box to learn more about my experience</span>
+                </a>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="point" style="--position:60%">
-            <div class="content job">
-                <h4>First Python Developer Job</h4>
-                <span>Apr 15, 2023</span>
-                <p>Joined JOS Group as a software engineer, working on front-end solutions data problems</p>
+<div class="point" style="--position:275%">
+    <div class="content internship">
+        <h4>Advanced Python</h4>
+        <span>August, 2022</span>
+        <div class="preview-container">
+            <p>Decorators, Testing, Web Frameworks...</p>
+            <div class="preview-tooltip">
+                <a href="#advanced-python-detail" class="preview-link">
+                    <img src="../img/advanced_python_preview.jpg" alt="Advanced Python Preview">
+                    <span class="preview-text">Click this box to learn more about my experience</span>
+                </a>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="point" style="--position:90%">
-            <div class="content promotion">
-                <h4>Promoted to Team Lead</h4>
-                <span>Nov 9, 2023</span>
-                <p>Became the team lead, managing a group of 5 developers and overseeing projects.</p>
+<div class="point" style="--position:260%">
+    <div class="content promotion">
+        <h4>Began Daily Learning</h4>
+        <span>April 5th, 2022</span>
+        <div class="preview-container">
+            <p>Began learning extraneously day by day to hone my skills, realized my passion for tech. This started as my completing a few certificates and turned into me using different platforms daily to enhance my self learning. One of my favorites is LinkedIN Learning, it has a vast amount of great instructors to choose from, you can even learn while driving! </p>
+            <div class="preview-tooltip">
+                <a href="#daily-work-detail" class="preview-link">
+                    <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
+                    <span class="preview-text">Click this box to learn more about my experience daily learning</span>
+                </a>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="point" style="--position:380%">
+    <div class="content internship">
+        <h4>Snowflake</h4>
+        <span>August, 2023</span>
+        <div class="preview-container">
+            <p>Began working with Snowflake.</p>
+            <div class="preview-tooltip">
+                <a href="#snowflake-detail" class="preview-link">
+                    <img src="../img/snowflake_preview.jpg" alt="Snowflake Preview">
+                    <span class="preview-text">Click this box to learn more about my experience</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="point" style="--position:350%">
+    <div class="content job">
+        <h4>First Python Developer Job</h4>
+        <span>Apr 15, 2023</span>
+        <div class="preview-container">
+            <p>Joined JOS Group as a software engineer...</p>
+            <div class="preview-tooltip">
+                <a href="#first-job-detail" class="preview-link">
+                    <img src="../img/first_job_preview.jpg" alt="First Job Preview">
+                    <span class="preview-text">Click this box to learn more about my experience</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="point" style="--position:320%">
+    <div class="content promotion">
+        <h4>Began Working With AI</h4>
+        <span>Nov 9, 2022</span>
+        <div class="preview-container">
+            <p>Began working with AI daily...</p>
+            <div class="preview-tooltip">
+                <a href="#ai-work-detail" class="preview-link">
+                    <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
+                    <span class="preview-text">Click this box to learn more about my experience</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     </div>
 </div>
 
+<!-- Detail section for "Started Coding" -->
+<div id="python-detail" class="timeline-detail">
+    <h3>Python: The Beginning of My Coding Journey</h3>
+    <p>In February 2016, I began exploring the world of coding through Python. This versatile language enabled me to build small projects, which sparked my interest in software development and laid the groundwork for my future endeavors.</p>
+</div>
+
+<!-- Detail section for "C++ and OOP" -->
+<div id="cpp-detail" class="timeline-detail">
+    <h3>C++ and Object-Oriented Concepts</h3>
+    <p>My experience with C++ started in August 2018 and it was a game-changer. Grasping object-oriented programming allowed me to write more efficient and scalable code, leading to robust software solutions.</p>
+</div>
+
+<!-- Detail section for "Advanced Python" -->
+<div id="advanced-python-detail" class="timeline-detail">
+    <h3>Advanced Python: Elevating My Coding Skills</h3>
+    <p>By August 2022, I was deep diving into advanced Python concepts. From decorators to testing and web frameworks, I expanded my Python expertise to include a variety of libraries and machine learning techniques.</p>
+</div>
+
+<!-- Detail section for "Began Daily Learning" -->
+<div id="daily-work-detail" class="timeline-detail">
+    <h3>Dedicated Daily Learning: A Self-Taught Journey</h3>
+    <p>Since April 5th, 2022, I committed to daily learning to sharpen my tech skills. Platforms like LinkedIn Learning have been instrumental in this journey, offering resources that I could engage with even while on the move.</p>
+</div>
+
+<!-- Detail section for "Snowflake" -->
+<div id="snowflake-detail" class="timeline-detail">
+    <h3>Snowflake: A New Chapter in Data Engineering</h3>
+    <p>Starting August 2023, I embraced the challenge of working with Snowflake, a cloud data platform that revolutionized the way I approach data warehousing, big data, and analytics.</p>
+</div>
+
+<!-- Detail section for "First Python Developer Job" -->
+<div id="first-job-detail" class="timeline-detail">
+    <h3>My First Role as a Python Developer</h3>
+    <p>On April 15, 2023, I joined the JOS Group as a software engineer. Here, I've been solving complex data problems and creating innovative front-end solutions.</p>
+</div>
+
+<!-- Detail section for "Began Working With AI" -->
+<div id="ai-work-detail" class="timeline-detail">
+    <h3>AI and Machine Learning: The Future of Innovation</h3>
+    <p>Since November 9, 2022, AI has been a daily part of my work. Automating workflows and developing intelligent models has not only optimized our processes but also sparked creative solutions to intricate problems.</p>
+</div>
 
 	</section>
 
