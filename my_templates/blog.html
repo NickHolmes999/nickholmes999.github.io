@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Blog</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Your existing styles ... */
+
+        /* Style for the blog posts */
+        .blog-post {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .blog-post h2 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .blog-post time {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .blog-posts-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Reusing your existing navigation -->
+        <nav>
+            <h1></h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="certificates.html">Certificates</a></li>
+                <li><a href="#" class="active">Blog</a></li> <!-- Added Blog to Nav -->
+            </ul>
+        </nav>
+    </header>
+
+    <main class="blog-posts-container">
+        <!-- Blog posts will go here -->
+        <article class="blog-post">
+            <h2>Blog Post Title</h2>
+            <time datetime="2023-01-01T15:00">January 1, 2023 at 3:00 PM</time>
+            <p>Blog post content goes here...</p>
+        </article>
+        <!-- Repeat for each blog post -->
+    </main>
+
+    <footer>
+        <!-- Your footer here -->
+    </footer>
+
+    <script>
+        // If you want to dynamically load posts or sort them, you'll need some JavaScript here.
+    </script>
+</body>
+</html>
