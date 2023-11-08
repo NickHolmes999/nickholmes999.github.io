@@ -158,8 +158,13 @@
   display: inline-block;
   position: relative;
   text-shadow: 0 0 10px rgba(5, 171, 231, 0.97);
+  text-decoration: none; /* No underline by default */
 }
-
+.certificates-heading-text:hover {
+  text-decoration: underline; /* Underline on hover */
+  color: red;
+  font-size: 80px;
+}
 
 .certificates-heading-line {
   position: absolute;
@@ -217,9 +222,9 @@
 	</header>
 <section class="certificates">
   <h2 class="certificates-heading">
-  <span class="certificates-heading-text">Certificates</span>
-  <span class="certificates-heading-line"></span>
-</h2>
+    <a href="https://www.linkedin.com/in/nick-holmes-90264a217/details/certifications/" class="certificates-heading-text">Certificates</a>
+    <span class="certificates-heading-line"></span>
+  </h2>
 
   <div class="dropdown">
     <button class="dropbtn">Python Certificates</button>
