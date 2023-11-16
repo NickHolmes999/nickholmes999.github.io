@@ -92,3 +92,15 @@ searchResults.style.maxHeight = '200px';
 searchResults.style.overflowY = 'auto';
 searchResults.style.border = '1px solid #ccc';
 
+function copyToClipboard(elementId) {
+  var copyText = document.getElementById(elementId).innerText;
+  var textArea = document.createElement("textarea");
+  textArea.value = copyText;
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("Copy");
+  textArea.remove();
+  alert("Copied: " + copyText); // This line is optional, it's just to give immediate feedback
+}
+
+
