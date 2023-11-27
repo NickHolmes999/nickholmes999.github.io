@@ -56,7 +56,7 @@ h2 {
 }
 .line {
     position: absolute;
-    width: 4px;
+    width: 6px; /* Slightly thicker */
     height: 2000px;
     background-color: rgba(5, 171, 231, 0.97);
     top: 0;
@@ -64,7 +64,10 @@ h2 {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1;
+    box-shadow: 0 0 60px rgba(5, 171, 231, 0.97); /* Glow effect */
 }
+
+
 
 .point {
     position: absolute;
