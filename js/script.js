@@ -103,4 +103,15 @@ function copyToClipboard(elementId) {
   alert("Copied: " + copyText); // This line is optional, it's just to give immediate feedback
 }
 
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+
 

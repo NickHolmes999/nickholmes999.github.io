@@ -2,6 +2,15 @@ body {
   padding: 0;
   margin: 0;
 }
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #1e90ff; /* Subtle hover effect color */
+}
 
 nav {
   display: flex;
@@ -10,8 +19,22 @@ nav {
   background-color: #070707;
   padding: 10px;
   text-align: center;
+  border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* added box-shadow to create separation */
 }
+
+@media screen and (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        text-align: left;
+    }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
 
 nav ul {
   display: flex;
