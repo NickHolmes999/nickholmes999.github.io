@@ -196,7 +196,27 @@
   }
 }
 
+#search-results {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    z-index: 9999;
+    padding: 20px; /* Add some padding */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Round the corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a box shadow */
+}
 
+  #search-results div {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  #search-results div:hover {
+    background-color: #f1f1f1;}
 
 
 
@@ -214,10 +234,9 @@
         <li><a href="my_templates/certificates.html" class="active">Certificates</a></li>
         <li><a href="blog.html" >Blog</a></li> <!-- Added Blog to Nav -->
 			</ul>
-      <form id="search-form">
+      <<form id="search-form">
   <label for="search-input">Search</label>
   <input type="text" id="search-input" placeholder="Search">
-  <button type="submit">Search</button>
 </form>
 
 <div id="search-results"></div>
@@ -411,6 +430,10 @@
     </div>
   </div>
 </section>
+<script src="../js/script.js"></script>
+</body>
+</html>
+
 
 
 
