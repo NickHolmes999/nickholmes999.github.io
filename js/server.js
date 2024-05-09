@@ -1,5 +1,6 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
 const dotenv = require('dotenv');
 const app = express();
 
@@ -10,11 +11,28 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/send', async (req, res) => {
   let { name, email, subject, message } = req.body;
 
+  const OAuth2 = google.auth.OAuth2;
+  const oauth2Client = new OAuth2(
+    process.env.CLIENT_ID, // Client ID
+    process.env.CLIENT_SECRET, // Client Secret
+    process.env.REDIRECT_URL // Redirect URL
+  );
+
+  oauth2Client.setCredentials({
+    refresh_token: process.env.REFRESH_TOKEN
+  });
+
+  const accessToken = oauth2Client.getAccessToken();
+
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
+      type: 'OAuth2',
       user: process.env.EMAIL,
-      pass: process.env.PASSWORD
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+      accessToken: accessToken
     }
   });
 
