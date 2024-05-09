@@ -8,71 +8,57 @@
 
 
 	<style>
-    body {
-        background-color: #1c1b1b;
-        color: #ffffff;
-      }
+body {
+    background-color: #1c1b1b;
+    color: #ffffff;
+}
+
 .dropdown {
-  position: relative;
-  display: inline-block;
-  margin-right: 90px; /* added margin to spread out dropdowns */
-  margin-top: 20px;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
 }
 
 .dropbtn {
-  background-color: black;
-  color: rgba(5, 171, 231, 0.97);
-  padding: 12px 16px;
-  font-size: 14px;
-  border: none;
-  font-family: 'Source Sans Pro', sans-serif;
-  cursor: pointer;
-  border-radius: 5px;
-  margin: 5px 0; /* added margin to spread out dropdowns */
-  white-space: normal; /* added to allow multiple lines of text */
-  display: inline-block; /* added to allow multiple lines of text */
-  max-width: 200px; /* added to limit the width of the dropdown button */
-  overflow: hidden; /* added to prevent overlapping */
-  text-overflow: ellipsis; /* added to prevent overlapping */
-			transition: background-color 0.3s;
-  box-shadow: 0 20px 500px 0 rgba(0, 0, 0, 0.5);
+    background-color: #333;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 14px;
+    border: none;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px 0;
+    white-space: normal;
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s;
+    box-shadow: 0 20px 500px 0 rgba(0, 0, 0, 0.5);
 }
-
 
 .dropbtn:hover {
-  transition: all 0.2s ease-in-out;
-  transform: scale(1.5);
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.5);
 }
-
-.dropdown-content * {
-  font-family: 'Segoe UI', sans-serif;
-}
-
 
 .dropdown-content {
-  display: none;
-  position: absolute;
-  z-index: 1;
-  padding: 16px;
-  background-color: #000000;
-  border-radius: 16px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  transform: translateY(-10px);
-  transition: transform 0.3s;
-  top: 100%;
-  left: 0;
-  width: 400px;
-  max-height: 500px;
-  overflow-y: auto;
-  font-family: 'Segoe UI',serif;
-  min-width: 200px;
-
-}
-
-.dropdown-content ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    display: none;
+    position: absolute;
+    z-index: 1;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 16px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px);
+    transition: transform 0.3s;
+    top: 100%;
+    left: 0;
+    width: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+    min-width: 200px;
 }
 
 .dropdown-content a {
@@ -80,47 +66,49 @@
   padding: 12px;
   font-size: 14px;
   line-height: 1.5;
-  white-space: nowrap;
-  text-align: center;
-  word-break: break-all;
+  white-space: normal; /* Allow text to wrap to the next line */
+  text-align: left;
+  word-break: break-all; /* Break words to prevent overflow */
   margin-bottom: 12px;
   text-decoration: none;
-    background-color: black;
+  background-color: black;
   color: #ffffff;
-  font-family: 'Segoe UI',serif;
-}
-
-.dropdown-content a:last-child {
-  margin-bottom: 0;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-  transform: translateY(0);
-}
-
-.dropdown-content a::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  box-shadow: 0px 2px 10px rgba(255, 255, 255, 0.3);
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-.dropdown-content a:hover::before {
-  opacity: 1;
-  transition: all 0.2s ease-in-out;
-  transform: scale(1.5);
+  font-family: 'Roboto', sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 .dropdown-content a:hover {
-  box-shadow: 0px 2px 10px rgba(255, 255, 255, 0.3);
-  transition: all 0.2s ease-in-out;
-  transform: scale(1.1);
+    background-color: #555;
+    color: #fff;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    transform: translateY(0);
+}
+
+.dropdown-content a::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    box-shadow: 0px 2px 10px rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.dropdown-content a:hover::before {
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.5);
+}
+
+.dropdown-content a:hover {
+    box-shadow: 0px 2px 10px rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.1);
 }
 
 
@@ -232,7 +220,7 @@
 				<li><a href="projects.html">Projects</a></li>
 				<li><a href="contact.html">Contact</a></li>
         <li><a href="my_templates/certificates.html" class="active">Certificates</a></li>
-        <li><a href="blog.html" >Blog</a></li> <!-- Added Blog to Nav -->
+        <li><a href="blog.html">Blog</a></li>
 			</ul>
       <<form id="search-form">
   <label for="search-input">Search</label>
