@@ -145,20 +145,50 @@ const certificates = {
     "What Is Generative AI?",
     "What is Copilot? Get Started with Microsoft's Everyday AI Companion"
   ],
-  "Data Science Certificates": [
-    "Certificate 1",
-    "Certificate 2",
-    // ...
-  ],
-  "Java Certificates": [
-    // ...
-  ],
-  "C/C++ Certificates": [
-    // ...
-  ],
   "SQL Certificates": [
-    // ...
+    "SQL",
+    "Introduction To SQL",
+    "SQL Intermediate",
+    "Choose the Right Tool for Your Data: Python, R, or SQL",
+    "Programming Foundations: Databases",
+    "Learning SQL Programming"
+  ],
+  "HTML/CSS/Javascript Certificates": [
+    "Cutting-Edge CSS",
+    "HTML Essential Training",
+    "CSS Essential Training (2019)",
+    "JavaScript Essential Training"
+  ],
+  "Advanced Certificates": [
+    "AWS Academy Graduate - AWS Academy Cloud Foundations",
+    "Google Share Data Through the Art of Visualization Issuing Organization",
+    "Google Foundations: Data, Data, Everywhere",
+    "Google Data Analysis with R Programming",
+    "Google Prepare Data for Exploration",
+    "Google Process Data from Dirty to Clean",
+    "Google Data Analytics Certificate",
+    "Google Data Analytics Specialization",
+    "Google Data Analytics Capstone: Complete a Case Study"
+  ],
+  "Software Certificates": [
+    "AWS Academy Graduate - AWS Academy Cloud Foundations",
+    "AI Show: Medical Imaging with Azure Machine Learning",
+    "AI Show: Building NLP models with Azure ML AutoML",
+    "Azure AI Studio First Look",
+    "Azure AI Tips for Developers: Securing Your Data",
+    "Everybody's Introduction to Snowflake",
+    "Learning SnowflakeDB"
+  ],
+  "Cloud Certificates": [
+    "AWS Academy Graduate - AWS Academy Cloud Foundations",
+    "Google Cloud Foundations",
+    "Choosing a Database: PostgreSQL, MySQL, Mongo, and Cloud",
+    "Learning Cloud Computing: Core Concepts",
+    "Cloud Architecture: Core Concepts",
+    "Generative AI in Cloud Computing: Core Concepts",
+    "Top 10 Skills for Machine Learning Cloud Architects"
   ]
+
   // Add more categories as needed
 };
 
