@@ -6,10 +6,13 @@ nav ul li a {
   color: #fff;
   text-decoration: none;
   transition: color 0.3s ease;
+  padding: 10px; /* Add padding to create space for the background color */
+  border-radius: 5px; /* Add border-radius to make the corners rounded */
 }
 
 nav ul li a:hover {
   color: #1e90ff; /* Subtle hover effect color */
+  background-color: cyan; /* Add a background color on hover */
 }
 
 nav {
