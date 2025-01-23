@@ -1,451 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>My Portfolio</title>
-	<link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <title>My Portfolio</title>
+  <link rel="stylesheet" href="../css/style.css">
   <script src="js/script.js"></script>
 
+  <style>
+    body {
+      background-color: #1c1b1b;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
 
-	<style>
-body {
-    background-color: #1c1b1b;
-    color: #ffffff;
-}
+    /* HEADER / NAV (from your style.css, presumably) */
+    header {
+      /* If you're using the "pill" nav, it might be styled in style.css */
+    }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 20px;
-}
+    /* CERTIFICATES HEADING + SUBTEXT */
+    .certificates-heading {
+      margin: 40px auto 0;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 2; /* so it's above any background */
+    }
 
-.dropbtn {
-    background-color: #333;
-    color: #fff;
-    padding: 12px 16px;
-    font-size: 14px;
-    border: none;
-    font-family: 'Roboto', sans-serif;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 5px 0;
-    white-space: normal;
-    display: inline-block;
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: background-color 0.3s;
-    box-shadow: 0 20px 500px 0 rgba(0, 0, 0, 0.5);
-}
+    /* Clean, modern styling for the main heading text */
+    .certificates-heading-text {
+      font-size: 48px;
+      font-weight: bold;
+      color: rgba(5, 171, 231, 0.97);
+      font-family: 'Brush Script MT', cursive;
+      display: inline-block;
+      position: relative;
+      text-shadow: 0 0 6px rgba(5, 171, 231, 0.5);
+      text-decoration: none; /* no underline by default */
+      transition: color 0.3s ease;
+    }
 
-.dropbtn:hover {
-    transition: all 0.2s ease-in-out;
-    transform: scale(1.5);
-}
+    /* Subtle hover: lighten color slightly, no red */
+    .certificates-heading-text:hover {
+      color: rgba(5, 200, 255, 0.97);
+      text-decoration: underline; /* optional if you want an underline on hover */
+    }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    z-index: 1;
-    padding: 20px;
-    background-color: #333;
-    border-radius: 16px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    transform: translateY(-10px);
-    transition: transform 0.3s;
-    top: 100%;
-    left: 0;
-    width: 400px;
-    max-height: 500px;
-    overflow-y: auto;
-    min-width: 200px;
-}
+    /* A simpler, more subtle line under the heading */
+    .certificates-heading-line {
+      margin: 8px auto 0;
+      width: 220px;
+      height: 4px;
+      background-color: rgba(5, 171, 231, 0.97);
+      border-radius: 2px;
+    }
 
-.dropdown-content a {
-  display: block;
-  padding: 12px;
-  font-size: 14px;
-  line-height: 1.5;
-  white-space: normal; /* Allow text to wrap to the next line */
-  text-align: left;
-  word-break: break-all; /* Break words to prevent overflow */
-  margin-bottom: 12px;
-  text-decoration: none;
-  background-color: black;
-  color: #ffffff;
-  font-family: 'Roboto', sans-serif;
-  transition: background-color 0.3s ease;
-}
+    .certificates-subtext {
+      color: #808080;
+      font-size: 0.9em;
+      margin: 10px auto 20px;
+      text-align: center;
+      width: 80%;
+      max-width: 800px;
+      line-height: 1.5;
+    }
 
-.dropdown-content a:hover {
-    background-color: #555;
-    color: #fff;
-}
+    /* SEARCH SECTION (moved below heading + subtext) */
+    #search-container {
+      margin: 20px auto 40px;
+      text-align: center;
+      position: relative;
+      width: 80%;
+      max-width: 600px;
+    }
 
-.dropdown:hover .dropdown-content {
-    display: block;
-    transform: translateY(0);
-}
+    #search-form {
+      display: inline-flex;
+      align-items: center;
+      background-color: #2c2c2c;
+      padding: 10px;
+      border-radius: 5px;
+    }
 
-.dropdown-content a::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    box-shadow: 0px 2px 10px rgba(255, 255, 255, 0.3);
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-}
+    #search-form label {
+      margin-right: 8px;
+      font-size: 16px;
+    }
 
-.dropdown-content a:hover::before {
-    opacity: 1;
-    transition: all 0.2s ease-in-out;
-    transform: scale(1.5);
-}
+    #search-input {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      font-size: 16px;
+      width: 250px;
+    }
 
-.dropdown-content a:hover {
-    box-shadow: 0px 2px 10px rgba(255, 255, 255, 0.3);
-    transition: all 0.2s ease-in-out;
-    transform: scale(1.1);
-}
+    /* RESULTS DROPDOWN */
+    #search-results {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      z-index: 9999;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 400px;
+    }
 
+    #search-results div {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
 
+    #search-results div:hover {
+      background-color: #f1f1f1;
+    }
 
+    /* CERTIFICATES SECTION + DROPDOWNS */
+    .certificates {
+      margin-top: 20px;
+      text-align: center;
+    }
 
-.certificates-subtext {
-  color: #808080; /* A shade of gray */
-  font-size: 0.75em; /* Smaller font size */
-  margin-top: 0.5em; /* Spacing between the title and the subtext */
-}
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      margin: 10px;
+    }
 
-.certificates {
-  margin-top: 20px;
-  text-align: center;
-}
+    .dropbtn {
+      background-color: #333;
+      color: #fff;
+      padding: 12px 16px;
+      font-size: 14px;
+      border: none;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px 0;
+      white-space: normal;
+      display: inline-block;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 20px 500px 0 rgba(0, 0, 0, 0.5);
+    }
 
-.certificates h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-  text-align: center;
-}
+    .dropbtn:hover {
+      transform: scale(1.2);
+    }
 
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      padding: 20px;
+      background-color: #333;
+      border-radius: 16px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-10px);
+      transition: transform 0.3s;
+      top: 100%;
+      left: 0;
+      width: 400px;
+      max-height: 500px;
+      overflow-y: auto;
+      min-width: 200px;
+    }
 
-.certificates-heading {
-  margin: 20px auto 0;
-  width: 240px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  z-index: 2; /* set a higher z-index value */
-}
+    .dropdown-content a {
+      display: block;
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: normal;
+      text-align: left;
+      word-break: break-all;
+      margin-bottom: 12px;
+      text-decoration: none;
+      background-color: black;
+      color: #ffffff;
+      transition: background-color 0.3s ease, transform 0.3s;
+    }
 
-.certificates-heading-text {
-  font-size: 60px;
-  font-weight: bold;
-  color: rgba(5, 171, 231, 0.97);
-  font-family: 'Brush Script MT', cursive;
-  display: inline-block;
-  position: relative;
-  text-shadow: 0 0 10px rgba(5, 171, 231, 0.97);
-  text-decoration: none; /* No underline by default */
-}
-.certificates-heading-text:hover {
-  text-decoration: underline; /* Underline on hover */
-  color: red;
-  font-size: 80px;
-}
+    .dropdown-content a:hover {
+      background-color: #555;
+      transform: scale(1.05);
+    }
 
-.certificates-heading-line {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(100%);
-  width: 150%;
-  height: 10px;
-  background-color: rgba(5, 171, 231, 0.97);
-  animation: move-line 3s infinite;
-}
-
-@keyframes move-line {
-  0% {
-    transform: translateX(-50%);
-  }
-  50% {
-    transform: translateX(-80%);
-  }
-  75% {
-    transform: translateX(-25%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-#search-results {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    z-index: 9999;
-    padding: 20px; /* Add some padding */
-    border: 1px solid #ccc; /* Add a border */
-    border-radius: 5px; /* Round the corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a box shadow */
-}
-
-  #search-results div {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-
-  #search-results div:hover {
-    background-color: #f1f1f1;}
-
-
-
-	</style>
+    .dropdown:hover .dropdown-content {
+      display: block;
+      transform: translateY(0);
+    }
+  </style>
 </head>
+
 <body>
-	<header>
-		<nav>
-			<h1></h1>
-			<ul>
-				<li><a href="index.html">Home</a></li>
-				<li><a href="about.html">About</a></li>
-				<li><a href="projects.html">Projects</a></li>
-				<li><a href="contact.html">Contact</a></li>
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
         <li><a href="my_templates/certificates.html" class="active">Certificates</a></li>
         <li><a href="blog.html">Blog</a></li>
-			</ul>
-      <<form id="search-form">
-  <label for="search-input">Search</label>
-  <input type="text" id="search-input" placeholder="Search">
-</form>
+      </ul>
+    </nav>
+  </header>
 
-<div id="search-results"></div>
+  <section class="certificates">
+    <!-- Certificates Heading -->
+    <h2 class="certificates-heading">
+      <a href="https://www.linkedin.com/in/nick-holmes-90264a217/details/certifications/"
+         class="certificates-heading-text">
+         Certificates
+      </a>
+    </h2>
+    <div class="certificates-heading-line"></div>
 
-		</nav>
-	</header>
-<section class="certificates">
-  <h2 class="certificates-heading">
-    <a href="https://www.linkedin.com/in/nick-holmes-90264a217/details/certifications/" class="certificates-heading-text">Certificates</a>
-    <span class="certificates-heading-line"></span>
-  </h2>
-  <p class="certificates-subtext">Over 450 courses completed and 30 in-depth certifications from industry leaders like Google, Amazon, and Microsoft. Some of the important certificates can be clicked to send you to the url for the certificate credentials. LinkedIN does not permit web scraping so forgive me for outdated certificates, I have to update this manually every few months. </p>
+    <!-- Subtext -->
+    <p class="certificates-subtext">
+      Over 450 courses completed and 30 in-depth certifications from industry leaders like Google,
+      Amazon, and Microsoft. Some of the important certificates can be clicked to send you to the
+      URL for the certificate credentials. LinkedIn does not permit web scraping, so forgive me for
+      outdated certificates—I have to update this manually every few months.
+    </p>
+  </section>
 
-  <div class="dropdown">
-    <button class="dropbtn">Python Certificates</button>
-    <div class="dropdown-content">
-      <a href="#">Advanced Python: Language Features</a>
-      <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
-      <a href="#">Building Computer Vision Applications with Python</a>
-      <a href="#">Building Tools with Python</a>
-      <a href="#">Choose the Right Tool for Your Data: Python, R, or SQL</a>
-      <a href="#">Hands-On Generative AI with Multi-Agent LangChain: Building Real-World Applications</a>
-      <a href="#">Hands-On Generative AI: Getting Started with Vector Search</a>
-      <a href="#">Hands-On Introduction: Python</a>
-      <a href="#">Hands-On PyTorch Machine Learning</a>
-      <a href="#">Intermediate Python</a>
-      <a href="#">Intermediate Python for Non-Programmers</a>
-      <a href="#">Introduction to Python</a>
-      <a href="#">Learning Python</a>
-      <a href="#">Machine Learning with Python: Foundations</a>
-      <a href="#">Nail Your Python Interview</a>
-      <a href="#">Python</a>
-      <a href="#">Python 3 Certification Course</a>
-      <a href="#">Python Certification Course</a>
-      <a href="#">Python Core</a>
-      <a href="#">Python Data Structures</a>
-      <a href="#">Python Essential Libraries</a>
-      <a href="#">Python Essential Training</a>
-      <a href="#">Python for Non-Programmers</a>
-      <a href="#">Python Functions for Data Science</a>
-      <a href="#">Python in Excel</a>
-      <a href="#">Python Object-Oriented Programming</a>
-      <a href="#">Python Standard Library Essential Training</a>
-      <a href="#">Python vs. R for Data Science</a>
-      <a href="#">Python For Data Science</a>
-      <a href="#">Python For Finance</a>
-      <a href="#">Programming Fundamentals Certification Course</a>
-      <a href="#">Using Python for Automation</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <button class="dropbtn">Artificial Intelligence Certificates</button>
-    <div class="dropdown-content">
-      <a href="#">AI 2041: Five Visions for Our Future (Book Bite)</a>
-      <a href="#">AI Challenges and Opportunities for Leadership</a>
-      <a href="#">AI Engineering Essentials: Navigating the Tech Revolution</a>
-      <a href="#">AI Fundamentals for Data Professionals</a>
-      <a href="#">AI in Connected Products (AIOT)</a>
-      <a href="#">AI Pair Programming with GitHub Copilot</a>
-      <a href="#">AI Productivity Hacks to Reimagine Your Workday and Career</a>
-      <a href="#">AI Show: Applied AI - Computer Vision and Optical Character Recognition (OCR)</a>
-      <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
-      <a href="#">AI Show: Building Recommender Systems</a>
-      <a href="#">AI Show: Deep Dive into Responsible AI Dashboard and Scorecard</a>
-      <a href="#">AI Show: Easier, Faster Training for your Hugging Face Models</a>
-      <a href="#">AI Show: Intelligent Recommendations</a>
-      <a href="#">AI Show: Medical Imaging with Azure Machine Learning</a>
-      <a href="#">Artificial Intelligence</a>
-      <a href="#">Artificial Intelligence and Business Strategy</a>
-      <a href="#">Artificial Intelligence Artificial Intelligence</a>
-      <a href="#">Artificial Intelligence Foundations: Machine Learning</a>
-      <a href="#">Artificial Intelligence Foundations: Neural Networks</a>
-      <a href="#">Artificial Intelligence Foundations: Neural Networks</a>
-      <a href="#">Artificial Intelligence Foundations: Thinking Machines</a>
-      <a href="#">Azure AI Studio First Look</a>
-      <a href="#">Azure AI Tips for Developers: Securing Your Data</a>
-      <a href="#">Big Data in the Age of AI</a>
-      <a href="#">Building ChatGPT Plugins: How They Work and How to Use Them</a>
-      <a href="#">Building Computer Vision Applications with Python</a>
-      <a href="#">Building Generative AI Skills for Business Professionals</a>
-      <a href="#">Causal AI: A Tech Primer</a>
-      <a href="#">Copilot in Excel: Supercharge Your Productivity</a>
-      <a href="#">Copilot in Outlook: Maximize Your Workday Efficiency</a>
-      <a href="#">Copilot in PowerPoint: From Prompt to Presentation</a>
-      <a href="#">Copilot in Teams: AI-Powered Collaboration</a>
-      <a href="#">Copilot in Word: Create and Refine Documents with AI</a>
-      <a href="#">Crash Course For Python - Issued by Coursera</a>
-      <a href="#">Deep Learning: Getting Started</a>
-      <a href="#">Ethics in the Age of Generative AI</a>
-      <a href="#">Executive Guide to AutoML</a>
-      <a href="#">Exploring AIOps</a>
-      <a href="#">Fine-tuning Your Own GPT Model</a>
-      <a href="#">Function Calling with the OpenAI API</a>
-      <a href="#">Generative AI Approaches to Business Challenges</a>
-      <a href="#">Generative AI for Business Leaders</a>
-      <a href="#">Generative AI for Creative Pros: Opportunities, Issues, and Ethics</a>
-      <a href="#">Generative AI in Cloud Computing: Core Concepts</a>
-      <a href="#">Generative AI Productivity Hacks with Miss Excel</a>
-      <a href="#">Generative AI vs. Traditional AI</a>
-      <a href="#">Generative AI: Working with Large Language Models</a>
-      <a href="#">Getting Hands-on with GPT-4: Tips and Tricks</a>
-      <a href="#">Getting Started with AI and Machine Learning</a>
-      <a href="#">GPT-4 Foundations: Building AI-Powered Apps</a>
-      <a href="#">GPT-4: The New GPT Release and What You Need to Know</a>
-      <a href="#">Hands-On Generative AI with Multi-Agent LangChain: Building Real-World Applications</a>
-      <a href="#">Hands-On Generative AI: Getting Started with Vector Search</a>
-      <a href="#">Hands-On PyTorch Machine Learning</a>
-      <a href="#">How to Boost Your Productivity with AI Tools</a>
-      <a href="#">How to Research and Write Using Generative AI Tools</a>
-      <a href="#">Introduction to Artificial Intelligence</a>
-      <a href="#">Introduction to Generative Adversarial Networks (GANs)</a>
-      <a href="#">Introduction to Large Language Models</a>
-      <a href="#">Introduction to Prompt Engineering for Generative AI</a>
-      <a href="#">IT Basics - Issued by Programming Hub</a>
-      <a href="#">Learning XAI: Explainable Artificial Intelligence</a>
-      <a href="#">LinkedIn AI Academy AI-100: 1 Demystifying AI</a>
-      <a href="#">Machine Learning and AI Foundations: Classification Modeling</a>
-      <a href="#">Machine Learning and AI Foundations: Prediction, Causation, and Statistical Inference</a>
-      <a href="#">Machine Learning and AI Foundations: Recommendations</a>
-      <a href="#">Machine Learning and AI Foundations: Value Estimations</a>
-      <a href="#">Machine Learning Foundations: Linear Algebra</a>
-      <a href="#">Machine Learning Foundations: Statistics</a>
-      <a href="#">Machine Learning with Python: Foundations</a>
-      <a href="#">Magic ToDo: An AI Tool to Make Complex Projects Simpler</a>
-      <a href="#">Microsoft 365 Chat: Get Secure Answers About Your Organization with AI</a>
-      <a href="#">Microsoft 365 Copilot First Look</a>
-      <a href="#">Midjourney: Tips and Techniques for Creating Images</a>
-      <a href="#">Multimodal Prompting with Google's Project Gemini</a>
-      <a href="#">Nano Tips for Using AI in the Job Search with Sho Dewan</a>
-      <a href="#">Nano Tips for Using ChatGPT for Business with Rachel Woods</a>
-      <a href="#">Nano Tips for Using Generative AI Tools for Better Marketing Outcomes with Joanna Yung</a>
-      <a href="#">No-Code AI: Building Your First Model</a>
-      <a href="#">Pair Programming with AI</a>
-      <a href="#">Powerful Custom GPTs You Can Build Right Now</a>
-      <a href="#">Prompt Engineering: How to Talk to the AIs</a>
-      <a href="#">Prompting ChatGPT with Multimodal Techniques</a>
-      <a href="#">RPA, AI, and Cognitive Tech for Leaders</a>
-      <a href="#">Safeguarding AI</a>
-      <a href="#">Software Is Eating Your Car</a>
-      <a href="#">Streamlining Your Work with Microsoft Copilot</a>
-      <a href="#">Supercharge Your Productivity with ChatGPT Plugins</a>
-      <a href="#">Tech For Everyone - Issued by Sololearn</a>
-      <a href="#">Technical Support Fundamentals - Issued by Coursera</a>
-      <a href="#">The Datapreneurs: How People Are Shaping the Future of AI (Book Bite)</a>
-      <a href="#">The Power of Accurate Prompting with Anthropic’s Claude</a>
-      <a href="#">Top 10 Skills for AI Engineer/AI Ops Engineers</a>
-      <a href="#">Top 10 Skills for AI Systems Designers</a>
-      <a href="#">Top 10 Skills for Machine Learning Cloud Architects</a>
-      <a href="#">Top 10 Skills for NLP Specialists</a>
-      <a href="#">Understanding Bias in AI</a>
-      <a href="#">What Is Generative AI?</a>
-      <a href="#">What is Copilot? Get Started with Microsoft's Everyday AI Companion</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <button class="dropbtn">HTML/CSS/Javascript Certificates</button>
-    <div class="dropdown-content">
-      <a href="#">Cutting-Edge CSS</a>
-      <a href="#">HTML Essential Training</a>
-      <a href="#">CSS Essential Training (2019)</a>
-      <a href="#">JavaScript Essential Training</a>
-    </div>
-  </div>
+  <!-- Search Bar (Below heading/subtext, above certificate categories) -->
+  <section id="search-container">
+    <form id="search-form">
+      <label for="search-input">Search</label>
+      <input type="text" id="search-input" placeholder="Search">
+    </form>
+    <div id="search-results"></div>
+  </section>
 
-  <div class="dropdown">
-    <button class="dropbtn">SQL Certificates</button>
-    <div class="dropdown-content">
-      <a href="#">SQL</a>
-      <a href="#">Introduction To SQL</a>
-      <a href="#">SQL Intermediate</a>
-      <a href="#">Choose the Right Tool for Your Data: Python, R, or SQL</a>
-      <a href="#">Programming Foundations: Databases</a>
-      <a href="#">Learning SQL Programming</a>
+  <!-- Dropdowns for each certificate category -->
+  <section class="certificates">
+    <div class="dropdown">
+      <button class="dropbtn">Python Certificates</button>
+      <div class="dropdown-content">
+        <!-- Python certificate links go here -->
+        <a href="#">Advanced Python: Language Features</a>
+        <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
+        <!-- etc... -->
+      </div>
     </div>
-  </div>
 
-  <div class="dropdown">
-    <button class="dropbtn">Cloud Certificates</button>
-    <div class="dropdown-content">
-      <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
-      <a href="#">Google Cloud Foundations</a>
-      <a href="#">Choosing a Database: PostgreSQL, MySQL, Mongo, and Cloud</a>
-      <a href="#">Learning Cloud Computing: Core Concepts</a>
-      <a href="#">Cloud Architecture: Core Concepts</a>
-      <a href="#">Generative AI in Cloud Computing: Core Concepts</a>
-      <a href="#">Top 10 Skills for Machine Learning Cloud Architects</a>
+    <div class="dropdown">
+      <button class="dropbtn">Artificial Intelligence Certificates</button>
+      <div class="dropdown-content">
+        <a href="#">AI 2041: Five Visions for Our Future (Book Bite)</a>
+        <!-- etc... -->
+      </div>
     </div>
-  </div>
 
-   <div class="dropdown">
-    <button class="dropbtn">Software Certificates</button>
-    <div class="dropdown-content">
-      <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
-      <a href="#">AI Show: Medical Imaging with Azure Machine Learning</a>
-      <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
-      <a href="#">Azure AI Studio First Look</a>
-      <a href="#">Azure AI Tips for Developers: Securing Your Data</a>
-      <a href="#">Everybody's Introduction to Snowflake</a>
-      <a href="#">Learning SnowflakeDB</a>
+    <div class="dropdown">
+      <button class="dropbtn">HTML/CSS/Javascript Certificates</button>
+      <div class="dropdown-content">
+        <a href="#">Cutting-Edge CSS</a>
+        <a href="#">HTML Essential Training</a>
+        <a href="#">CSS Essential Training (2019)</a>
+        <a href="#">JavaScript Essential Training</a>
+      </div>
+    </div>
 
+    <div class="dropdown">
+      <button class="dropbtn">SQL Certificates</button>
+      <div class="dropdown-content">
+        <a href="#">SQL</a>
+        <a href="#">Introduction To SQL</a>
+        <a href="#">SQL Intermediate</a>
+        <a href="#">Choose the Right Tool for Your Data: Python, R, or SQL</a>
+        <a href="#">Programming Foundations: Databases</a>
+        <a href="#">Learning SQL Programming</a>
+      </div>
     </div>
-  </div>
-   <div class="dropdown">
-    <button class="dropbtn">Advanced Certificates</button>
-    <div class="dropdown-content">
-      <a href="https://www.credly.com/badges/0b160894-196e-4d8d-b358-03ac0f7f4881/linked_in_profile">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
-      <a href="#">Google Share Data Through the Art of Visualization Issuing Organization</a>
-      <a href="#">Google Foundations: Data, Data, Everywhere</a>
-      <a href="#">Google Data Analysis with R Programming</a>
-      <a href="#">Google Prepare Data for Exploration</a>
-      <a href="#">Google Process Data from Dirty to Clean</a>
-      <a href="#">Google Data Analytics Certificate</a>
-      <a href="#">Google Data Analytics Specialization</a>
-      <a href="#">Google Data Analytics Capstone: Complete a Case Study</a>
+
+    <div class="dropdown">
+      <button class="dropbtn">Cloud Certificates</button>
+      <div class="dropdown-content">
+        <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
+        <a href="#">Google Cloud Foundations</a>
+        <!-- etc... -->
+      </div>
     </div>
-  </div>
-</section>
-<script src="../js/script.js"></script>
+
+    <div class="dropdown">
+      <button class="dropbtn">Software Certificates</button>
+      <div class="dropdown-content">
+        <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
+        <!-- etc... -->
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button class="dropbtn">Advanced Certificates</button>
+      <div class="dropdown-content">
+        <a href="https://www.credly.com/badges/0b160894-196e-4d8d-b358-03ac0f7f4881/linked_in_profile">
+          AWS Academy Graduate - AWS Academy Cloud Foundations
+        </a>
+        <!-- etc... -->
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/script.js"></script>
 </body>
 </html>
-
-
-
-

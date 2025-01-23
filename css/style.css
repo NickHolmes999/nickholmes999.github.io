@@ -241,6 +241,37 @@ header h1 {
   opacity: 1;
 }
 
+/* Ensures the search form is visible and placed nicely in the nav */
+#search-form {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+#search-input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  font-family: Arial;
+  width: 250px;
+}
+
+/* If you need a search button, re-add something like:
+#search-form button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(5, 171, 231, 0.97);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: Arial;
+}
+*/
+
+
 /* ======================== */
 /* 2) NEW NAV EXPANSION CODE */
 /* ======================== */
