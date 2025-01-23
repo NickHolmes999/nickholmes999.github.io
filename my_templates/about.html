@@ -1,755 +1,822 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>About Me</title>
-	<link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <title>About Me</title>
+  <link rel="stylesheet" href="../css/style.css"> <!-- In case you have global styles -->
   <style>
-     ul {
-       color: #000000;
-    font-size: 35px; /* Set font size for the main list items */
-       list-style-position: inside;
-       text-align: center; /* Center the list items */
-  padding-left: 0;
-  }  ul ul {
-    font-size: 14px; /* Set font size for the nested list items */
-       list-style-position: inside;
-       color: white;
-  }
+    /* ===== Base Body & Global Styles ===== */
     body {
-  background-color: #1a1a1a;
-  color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 16px; /* Increased base font size for readability */
-  margin: 0;
-  padding: 0;
-}
-    .skill-box ul .library-list {
-  margin-left: 40px; /* This indents the list */
-  font-size: 14px; /* This makes the font size smaller */
-  color: white; /* Ensure the text color remains consistent with your design */
-  list-style-position: outside;
-  text-align: left;
-}
+      margin: 0;
+      padding: 0;
+      background-color: #1a1a1a;
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 16px;
+    }
 
-#software-services {
-    background-color: #1d00ff; /* Replace with your desired color */
-}
+    h1, h2, h3, h4 {
+      margin: 0;
+      padding: 0;
+    }
 
-.timeline-container {
-    width: 80%;
-    margin: 50px auto;
-    position: relative;
-    font-family: Arial, sans-serif;
-}
-.timeline-line {
-    height: 2000px; /* Adjust this value to your preference */
-    width: 2px; /* Assuming you have a width defined */
-    background-color: black; /* Your chosen color for the line */
-    position: relative;
-    margin: auto; /* Center the line */
-    z-index: 1;
-}
-h2 {
-    text-align: center;
-    margin-bottom: 40px;
-   color: rgba(5, 171, 231, 0.97);
-}
+    a {
+      color: rgba(5, 171, 231, 0.97);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    a:hover {
+      color: #00d9ff;
+    }
 
-.timeline {
-    position: relative;
-    height: 400px;
-}
-.line {
-    position: absolute;
-    width: 6px; /* Slightly thicker */
-    height: 2000px;
-    background-color: rgba(5, 171, 231, 0.97);
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    box-shadow: 0 0 60px rgba(5, 171, 231, 0.97); /* Glow effect */
-}
+    /* ===== Navigation ===== */
+    header {
+      /* If you’re using the “pill” nav or a custom nav from style.css, keep that. */
+    }
+    nav {
+      /* Possibly overridden by your style.css */
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    nav li {
+      margin-right: 20px;
+    }
+    nav li:last-child {
+      margin-right: 0;
+    }
+    nav a.active {
+      text-decoration: underline;
+    }
 
-
-
-.point {
-    position: absolute;
-    width: 100%;
-    height: 20px;
-    left: 0;
-    top: var(--position);
-    transform: translateY(-50%);
-}
-
-.point .content {
-    width: 40%; /* Reduced width a bit for better control */
-    background: rgba(5, 171, 231, 0.97);
-    padding: 10px;
-    color: black;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.point .content:before {
-    content: "";
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: currentColor;
-    border-radius: 50%;
-    top: 50%;
-    left: -15px;
-    transform: translateY(-50%);
-}
-
-.point:nth-child(even) .content {
-    margin-left: 65%; /* Adjusted margin */
-}
-.point:nth-child(2) .content {
-    margin-top: -80px; /* This will make it appear higher, ensuring non-overlapping */
-}
-.point:nth-child(odd) .content {
-    margin-left: -10%;
-}
-.point:nth-child(odd) .content:before {
-    left: auto;
-    right: -15px;
-}
-.point:nth-child(1) .content {
-    margin-top: -20px; /* Control height for specific data point */
-}
-.point:nth-child(3) .content {
-    margin-top: -20px; /* This will make it appear lower, ensuring non-overlapping */
-}
-.content.coding {
-    border-left: 3px solid #c900ff;
-    color: #c900ff;
-}
-
-.content.internship {
-    border-left: 3px solid #e74c3c;
-    color: #e74c3c;
-}
-
-.content.job {
-    border-left: 3px solid #2ecc71;
-    color: #2ecc71;
-}
-
-.content.promotion {
-    border-left: 3px solid #f39c12;
-    color: #f39c12;
-}
-
-
-/* Tooltip container that wraps the paragraph and the tooltip */
-.preview-container {
-  position: relative;
-  display: inline-block;
-}
-
-/* Tooltip styling */
-.preview-tooltip {
-  display: none;
-  position: absolute;
-  bottom: 100%; /* Adjusted to lift the tooltip higher */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #000; /* Black background */
-  padding: 22px; /* Increased padding for a bigger box */
-  border-radius: 5px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  text-align: center;
-  width: 250px; /* Increased width for a bigger box */
-  border: 2px solid #0056b3; /* Blue edges */
-}
-
-/* Image inside tooltip */
-.preview-tooltip img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-}
-
-/* Text inside tooltip */
-.preview-text {
-  display: block;
-  margin-top: 10px; /* Increased space above the text */
-  font-size: 14px; /* Increased font size */
-  color: #fff; /* White text color */
-}
-
-/* Show the tooltip when hovering over the container */
-.preview-container:hover .preview-tooltip {
-  display: block;
-}
-
-.preview-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  border-width: 10px; /* Size of the arrow */
-  border-style: solid;
-  border-color: #000 transparent transparent transparent; /* Color of the arrow */
-  transform: translateX(-50%);
-}
-.timeline-detail {
-  display: none;
-  background-color: #fff; /* White background for readability */
-  color: #333; /* Dark text for contrast */
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 800px; /* Or adjust to fit your layout */
-  margin: auto; /* Centering the box */
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-detail h3 {
-  font-size: 1.8rem;
-  color: #0056b3; /* Stylish blue for headings */
-  margin-bottom: 15px;
-}
-
-.timeline-detail p {
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 10px;
-}
-
-.timeline-detail:target {
-  display: block;
-}
-
-/* Use this class to make images in the detail section look good */
-.detail-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  margin: 10px 0;
-}
-
-
+    /* ===== About Section ===== */
     #about {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 40px;
+      padding: 40px 20px;
       text-align: center;
     }
-
     #about img {
       display: block;
-      margin: 0 auto;
+      margin: 0 auto 20px;
       max-width: 300px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      transition: transform 0.3s;
     }
-     .skills {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .skill-box {
-    width: 300px;
-    background-color: rgba(5, 171, 231, 0.97);
-    border: 1px solid #000000;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transition: all 0.3s ease-out;
-    filter: blur(0);
-  }
-.skill-box:hover {
-  transform: scale(1.3);
-  box-shadow: 0 0 1000rem rgba(0, 0, 0, 1.6);
-  z-index: 1;
-}
+    #about img:hover {
+      transform: scale(1.03);
+    }
 
-.year-label-top, .year-label-bottom {
-    position: absolute;
-    left: 50%; /* Center the text relative to the line */
-    transform: translateX(-50%); /* Centering adjustment */
-    font-size: 14px; /* Adjust font size if necessary */
-    font-weight: bold; /* Make the font bold */
-}
+    #about p {
+      line-height: 1.6;
+      margin: 0 auto 20px;
+      max-width: 800px;
+      text-align: justify;
+    }
 
-.year-label-top {
-    top: 0;
-    transform: translateX(-50%) translateY(-100%); /* Adjust positioning */
-}
+    #about button {
+      background-color: rgba(5, 171, 231, 0.97);
+      border: none;
+      border-radius: 4px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      margin: 10px 0 20px;
+    }
+    #about button:hover {
+      background-color: #00b0ff;
+      transform: scale(1.05);
+    }
 
-.year-label-bottom {
-    bottom: 0;
-    transform: translateX(-50%) translateY(100%); /* Adjust positioning */
-}
+    #about a {
+      color: rgba(5, 171, 231, 0.97);
+    }
 
-  .skill-box h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: black;
-  }
-  .skill-box ul {
-    margin: 0;
-    padding: 0;
-    list-style-position: inside;
-    text-align: left;
-  }
-  .skill-box li {
-    margin: 5px 0;
-    font-size: 18px;
-  }
-</style>
+    /* ===== Skills Section ===== */
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+    }
 
+    .skill-box {
+      width: 300px;
+      background-color: rgba(5, 171, 231, 0.97);
+      border-radius: 5px;
+      padding: 20px;
+      margin: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-box h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: #1a1a1a;
+      text-shadow: 0 0 2px rgba(255,255,255,0.2);
+    }
+    .skill-box ul {
+      margin: 0;
+      padding: 0;
+      list-style-position: inside;
+      text-align: left;
+      color: #1a1a1a;
+    }
+    .skill-box li {
+      margin: 5px 0;
+      font-size: 15px;
+      line-height: 1.4;
+    }
 
+    /* Sub-list for libraries */
+    .library-list {
+      margin-left: 20px;
+      font-size: 14px;
+    }
 
+    /* Skill-box hover effect */
+    .skill-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+
+    /* ===== Timeline Styles ===== */
+    .timeline-container {
+      width: 80%;
+      max-width: 900px;
+      margin: 50px auto;
+      position: relative;
+    }
+    .timeline-container h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: rgba(5, 171, 231, 0.97);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 2rem;
+      text-shadow: 0 0 4px rgba(5, 171, 231, 0.6);
+    }
+
+    .timeline {
+      position: relative;
+      min-height: 3000px;
+      padding-top: 100px; /* Added padding to push the first item down */
+    }
+
+    .line {
+      position: absolute;
+      width: 6px;
+      height: calc(100% - 100px); /* Matches the timeline's padding-top */
+      background-color: rgba(5, 171, 231, 0.97);
+      top: 100px; /* Start below the padded area */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      box-shadow: 0 0 15px rgba(5, 171, 231, 0.8);
+      border-radius: 3px;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 100px; /* Same offset so the year labels match the line start */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: calc(100% - 100px);
+      z-index: 1;
+    }
+    .year-label-top, .year-label-bottom {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      font-weight: bold;
+      background: #333;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .year-label-top {
+      top: 0; /* It's at the top of the timeline-line, which is offset by 100px inside the container */
+      transform: translate(-50%, -110%);
+    }
+    .year-label-bottom {
+      bottom: 0;
+      transform: translate(-50%, 110%);
+    }
+
+    /* Points on the timeline */
+    .point {
+      position: absolute;
+      width: 100%;
+      height: auto;
+      left: 0;
+      /* Instead of top: var(--position), add 100px offset for the timeline's padding */
+      top: calc(var(--position) + 100px);
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: flex-start;
+    }
+    /* Even points align on the right, odd on the left */
+    .point:nth-child(even) {
+      justify-content: flex-end;
+    }
+
+    .point .content {
+      width: 40%;
+      background: rgba(5, 171, 231, 0.97);
+      padding: 20px;
+      color: #1a1a1a;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border-radius: 5px;
+      margin-bottom: 40px;
+      transform: translateX(0);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .point .content h4 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
+    .point .content span {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .point .content:hover {
+      transform: translateX(5px);
+    }
+
+    /* Color-coded left borders for different content categories */
+    .content.coding {
+      border-left: 4px solid #c900ff;
+    }
+    .content.internship {
+      border-left: 4px solid #e74c3c;
+    }
+    .content.job {
+      border-left: 4px solid #2ecc71;
+    }
+    .content.promotion {
+      border-left: 4px solid #f39c12;
+    }
+
+    /* Timeline tooltip preview */
+    .preview-container {
+      position: relative;
+      display: inline-block;
+    }
+    .preview-tooltip {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #000;
+      padding: 22px;
+      border-radius: 5px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      text-align: center;
+      width: 250px;
+      border: 2px solid #0056b3;
+    }
+    .preview-tooltip img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .preview-text {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #fff;
+    }
+    .preview-container:hover .preview-tooltip {
+      display: block;
+    }
+
+    .preview-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      border-width: 10px;
+      border-style: solid;
+      border-color: #000 transparent transparent transparent;
+      transform: translateX(-50%);
+    }
+
+    /* Timeline details (hidden by default, shown when #target in URL) */
+    .timeline-detail {
+      display: none;
+      background-color: #fff;
+      color: #333;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 800px;
+      position: relative;
+      z-index: 2;
+      text-align: left;
+    }
+    .timeline-detail h3 {
+      font-size: 1.8rem;
+      color: #0056b3;
+      margin-bottom: 15px;
+    }
+    .timeline-detail p {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .timeline-detail:target {
+      display: block;
+    }
+
+    /* Utility class for images inside detail sections */
+    .detail-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
-	<header>
-		<nav>
+  <header>
+    <nav>
       <h1></h1>
-			<ul>
-				<li><a href="index.html">Home</a></li>
-				<li><a href="about.html"class="active">About</a></li>
-				<li><a href="projects.html">Projects</a></li>
-				<li><a href="contact.html">Contact</a></li>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
         <li><a href="certificates.html">Certificates</a></li>
-        <li><a href="blog.html" >Blog</a></li> <!-- Added Blog to Nav -->
-			</ul>
-		</nav>
-	</header>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
 
-	<section id="about">
-		<img src="../img/Nick.jpeg" alt="Profile Picture">
-		<p>Hello, I'm Nick, a dynamic <span id="typing-text"></span> based in Bethesda, Maryland, with a robust foundation in modern development practices and a deep commitment to continuous learning. Over the past two years, I have embarked on an intensive self-directed learning journey, culminating in the completion of around 500 tech focused certificates, with 30 of these being advanced professional certifications. This educational endeavor reflects not only a breadth of knowledge but also a dedication to mastering the intricacies of technology and software development.</p>
-<p>My pursuit of excellence is matched by my eagerness to connect with like-minded professionals and enthusiasts in the tech space. I am always open to engaging in meaningful conversations, exchanging ideas, and exploring collaborative opportunities. If you're interested in discussing innovative technologies, sharing insights, or simply connecting, I would be delighted to hear from you.</p>
+  <section id="about">
+    <img src="../img/Nick.jpeg" alt="Profile Picture">
+    <p>
+      Hello, I'm Nick, a dynamic <span id="typing-text"></span> based in Bethesda, Maryland,
+      with a robust foundation in modern development practices and a deep commitment
+      to continuous learning. Over the past two years, I have embarked on an intensive
+      self-directed learning journey, culminating in the completion of around 500 tech
+      focused certificates, with 30 of these being advanced professional certifications.
+      This educational endeavor reflects not only a breadth of knowledge but also a
+      dedication to mastering the intricacies of technology and software development.
+    </p>
+    <p>
+      My pursuit of excellence is matched by my eagerness to connect with like-minded
+      professionals and enthusiasts in the tech space. I am always open to engaging in
+      meaningful conversations, exchanging ideas, and exploring collaborative opportunities.
+      If you're interested in discussing innovative technologies, sharing insights,
+      or simply connecting, I would be delighted to hear from you.
+    </p>
 
-<a href="../img/NickHolmesResumeApril2024.pdf" download>
-    <button>Click Here to download my up to date resume!</button>
-</a>
+    <a href="../img/NickHolmesResumeApril2024.pdf" download>
+      <button>Click Here to download my up to date resume!</button>
+    </a>
 
-<div>
-    <img src="../img/qr-code.png" alt="My LinkedIn QR Code">
-    <p><a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">^My LinkedIn^</a></p>
-</div>
+    <div>
+      <img src="../img/qr-code.png" alt="My LinkedIn QR Code" style="max-width:120px;">
+      <p><a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">^My LinkedIn^</a></p>
+    </div>
 
-<p>My technical repertoire includes a diverse range of skills such as:</p>
+    <p>My technical repertoire includes a diverse range of skills such as:</p>
+  </section>
 
-<div class="skills">
-  <div class="skill-box">
-    <h3>SQL</h3>
-    <ul>
-      <li>Keys</li>
-      <li>Joins</li>
-      <li>Subqueries</li>
-      <li>Functions</li>
-      <li>Views</li>
-      <li>Stored Procedures</li>
-      <li>Triggers</li>
-      <li>Constraints</li>
-      <li>Normalization</li>
-      <li>Data Definition Statements</li>
-      <li>Data Manipulation Statements</li>
-      <li>Key Elements of Databases</li>
-    </ul>
-  </div>
-  <div class="skill-box">
-    <h3>Python</h3>
-    <ul>
-  <li>General Syntax</li>
-  <li>General Structure</li>
-  <li>General Formatting</li>
-  <li>General Comments</li>
-  <li>General Documentation</li>
-  <li>Object-Oriented Programming</li>
-  <li>Data Manipulation</li>
-  <li>Artificial Intelligence</li>
-  <li>Games</li>
-  <li>Visualization</li>
-  <li>Automation</li>
+  <!-- ===== Skills Boxes ===== -->
+  <section class="skills">
+    <div class="skill-box">
+      <h3>SQL</h3>
+      <ul>
+        <li>Keys</li>
+        <li>Joins</li>
+        <li>Subqueries</li>
+        <li>Functions</li>
+        <li>Views</li>
+        <li>Stored Procedures</li>
+        <li>Triggers</li>
+        <li>Constraints</li>
+        <li>Normalization</li>
+        <li>Data Definition</li>
+        <li>Data Manipulation</li>
+      </ul>
+    </div>
 
-  <li>General Libraries
-    <ul class="library-list">
-      <li>Pandas</li>
-      <li>Numpy</li>
-      <li>Matplotlib</li>
-      <li>Seaborn</li>
-      <li>Scikit-Learn</li>
-      <li>Tensorflow</li>
-      <li>Pytorch</li>
-      <li>OpenCV</li>
-      <li>BeautifulSoup</li>
-      <li>Requests</li>
-      <li>Pygame</li>
-      <li>Pyautogui...and many more</li>
-    </ul>
-  </li>
-</ul>
-  </div>
-  <div class="skill-box">
-    <h3>HTML</h3>
-    <ul>
-      <li>Proper Structure</li>
-      <li>Proper Syntax</li>
-      <li>Proper Comments</li>
-      <li>Proper Documentation</li>
-      <li>Proper Formatting</li>
-      <li>Semantics</li>
-      <li>Accessibility</li>
-      <li>Forms</li>
-      <li>Effects/Animation</li>
-      <li>Responsive Web Design</li>
-    </ul>
-  </div>
-  <div class="skill-box">
-    <h3>Java</h3>
-    <ul>
-      <li>Object-Oriented Programming</li>
-      <li>Games</li>
-      <li>Android Development</li>
-      <li>General Syntax</li>
-      <li>General Structure</li>
-      <li>General Formatting</li>
-      <li>General Comments</li>
-      <li>General Documentation</li>
-    </ul>
-  </div>
-  <div class="skill-box">
-    <h3>Excel</h3>
-    <ul>
-      <li>Formulas</li>
-      <li>Functions</li>
-      <li>Charts</li>
-      <li>Tables</li>
-      <li>Conditional Formatting</li>
-      <li>Sorting and Filtering</li>
-      <li>Pivot Tables</li>
-      <li>What-If Analysis</li>
-      <li>Macros</li>
-      <li>Power Query</li>
-      <li>Power Pivot</li>
-      <li>Manipulate Data</li>
-      <li>Create Visualizations</li>
-      <li>Create proper sheets</li>
-    </ul>
-  </div>
-  <div class="skill-box">
-    <h3>Access</h3>
-    <ul>
-      <li>Creating Databases</li>
-      <li>Creating Tables</li>
-      <li>Creating Queries</li>
-      <li>Creating Forms</li>
-      <li>Creating Reports</li>
-      <li>Creating Macros</li>
-      <li>Loading database</li>
-      <li>Manipulating Data</li>
-      <li>Creating Relationships</li>
-    </ul>
-  </div>
-  <div class="skill-box">
-    <h3>Git/Github</h3>
-    <ul>
-      <li>Using and maintaining repositories</li>
-      <li>Proper documentation protocols</li>
-      <li>Branching and Merging</li>
-      <li>Pull requests and Code reviews</li>
-      <li>Collaboration</li>
-      <li>Version Control</li>
-    </ul>
-  </div>
-  <div class="skill-box">
-    <h3>Artificial Intelligence</h3>
-    <ul>
-      <li>Natural Language Processing</li>
-      <li>Reinforcement Learning</li>
-      <li>Machine Learning</li>
-      <li>Neural Networks</li>
-      <li>Computer Vision</li>
-      <li>Linear Algebra</li>
-      <li>Deep Learning</li>
-      <li>Tensorflow</li>
-      <li>Pytorch</li>
-      <li>Azure</li>
-    </ul>
-  </div>
-  <div class="skill-box">
-    <h3>Data Analytics</h3>
-    <ul>
-      <li>Graphs</li>
-      <li>Data point mapping</li>
-      <li>Prediction Analytics</li>
-      <li>Statistical Analysis</li>
-      <li>Hypothesis Testing</li>
-      <li>Regression Analysis</li>
-    </ul>
-  </div>
-  <div class="skill-box" id="software-services">
-    <h3>Software/Services</h3>
-    <ul>
-      <li>SkillsNetwork - Creating Labs</li>
-      <li>Microsoft Azure - specifically Databricks AutoML</li>
-      <li>SnowPark - General Querying and retrieval</li>
-      <li>AWS - Starting Knowledge</li>
-      <li>Agile Tools - Qualtrics, Confluence, etc</li>
-      <li>Google Cloud - Starting Knowledge</li>
-    </ul>
-  </div>
-</div>
-<div class="timeline-container">
+    <div class="skill-box">
+      <h3>Python</h3>
+      <ul>
+        <li>General Syntax/Structure</li>
+        <li>OOP</li>
+        <li>Data Manipulation</li>
+        <li>Artificial Intelligence</li>
+        <li>Games</li>
+        <li>Visualization</li>
+        <li>Automation</li>
+        <li>Major Libraries:
+          <ul class="library-list">
+            <li>Pandas, Numpy, Matplotlib, Seaborn</li>
+            <li>Scikit-Learn, TensorFlow, PyTorch</li>
+            <li>OpenCV, BeautifulSoup, Requests</li>
+            <li>PyGame, PyAutoGUI, etc.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="skill-box">
+      <h3>HTML</h3>
+      <ul>
+        <li>Proper Structure & Semantics</li>
+        <li>Accessibility</li>
+        <li>Forms & Validation</li>
+        <li>Animations</li>
+        <li>Responsive Design</li>
+      </ul>
+    </div>
+
+    <div class="skill-box">
+      <h3>Java</h3>
+      <ul>
+        <li>OOP</li>
+        <li>Android Development</li>
+        <li>General Syntax/Structure</li>
+        <li>Games</li>
+        <li>Documentation & Comments</li>
+      </ul>
+    </div>
+
+    <div class="skill-box">
+      <h3>Excel</h3>
+      <ul>
+        <li>Formulas & Functions</li>
+        <li>Charts & Tables</li>
+        <li>Pivot Tables</li>
+        <li>Macros & Automation</li>
+        <li>Power Query & Power Pivot</li>
+      </ul>
+    </div>
+
+    <div class="skill-box">
+      <h3>Access</h3>
+      <ul>
+        <li>Creating Databases/Tables</li>
+        <li>Queries & Reports</li>
+        <li>Forms & Macros</li>
+        <li>Data Manipulation</li>
+        <li>Relationships</li>
+      </ul>
+    </div>
+
+    <div class="skill-box">
+      <h3>Git/Github</h3>
+      <ul>
+        <li>Version Control</li>
+        <li>Branching & Merging</li>
+        <li>Pull Requests & Code Reviews</li>
+        <li>Proper Documentation</li>
+      </ul>
+    </div>
+
+    <div class="skill-box">
+      <h3>Artificial Intelligence</h3>
+      <ul>
+        <li>NLP & Reinforcement Learning</li>
+        <li>Machine/Deep Learning</li>
+        <li>Neural Networks & Computer Vision</li>
+        <li>TensorFlow & PyTorch</li>
+        <li>Azure Integration</li>
+      </ul>
+    </div>
+
+    <div class="skill-box">
+      <h3>Data Analytics</h3>
+      <ul>
+        <li>Graphs & Visualization</li>
+        <li>Statistical Analysis</li>
+        <li>Regression & Hypothesis Testing</li>
+        <li>Predictive Analytics</li>
+      </ul>
+    </div>
+
+    <div class="skill-box" id="software-services">
+      <h3>Software/Services</h3>
+      <ul>
+        <li>SkillsNetwork (Lab Creation)</li>
+        <li>Microsoft Azure (Databricks AutoML)</li>
+        <li>SnowPark & Snowflake</li>
+        <li>AWS (Basic Foundations)</li>
+        <li>Agile Tools (Qualtrics, Confluence)</li>
+        <li>Google Cloud (Starting Knowledge)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Timeline ===== -->
+  <div class="timeline-container">
     <h2>My Tech Journey</h2>
     <div class="timeline">
-        <div class="line"></div>
-      <div class="timeline-line">
-    <span class="year-label-top">2016</span>
-    <span class="year-label-bottom">Present</span>
-</div>
+      <div class="line"></div>
 
-        <div class="point" style="--position:0px">
-    <div class="content coding">
-        <h4>Started Coding</h4>
-        <span>Feb, 2016</span>
-        <div class="preview-container">
+      <div class="timeline-line">
+        <span class="year-label-top">2016</span>
+        <span class="year-label-bottom">Present</span>
+      </div>
+
+      <!-- Point 1: Started Coding -->
+      <div class="point" style="--position:100px">
+        <div class="content coding">
+          <h4>Started Coding</h4>
+          <span>Feb, 2016</span>
+          <div class="preview-container">
             <p>Began my journey with Python, creating small projects and learning the basics.</p>
             <div class="preview-tooltip">
-                <a href="#python-detail" class="preview-link">
-                    <img src="../img/python_preview.jpg" alt="Python Project Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#python-detail" class="preview-link">
+                <img src="../img/python_preview.jpg" alt="Python Project Preview">
+                <span class="preview-text">Click to learn more about my experience</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<div class="point" style="--position:625px">
-    <div class="content internship">
-        <h4>C++ and OOP</h4>
-        <span>August, 2018</span>
-        <div class="preview-container">
-            <p>Started coding in C++ for my high school class</p>
+      <!-- Point 2: C++ and OOP -->
+      <div class="point" style="--position:625px">
+        <div class="content internship">
+          <h4>C++ and OOP</h4>
+          <span>August, 2018</span>
+          <div class="preview-container">
+            <p>Started coding in C++ for my high school class.</p>
             <div class="preview-tooltip">
-                <a href="#cpp-detail" class="preview-link">
-                    <img src="../img/cpp_preview.jpg" alt="C++ Project Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#cpp-detail">
+                <img src="../img/cpp_preview.jpg" alt="C++ Project Preview">
+                <span class="preview-text">Click to learn more about my experience</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<div class="point" style="--position:1025px">
-    <div class="content internship">
-        <h4>Advanced Python</h4>
-        <span>August, 2022</span>
-        <div class="preview-container">
-            <p>Decorators, Testing, Web Frameworks...</p>
+      <!-- Point 3: Advanced Python -->
+      <div class="point" style="--position:1025px">
+        <div class="content internship">
+          <h4>Advanced Python</h4>
+          <span>August, 2022</span>
+          <div class="preview-container">
+            <p>Explored decorators, testing, and web frameworks in depth.</p>
             <div class="preview-tooltip">
-                <a href="#advanced-python-detail" class="preview-link">
-                    <img src="../img/advanced_python_preview.jpg" alt="Advanced Python Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#advanced-python-detail">
+                <img src="../img/advanced_python_preview.jpg" alt="Advanced Python Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-
-
-<div class="point" style="--position:900px">
-    <div class="content promotion">
-        <h4>Began Daily Learning</h4>
-        <span>April 5th, 2022</span>
-        <div class="preview-container">
-            <p>Began learning day by day to hone my skills, realized my passion for tech. This started as my completing a few certificates and turned into me using different platforms daily to enhance my self learning. One of my favorites is LinkedIN Learning, you can even learn while driving! </p>
+      <!-- Point 4: Began Daily Learning -->
+      <div class="point" style="--position:900px">
+        <div class="content promotion">
+          <h4>Began Daily Learning</h4>
+          <span>April 5th, 2022</span>
+          <div class="preview-container">
+            <p>Committed to daily self-directed study, fueling my passion for tech.</p>
             <div class="preview-tooltip">
-                <a href="#daily-work-detail" class="preview-link">
-                    <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
-                    <span class="preview-text">Click this box to learn more about my experience daily learning</span>
-                </a>
+              <a href="#daily-work-detail">
+                <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<div class="point" style="--position:1250px">
-    <div class="content promotion">
-        <h4>Began Working With AI</h4>
-        <span>Nov 9, 2022</span>
-        <div class="preview-container">
-            <p>Began working with AI daily</p>
+      <!-- Point 5: Began Working With AI -->
+      <div class="point" style="--position:1250px">
+        <div class="content promotion">
+          <h4>Began Working With AI</h4>
+          <span>Nov 9, 2022</span>
+          <div class="preview-container">
+            <p>Focused on AI models daily to solve complex problems.</p>
             <div class="preview-tooltip">
-                <a href="#ai-work-detail" class="preview-link">
-                    <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#ai-work-detail">
+                <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<div class="point" style="--position:1450px">
-    <div class="content job">
-        <h4>First Python Developer Job</h4>
-        <span>Apr 15, 2023</span>
-        <div class="preview-container">
-            <p>Joined JOS Group as a Python/AI developer</p>
+      <!-- Point 6: First Python Dev Job -->
+      <div class="point" style="--position:1450px">
+        <div class="content job">
+          <h4>First Python Developer Job</h4>
+          <span>Apr 15, 2023</span>
+          <div class="preview-container">
+            <p>Joined JOS Group as a Python/AI developer.</p>
             <div class="preview-tooltip">
-                <a href="#first-job-detail" class="preview-link">
-                    <img src="../img/JOS+Logo-16e90eba-158w.webp" alt="First Job Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#first-job-detail">
+                <img src="../img/JOS+Logo-16e90eba-158w.webp" alt="First Job Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<div class="point" style="--position:1575px">
-    <div class="content internship">
-        <h4>Snowflake</h4>
-        <span>August, 2023</span>
-        <div class="preview-container">
-            <p>Began working with Snowflake</p>
+      <!-- Point 7: Snowflake -->
+      <div class="point" style="--position:1575px">
+        <div class="content internship">
+          <h4>Snowflake</h4>
+          <span>August, 2023</span>
+          <div class="preview-container">
+            <p>Began working with Snowflake for data warehousing.</p>
             <div class="preview-tooltip">
-                <a href="#snowflake-detail" class="preview-link">
-                    <img src="../img/snowflake_preview.jpg" alt="Snowflake Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#snowflake-detail">
+                <img src="../img/snowflake_preview.jpg" alt="Snowflake Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-
-
-
-<div class="point" style="--position:1780px">
-    <div class="content job">
-        <h4>First Government Contract</h4>
-        <span>Jan 28, 2024</span>
-        <div class="preview-container">
-            <p>Started creating AI/ML courses for CMS users</p>
+      <!-- Point 8: First Government Contract -->
+      <div class="point" style="--position:1780px">
+        <div class="content job">
+          <h4>First Government Contract</h4>
+          <span>Jan 28, 2024</span>
+          <div class="preview-container">
+            <p>Created AI/ML courses for CMS users in Jupyter Labs.</p>
             <div class="preview-tooltip">
-                <a href="#gov-contract-detail" class="preview-link">
-                    <img src="../img/gov_contract_preview.jpg" alt="Government Contract Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#gov-contract-detail">
+                <img src="../img/gov_contract_preview.jpg" alt="Government Contract Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-
-
-<div class="point" style="--position:1950px">
-    <div class="content promotion">
-        <h4>Began Working With Microsoft AutoML</h4>
-        <span>Apr 9, 2024</span>
-        <div class="preview-container">
-            <p>Began working with Microsoft AutoML using Databricks</p>
+      <!-- Point 9: Microsoft AutoML -->
+      <div class="point" style="--position:1950px">
+        <div class="content promotion">
+          <h4>Microsoft AutoML & Databricks</h4>
+          <span>Apr 9, 2024</span>
+          <div class="preview-container">
+            <p>Utilized MS AutoML in Databricks for advanced ML solutions.</p>
             <div class="preview-tooltip">
-                <a href="#ai-work-detail" class="preview-link">
-                    <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
-                    <span class="preview-text">Click this box to learn more about my experience</span>
-                </a>
+              <a href="#ai-work-detail">
+                <img src="../img/ai_work_preview.jpg" alt="AI Work Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
-
-    </div>
-</div>
-
-<!-- Detail section for "Started Coding" -->
-<div id="python-detail" class="timeline-detail">
+  <!-- ===== Timeline Details ===== -->
+  <!-- Python Detail -->
+  <div id="python-detail" class="timeline-detail">
     <h3>Python: The Beginning of My Coding Journey</h3>
-    <p>In February 2016, my journey into the intricate world of coding began with the discovery of Python. As a versatile and intuitive language, Python became my gateway into the realms of software development. It was through Python that I developed my first projects, ranging from simple scripts to more complex applications. These initial endeavors were crucial in establishing a solid foundation for my programming skills and ignited a passion for technology that has been the driving force behind my career.</p>
-</div>
+    <p>
+      In February 2016, my journey into the world of coding began with Python.
+      This intuitive language became my gateway, from simple scripts to complex applications,
+      building a solid foundation for my programming skills.
+    </p>
+  </div>
 
-<div id="gov-contract-detail" class="timeline-detail">
+  <!-- Gov Contract Detail -->
+  <div id="gov-contract-detail" class="timeline-detail">
     <h3>First Government Contract: Teaching AI/ML to CMS Users</h3>
-    <p>On January 28, 2024, I embarked on a new journey by securing my first government contract. In this role, I was tasked with creating AI/ML courses for CMS users. The courses were designed to teach users how to utilize AI using Python within a Jupyter Labs environment. The curriculum covered a wide range of topics, including sentiment analysis, fraud detection, feature engineering, neural networks, and Retrieval Augmented Generation with Langchain and LLMS. This experience allowed me to leverage my technical expertise to educate others, further solidifying my understanding of these complex topics.</p>
-</div>
+    <p>
+      On January 28, 2024, I secured my first government contract, developing AI/ML courses
+      for CMS users in Jupyter Labs. The curriculum covered sentiment analysis, fraud detection,
+      feature engineering, neural networks, and more, enabling users to fully leverage Python and
+      advanced ML techniques.
+    </p>
+  </div>
 
-<div id="cpp-detail" class="timeline-detail">
+  <!-- C++ Detail -->
+  <div id="cpp-detail" class="timeline-detail">
     <h3>C++ and Object-Oriented Concepts</h3>
-    <p>My foray into C++ in August 2018 marked a pivotal moment in my development as a programmer. The power and complexity of C++ introduced me to the fundamental concepts of object-oriented programming (OOP). This paradigm shift allowed me to architect software that was not only efficient but also scalable and maintainable. It was here that I began to appreciate the intricate dance between software design and system architecture, leading to the creation of robust and sophisticated software solutions.</p>
-</div>
+    <p>
+      My foray into C++ in August 2018 introduced me to object-oriented programming (OOP).
+      Understanding classes, inheritance, and polymorphism elevated my approach to software design,
+      enhancing efficiency and scalability in projects.
+    </p>
+  </div>
 
-<div id="advanced-python-detail" class="timeline-detail">
+  <!-- Advanced Python Detail -->
+  <div id="advanced-python-detail" class="timeline-detail">
     <h3>Advanced Python: Elevating My Coding Skills</h3>
-    <p>By August 2022, I had embarked on a deep exploration of advanced Python. Delving into the depths of this rich language, I mastered decorators, embraced rigorous testing methodologies, and harnessed the power of various web frameworks. My toolkit expanded to include an array of libraries, each opening new doors to machine learning, data analysis, and code optimization. This journey through Python's advanced landscapes has not only broadened my expertise but also enriched my problem-solving strategies.</p>
-</div>
+    <p>
+      By August 2022, I delved into advanced Python—mastering decorators, rigorous testing,
+      and various web frameworks. This deep dive expanded my capabilities in machine learning,
+      data analysis, and code optimization.
+    </p>
+  </div>
 
-<div id="daily-work-detail" class="timeline-detail">
+  <!-- Daily Work Detail -->
+  <div id="daily-work-detail" class="timeline-detail">
     <h3>Dedicated Daily Learning: A Self-Taught Journey</h3>
-    <p>Beginning April 5th, 2022, I dedicated myself to a regimen of continuous learning to hone my technical expertise. My commitment to daily skill enhancement was fueled by a variety of online platforms, with LinkedIn Learning being particularly transformative. This platform provided a wealth of knowledge delivered by industry experts, enabling me to grow my skill set in a structured yet flexible manner. Whether commuting or during brief downtimes, my pursuit of knowledge was relentless, fostering a lifelong passion for learning and professional growth.</p>
-</div>
+    <p>
+      Starting April 5th, 2022, I committed to consistent, daily skill-building across diverse
+      platforms. LinkedIn Learning, in particular, offered structured yet flexible methods to
+      continuously refine my expertise and professional growth.
+    </p>
+  </div>
 
-<div id="snowflake-detail" class="timeline-detail">
+  <!-- Snowflake Detail -->
+  <div id="snowflake-detail" class="timeline-detail">
     <h3>Snowflake: A New Chapter in Data Engineering</h3>
-    <p>In August 2023, I embarked on a journey with Snowflake, embracing the cutting-edge cloud data platform that has redefined the landscape of data warehousing, big data, and analytics. My engagement with Snowflake was more than just learning a new technology; it was about embracing a paradigm shift in data processing and storage. The platform's unique architecture and approach to data management empowered me to deliver innovative solutions that leverage the full potential of cloud scalability and performance.</p>
-</div>
+    <p>
+      In August 2023, I embraced Snowflake—a cloud data platform redefining data warehousing
+      and analytics. Its unique architecture empowered me to deploy solutions leveraging
+      scalable cloud performance for complex data challenges.
+    </p>
+  </div>
 
-<div id="first-job-detail" class="timeline-detail">
+  <!-- First Job Detail -->
+  <div id="first-job-detail" class="timeline-detail">
     <h3>My First Role as a Python Developer</h3>
-    <p>On April 15, 2023, I took a significant step in my career by joining the JOS Group as a software engineer. In this role, I'm not just writing code; I'm solving complex data challenges and contributing to the creation of cutting-edge front-end solutions. My work involves collaboration with a team of talented individuals, where we collectively push the boundaries of what's possible with technology, crafting systems that are both innovative and efficient.</p>
-</div>
+    <p>
+      On April 15, 2023, I joined JOS Group, where I tackled complex data-driven tasks and
+      collaborated with a talented team to build cutting-edge front-end solutions.
+      It was a pivotal leap in my professional journey.
+    </p>
+  </div>
 
-<div id="ai-work-detail" class="timeline-detail">
+  <!-- AI Work Detail -->
+  <div id="ai-work-detail" class="timeline-detail">
     <h3>AI and Machine Learning: The Future of Innovation</h3>
-    <p>Since November 9, 2022, artificial intelligence (AI) and machine learning (ML) have been at the core of my professional endeavors. My daily interactions with AI involve developing models that not only automate mundane tasks but also drive innovation. This work is at the intersection of technology and creativity, where I employ machine learning algorithms to distill vast amounts of data into actionable insights, fostering intelligent solutions to some of the most complex and nuanced problems faced in the industry today.</p>
-</div>
+    <p>
+      Since November 9, 2022, AI and ML have been central to my daily work—developing models
+      that automate workflows and deliver valuable insights. This fusion of technology and
+      creativity drives novel solutions to complex industry challenges.
+    </p>
+  </div>
 
+  <!-- Typing Text Effect (JS) -->
+  <script>
+    const typingText = document.getElementById('typing-text');
+    const words = ["Full Stack Developer", "Hybrid Database Engineer", "Software Developer"];
+    const colors = ["red", "blue", "green", "orange", "purple", "yellow"];
+    let wordIndex = 0;
+    let charIndex = 0;
 
-	</section>
+    function type() {
+      if (charIndex < words[wordIndex].length) {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        typingText.style.color = randomColor;
+        typingText.textContent += words[wordIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(type, 200);
+      } else {
+        setTimeout(erase, 1250);
+      }
+    }
 
-	<script>
-		const typingText = document.getElementById('typing-text');
-		const words = ["Full Stack Developer", "Hybrid Database Engineer", "Software Developer"];
-	  const colors = ["red", "blue", "green", "orange", "purple", "yellow"];
-		let wordIndex = 0;
-		let charIndex = 0;
+    function erase() {
+      if (charIndex > 0) {
+        typingText.textContent = words[wordIndex].substring(0, charIndex - 1);
+        charIndex--;
+        setTimeout(erase, 50);
+      } else {
+        wordIndex++;
+        if (wordIndex >= words.length) wordIndex = 0;
+        setTimeout(type, 1000);
+      }
+    }
 
-		function type() {
-			if (charIndex < words[wordIndex].length) {
-	      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-	      typingText.style.color = randomColor;
-				typingText.textContent += words[wordIndex].charAt(charIndex);
-				charIndex++;
-				setTimeout(type, 200);
-			} else {
-				setTimeout(erase, 1250);
-			}
-		}
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(type, 1000);
+    });
+  </script>
 
-		function erase() {
-			if (charIndex > 0) {
-				typingText.textContent = words[wordIndex].substring(0, charIndex - 1);
-				charIndex--;
-				setTimeout(erase, 50);
-			} else {
-				wordIndex++;
-				if (wordIndex >= words.length) {
-					wordIndex = 0;
-				}
-				setTimeout(type, 1000);
-			}
-		}
-
-		document.addEventListener("DOMContentLoaded", function() {
-			setTimeout(type, 1000);
-		});
-	</script>
-	<script src="script.js"></script>
+  <script src="script.js"></script> <!-- If you have additional JS -->
 </body>
 </html>
-
