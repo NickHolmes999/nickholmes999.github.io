@@ -3,54 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <title>My Portfolio</title>
+
+  <!-- Main styles -->
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWecC7o/muK72M6FazRvz8gXpCMLNV9H/1xIKz9vI4MqzV0n8JLpfaN9lFhJ" crossorigin="anonymous">
+
+  <!-- Font Awesome (for icons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    integrity="sha384-k6RqeWecC7o/muK72M6FazRvz8gXpCMLNV9H/1xIKz9vI4MqzV0n8JLpfaN9lFhJ"
+    crossorigin="anonymous"
+  >
 
   <style>
-    /* 1) Dark Gray Body Background */
+    /* ===== Global body ===== */
     body {
       margin: 0;
       padding: 0;
-      background-color: #2c2c2c; /* Dark gray background for the whole page */
+      background-color: #2c2c2c; /* Dark gray background */
+      font-family: Arial, sans-serif;
+      color: #fff;
     }
 
-    #skillsPieChart {
-      width: 400px;
-      height: 400px;
-      background-color: #1c1b1b;
-    }
-
-    #skills-chart {
+    /* ===== Navigation (if not overridden in style.css) ===== */
+    nav ul {
+      list-style: none;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba(5, 171, 231, 0.97);
+      margin: 0;
+      padding: 0;
     }
-
-    /* LinkedIn button snippet (still inside #skills-chart style block) */
-    .linkedin-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 15px;
-      background-color: #0077b5; /* LinkedIn brand color */
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
+    nav li {
+      margin-right: 20px;
+    }
+    nav li:last-child {
+      margin-right: 0;
+    }
+    nav a {
+      color: #fff;
       text-decoration: none;
-      border-radius: 4px;
-      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    nav a.active {
+      text-decoration: underline;
+      font-weight: bold;
     }
 
-    .linkedin-btn i {
-      margin-right: 8px;
-    }
-
-    .linkedin-btn:hover {
-      background-color: #005a87; /* Darker LinkedIn brand color on hover */
-    }
-
-    /* Banner (GIF background) */
+    /* ===== Banner with GIF background ===== */
     #banner {
       display: flex;
       background-image: url('../img/coding.gif');
@@ -61,22 +61,180 @@
       justify-content: center;
       align-items: center;
       height: 60vh;
-      margin-top: 0px;
+      margin-top: 0;
       padding: 20px;
       border-radius: 20px;
-      overflow: hidden; /* keeps corners rounded by cutting off overflow */
+      overflow: hidden; /* keeps corners rounded */
     }
 
     #banner h1,
     #banner p {
       border-radius: 20px;
-      background-color: rgba(255,255,255,0.95); /* White w/ slight transparency */
+      background-color: rgba(255,255,255,0.95); /* slight transparency */
       padding: 20px;
       color: black;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    /* Typing text in H1 */
+    #typing-text {
+      font-weight: bold;
+    }
+
+    /* ===== Services Section ===== */
+    #services {
+      padding: 40px 20px;
+      max-width: 1100px;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    #services h2 {
+      color: #fff;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .proficiency-note {
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+
+    .service-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .service-bar {
+      position: relative;
+      padding: 20px;
+      margin-bottom: 20px;
+      background: rgba(5, 171, 231, 0.97);
+      width: 300px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+    .service-bar:hover {
+      transform: scale(1.03);
+      z-index: 1;
+    }
+
+    .service-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background-color: #007bff;
+      z-index: 1;
+      transition: width 0.5s ease-out;
+      opacity: 0.2; /* Slight transparent overlay to illustrate proficiency */
+    }
+
+    .service-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .service-text {
+      position: relative;
+      z-index: 2;
+      color: #000;
+      text-align: left;
+    }
+    .service-text h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      color: #000;
+    }
+    .service-text p {
+      margin: 0;
+      line-height: 1.4;
+      color: #050505;
+    }
+
+    /* QR code & resume button near top of services */
+    #services > div {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #services img {
+      display: inline-block;
+      margin: 10px;
+    }
+    #services a button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #00bfff;
+      color: #000;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    #services a button:hover {
+      background-color: #007acc;
+      transform: scale(1.05);
+    }
+
+    /* ===== Skills Chart Section ===== */
+    #skills-chart {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    #skills-chart canvas {
+      background-color: #1c1b1b;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      background-color: #1f1f1f; /* Slightly different dark shade */
+      color: #999;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    footer .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    footer a {
+      color: #999;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    .footer-note {
+      font-size: 0.85rem;
+      margin: 10px 0;
+    }
+
+    /* Subtle fade-in animations with GSAP classes */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-in.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
-
 <body>
   <header>
     <nav>
@@ -87,73 +245,52 @@
         <li><a href="projects.html">Projects</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li><a href="certificates.html">Certificates</a></li>
-        <li><a href="blog.html">Blog</a></li> <!-- Added Blog to Nav -->
+        <li><a href="blog.html">Blog</a></li>
       </ul>
     </nav>
   </header>
 
-  <section id="banner">
-    <h1>Hey! I'm Nick Holmes, and I'm a <span id="typing-text"></span></h1>
+  <!-- BANNER SECTION -->
+  <section id="banner" class="fade-in">
+    <h1>
+      Hey! I'm Nick Holmes, and I'm a
+      <span id="typing-text"></span>
+    </h1>
     <p>Explore my work and hopefully I can provide value!</p>
   </section>
 
-  <script>
-    const typingText = document.getElementById('typing-text');
-    const words = ["Full Stack Developer", "Freelancer", "Youtuber", "Hybrid Database Engineer", "Software Developer"];
-    const colors = ["red", "blue", "green", "orange", "purple"];
-    let wordIndex = 0;
-    let charIndex = 0;
-
-    function type() {
-      if (charIndex < words[wordIndex].length) {
-        typingText.innerHTML += words[wordIndex].charAt(charIndex);
-        charIndex++;
-        let typingSpeed = 200 - Math.random() * 100; // Typing speed variation
-        setTimeout(type, typingSpeed);
-      } else {
-        setTimeout(erase, 1250);
-      }
-    }
-
-    function erase() {
-      if (charIndex > 0) {
-        typingText.innerHTML = words[wordIndex].substring(0, charIndex - 1);
-        charIndex--;
-        let erasingSpeed = 100 - Math.random() * 50; // Erasing speed variation
-        setTimeout(erase, erasingSpeed);
-      } else {
-        wordIndex++;
-        if (wordIndex >= words.length) wordIndex = 0;
-        // Change color smoothly when starting to type a new word
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        typingText.style.transition = "color 0.4s ease-in-out";
-        typingText.style.color = randomColor;
-        setTimeout(type, 200);
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      setTimeout(type, 1000);
-    });
-  </script>
-
-  <section id="services">
+  <!-- SERVICES SECTION -->
+  <section id="services" class="fade-in">
     <div>
-      <img src="../img/qr-code.png" alt="My LinkedIn QR Code" style="width: 100px; height: 100px;">
-      <p><a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">^My LinkedIn^</a></p>
+      <img
+        src="../img/qr-code.png"
+        alt="My LinkedIn QR Code"
+        style="width: 100px; height: 100px;"
+      >
+      <p>
+        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/"
+           target="_blank"
+        >
+          ^My LinkedIn^
+        </a>
+      </p>
     </div>
     <a href="../img/NickHolmesResumeApril2024.pdf" download>
       <button>Click Here to download my up to date resume!</button>
     </a>
+
     <h2>My Services</h2>
-    <p class="proficiency-note">The highlights in the boxes below represent my proficiency in each skill, indicating how adept I am at one compared to the others.</p>
+    <p class="proficiency-note">
+      The highlights below represent my proficiency in each skill,
+      indicating how adept I am at one compared to the others.
+    </p>
 
     <div class="service-container">
       <div class="service-bar">
         <i class="fa fa-code service-icon"></i>
         <div class="service-text">
           <h3>Web Development</h3>
-          <p>I can design and develop responsive websites that are optimized for performance and user experience.</p>
+          <p>I can design and develop responsive websites optimized for performance and user experience.</p>
         </div>
         <div class="service-bar-fill" data-width="90%"></div>
       </div>
@@ -161,7 +298,7 @@
         <i class="fa fa-paint-brush service-icon"></i>
         <div class="service-text">
           <h3>Graphic Design</h3>
-          <p>I can create beautiful and effective designs for logos, branding, marketing materials, and more.</p>
+          <p>I can create beautiful, effective designs for logos, branding, marketing materials, and more.</p>
         </div>
         <div class="service-bar-fill" data-width="75%"></div>
       </div>
@@ -169,7 +306,7 @@
         <i class="fa fa-rocket service-icon"></i>
         <div class="service-text">
           <h3>Python Development/Machine Learning</h3>
-          <p>I can write clean, efficient code that meets industry criteria.</p>
+          <p>I can write clean, efficient code meeting industry criteria.</p>
         </div>
         <div class="service-bar-fill" data-width="95%"></div>
       </div>
@@ -185,7 +322,7 @@
         <i class="fa fa-code service-icon"></i>
         <div class="service-text">
           <h3>SQL</h3>
-          <p>I can query data effectively.</p>
+          <p>I can query and manage data effectively.</p>
         </div>
         <div class="service-bar-fill" data-width="60%"></div>
       </div>
@@ -193,7 +330,7 @@
         <i class="fa fa-code service-icon"></i>
         <div class="service-text">
           <h3>Data Manipulation/Analysis</h3>
-          <p>I can manipulate data strategically. Strong experience in data analysis.</p>
+          <p>I can manipulate data strategically and have strong experience in data analysis.</p>
         </div>
         <div class="service-bar-fill" data-width="90%"></div>
       </div>
@@ -201,28 +338,97 @@
         <i class="fa fa-code service-icon"></i>
         <div class="service-text">
           <h3>Full-Stack</h3>
-          <p>I can create full stack applications.</p>
+          <p>I can create end-to-end full stack applications.</p>
         </div>
         <div class="service-bar-fill" data-width="80%"></div>
       </div>
     </div>
   </section>
 
-  <section id="skills-chart">
+  <!-- SKILLS CHART SECTION -->
+  <section id="skills-chart" class="fade-in">
     <h2></h2>
     <canvas id="skillsPieChart"></canvas>
   </section>
 
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <script src="../js/script.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <!-- Contact icons or links if you like -->
+      <p>
+        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/">LinkedIn</a> |
+        <a href="https://github.com/NickHolmes999">GitHub</a> |
+      </p>
+      <p class="footer-note">
+        © 2024 Nick Holmes - All rights reserved
+      </p>
+      <p class="footer-note">
+        Built by hand using HTML, CSS, JavaScript, and some Python.
+      </p>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Typing Text Effect
+    const typingText = document.getElementById('typing-text');
+    const words = [
+      "Full Stack Developer",
+      "Freelancer",
+      "AI Engineer",
+      "AI Developer",
+      "Hybrid Database Engineer",
+      "Software Developer"
+    ];
+    const colors = ["red", "blue", "green", "orange", "purple"];
+    let wordIndex = 0;
+    let charIndex = 0;
+
+    function type() {
+      if (charIndex < words[wordIndex].length) {
+        typingText.innerHTML += words[wordIndex].charAt(charIndex);
+        charIndex++;
+        let typingSpeed = 200 - Math.random() * 100; // Variation
+        setTimeout(type, typingSpeed);
+      } else {
+        setTimeout(erase, 1250);
+      }
+    }
+
+    function erase() {
+      if (charIndex > 0) {
+        typingText.innerHTML = words[wordIndex].substring(0, charIndex - 1);
+        charIndex--;
+        let erasingSpeed = 100 - Math.random() * 50; // Variation
+        setTimeout(erase, erasingSpeed);
+      } else {
+        wordIndex++;
+        if (wordIndex >= words.length) {
+          wordIndex = 0;
+        }
+        // Change color smoothly
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        typingText.style.transition = "color 0.4s ease-in-out";
+        typingText.style.color = randomColor;
+        setTimeout(type, 200);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(type, 1000);
+    });
+  </script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.10.4/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.10.4/dist/ScrollTrigger.min.js"></script>
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-    // GSAP and ScrollTrigger scripts
+    // Animate Bars
     gsap.registerPlugin(ScrollTrigger);
-
     gsap.utils.toArray('.service-bar').forEach(bar => {
       let barFill = bar.querySelector('.service-bar-fill');
       ScrollTrigger.create({
@@ -233,15 +439,14 @@
         onEnterBack: () => gsap.to(barFill, { width: barFill.dataset.width, duration: 1, ease: 'power1.out' }),
       });
     });
-  </script>
 
-  <script>
+    // Chart.js Pie
     document.addEventListener("DOMContentLoaded", function() {
       const skillsData = {
         labels: [
           'Web Development',
           'Graphic Design',
-          'Python Development/Machine Learning',
+          'Python Dev/ML',
           'Artificial Intelligence',
           'SQL',
           'Data Manipulation/Analysis',
@@ -261,7 +466,7 @@
           ],
           borderColor: [
             'rgba(255,99,132,1)',
-            'rgba(246,0,255,0.7)',
+            'rgba(246,0,255,1)',
             'rgba(255, 206, 86, 1)',
             'rgba(75, 192, 192, 1)',
             'rgba(153, 102, 255, 1)',
@@ -278,18 +483,14 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: {
-            duration: 500 // Speed up the animation
-          },
+          animation: { duration: 500 },
           plugins: {
             legend: {
               display: true,
               position: 'bottom',
               labels: {
-                color: 'white', // Color of legend text
-                font: {
-                  size: 14
-                },
+                color: 'white',
+                font: { size: 14 },
                 padding: 20,
                 boxWidth: 20,
                 boxHeight: 20,
@@ -301,13 +502,8 @@
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
               borderColor: 'black',
               borderWidth: 2,
-              titleFont: {
-                size: 16,
-                weight: 'bold',
-              },
-              bodyFont: {
-                size: 14
-              },
+              titleFont: { size: 16, weight: 'bold' },
+              bodyFont: { size: 14 },
               cornerRadius: 6,
               displayColors: false,
             }
@@ -315,11 +511,27 @@
         },
       };
 
-      // Initialize the chart
       const ctx = document.getElementById('skillsPieChart').getContext('2d');
       new Chart(ctx, config);
     });
-  </script>
 
+    // Fade-in animation on scroll
+    const fadeElems = document.querySelectorAll('.fade-in');
+    fadeElems.forEach(elem => {
+      gsap.fromTo(elem,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          scrollTrigger: {
+            trigger: elem,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+  </script>
 </body>
 </html>
