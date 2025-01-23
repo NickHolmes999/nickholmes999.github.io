@@ -256,4 +256,24 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Select all the elements you want to animate
+const skillBoxes = document.querySelectorAll('.skill-box');
+const timelinePoints = document.querySelectorAll('.point');
 
+// Create a new Intersection Observer
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    // If the element is intersecting, add the 'show' class
+    if (entry.isIntersecting) {
+      entry.target.classList.add('show');
+    } else {
+      entry.target.classList.remove('show');
+    }
+  });
+}, {
+  threshold: 0.1 // Adjust this value to control when the callback is called
+});
+
+// Observe all the selected elements
+skillBoxes.forEach(box => observer.observe(box));
+timelinePoints.forEach(point => observer.observe(point));

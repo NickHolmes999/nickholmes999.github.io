@@ -1,108 +1,19 @@
+/* ========================= */
+/* 1) ALL YOUR UNCHANGED CODE */
+/* ========================= */
+
+/* Global reset/rules you had */
 body {
   padding: 0;
   margin: 0;
 }
-nav ul li a {
-  color: #fff;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  padding: 10px; /* Add padding to create space for the background color */
-  border-radius: 5px; /* Add border-radius to make the corners rounded */
-}
-
-nav ul li a:hover {
-  color: #1e90ff; /* Subtle hover effect color */
-  background-color: cyan; /* Add a background color on hover */
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #070707;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* added box-shadow to create separation */
-}
-
-@media screen and (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        text-align: left;
-    }
-}
 
 /* Smooth Scrolling */
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
-
-nav ul {
-  display: flex;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-nav li {
-  margin-right: 20px;
-   padding: 15px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-nav li:last-child {
-  margin-right: 0;
-   padding: 15px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-nav h1 {
-  text-align: center;
-  padding: 10px 20px;
-  font-weight: bold;
-  font-size: 38px;
-  margin: 55px;
-  margin-left: 2px;
-  color: rgba(5, 171, 231, 0.97);
-  font-family: 'Brush Script MT', cursive;
-  display: inline-block;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px rgba(5, 171, 231, 0.97);}
-
-
-nav a {
-  display: block;
-  padding: 10px;
-  color: #333;
-  text-decoration: none;
-  font-size: 30px;
-  font-weight: bold;
-  transition: all 0.2s ease-in-out;
-  font-family: 'Brush Script MT', cursive;
-}
-
-
-nav a:hover {
-  color: #ff0000;
-  background-color: #333;
-  transition: all 0.2s ease-in-out;
-  transform: scale(1.5);
-  box-shadow: 0 0 500rem rgba(0, 0, 0, 1.2);
-  z-index: 1;
-  font-weight: bold;
-}
-
-nav a.active {
-  color: rgba(0, 248, 214, 0.97);
-  background-color: #333;
-  cursor: default;
-}
-
+/* Services Section (unchanged) */
 #services {
   background-color: #1c1b1b;
   padding: 80px 20px;
@@ -142,14 +53,14 @@ nav a.active {
 
 .service-container {
   margin-bottom: 20px;
-  overflow: hidden; /* Hide the part of the bar that will animate */
+  overflow: hidden;
 }
 
 .service-bar {
   position: relative;
   padding: 10px;
   margin-bottom: 20px;
-  background: rgba(5, 171, 231, 0.97);;
+  background: rgba(5, 171, 231, 0.97);
   overflow: hidden;
 }
 
@@ -163,12 +74,13 @@ nav a.active {
   z-index: 1;
   transition: width 0.5s ease-out;
 }
+
 .proficiency-note {
-  color: grey; /* Set the color to grey */
-  font-size: 0.8em; /* Set a smaller font size */
+  color: grey;
+  font-size: 0.8em;
   margin-top: 0;
-  margin-bottom: 20px; /* Add some space below the note */
-  text-align: center; /* Center the text if desired */
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .service-icon {
@@ -179,8 +91,8 @@ nav a.active {
 .service-text {
   padding: 10px;
   color: white;
-  z-index: 2; /* This will place the service text above the filled bar */
-  position: relative; /* This ensures that z-index is applied */
+  z-index: 2;
+  position: relative;
 }
 
 header {
@@ -193,32 +105,26 @@ header h1 {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 3em;
-    text-shadow: 0 0 10px rgba(5, 171, 231, 0.97);
+  text-shadow: 0 0 10px rgba(5, 171, 231, 0.97);
   height: 17.5vh;
 }
 
-
-
 #banner h1 {
-    background-color: black;
-    display: inline-block;
-    padding: 10px 20px;
-    color: white;
-    word-wrap: break-word;
+  background-color: black;
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  word-wrap: break-word;
 }
+
 #banner p {
   background-color: black;
   display: inline-block;
   padding: 10px 20px;
   color: lightgray;
-
-}
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
+/* Search form (unchanged) */
 #search-form {
   display: flex;
   align-items: center;
@@ -245,6 +151,7 @@ nav {
   font-size: 16px;
   font-family: Arial;
 }
+
 #search-results {
   position: absolute;
   top: 100%;
@@ -254,79 +161,185 @@ nav {
   border: 1px solid black;
   padding: 0px;
 }
-/* Game section styles */
-        #games {
-            max-width: 800px;
-            margin: 40px auto 20px;
-            padding: 20px;
-            text-align: center;
-        }
 
-        .game-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
+/* Game section styles (unchanged) */
+#games {
+  max-width: 800px;
+  margin: 40px auto 20px;
+  padding: 20px;
+  text-align: center;
+}
 
-        .game-image img {
-            max-width: 150px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            margin-right: 20px;
-        }
+.game-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 
-        .game-details {
-            flex: 1;
-            text-align: left;
-        }
+.game-image img {
+  max-width: 150px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  margin-right: 20px;
+}
 
-        .game-details h3 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #fff;
-        }
+.game-details {
+  flex: 1;
+  text-align: left;
+}
 
-        .game-details p {
-            color: #bbb;
-            margin-bottom: 10px;
-        }
+.game-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
 
-        .game-details a {
-            color: #5DADE2;
-            text-decoration: none;
-            border: 1px solid #5DADE2;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-        }
+.game-details p {
+  color: #bbb;
+  margin-bottom: 10px;
+}
 
-        .game-details a:hover {
-            background-color: #5DADE2;
-            color: #1a1818;
-        }
+.game-details a {
+  color: #5DADE2;
+  text-decoration: none;
+  border: 1px solid #5DADE2;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
 
-/* Add a blinking cursor to the typing text */
+.game-details a:hover {
+  background-color: #5DADE2;
+  color: #1a1818;
+}
+
+/* Typing text cursor (unchanged) */
 #typing-text::after {
-    content: '|';
-    margin-left: 2px;
-    opacity: 1;
-    animation: blink 1s infinite;
+  content: '|';
+  margin-left: 2px;
+  opacity: 1;
+  animation: blink 1s infinite;
 }
 
-/* Cursor blink effect */
 @keyframes blink {
-    0%, 50% { opacity: 1; }
-    50.01%, 100% { opacity: 0; }
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
 }
 
-/* Ensure that transitions don't affect the cursor blinking */
 #typing-text {
-    display: inline-block;
-    word-wrap: break-word;
+  display: inline-block;
+  word-wrap: break-word;
 }
 
 .fade-in {
   opacity: 0;
   transition: opacity 1s ease-out;
+}
+
+.fade-in.show {
+  opacity: 1;
+}
+
+/* ======================== */
+/* 2) NEW NAV EXPANSION CODE */
+/* ======================== */
+
+/*
+   This transforms the entire nav bar into a single pill
+   until hovered, at which point it expands horizontally
+   to reveal each item in its own smaller pill.
+
+   1) The nav is initially "collapsed" (width ~70px).
+   2) On :hover, it expands (width ~600px).
+   3) Each <li> is scaled to 0 and invisible until :hover,
+      then transitions to scale(1) with full opacity.
+*/
+
+/* The nav container is one large pill at rest */
+nav {
+  position: relative;
+  width: 70px;               /* Collapsed width */
+  height: 60px;              /* Adjust as needed */
+  background-color: #101010; /* Modern dark background */
+  border-radius: 9999px;     /* Maximum pill shape */
+  transition: width 0.5s ease;
+  margin: 10px auto;         /* Center horizontally if desired */
+  overflow: hidden;          /* Hide text until expanded */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;           /* Indicates it's interactive */
+}
+
+/* When hovering over the nav, expand the pill horizontally */
+nav:hover {
+  width: 600px; /* Expanded width; adjust to fit all links */
+}
+
+/* The UL inside the nav takes up the full container space */
+nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  list-style: none;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* By default, each LI is invisible and scaled down */
+nav li {
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  white-space: nowrap; /* Keep text on one line */
+}
+
+/* On nav:hover, each LI fades in and scales up */
+nav:hover li {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* The anchor styling for each link pill */
+nav a {
+  display: inline-block;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: #1f1f1f;
+  padding: 10px 20px;
+  border-radius: 30px;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for each link pill: slight scale + color shift */
+nav a:hover {
+  background-color: #00b0ff;
+  transform: scale(1.08);
+}
+
+/* Active link styling (for current page) */
+nav a.active {
+  background-color: #333;
+  color: rgba(0, 248, 214, 0.97);
+  cursor: default;
+}
+
+/* Responsive behavior for very small screens */
+@media screen and (max-width: 768px) {
+  nav {
+    width: 50px;       /* Even smaller collapsed width if you want */
+  }
+
+  nav:hover {
+    width: 400px;      /* Adjust for smaller screens */
+  }
+
+  nav a {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
 }
