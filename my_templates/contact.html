@@ -1,168 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Contact Me</title>
-	<link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <title>Contact Me</title>
+  <link rel="stylesheet" href="../css/style.css">
   <style>
     body {
-  background-color: #1c1b1b;
-  color: #fff;
-}
+      background-color: #1c1b1b;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
 
+    /* Basic nav styling (if not already in style.css) */
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    nav li {
+      margin-right: 20px;
+    }
+    nav li:last-child {
+      margin-right: 0;
+    }
+    nav a.active {
+      text-decoration: underline;
+    }
 
-  form {
-    max-width: 500px;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
+    /* Contact Info Section */
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 30vh;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 50px;
+      text-align: center;
+    }
+    .contact-info h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: rgba(5, 171, 231, 0.97);
+    }
+    .contact-info ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      color: rgba(5, 171, 231, 0.97);
+    }
+    .contact-info li {
+      margin-bottom: 10px;
+      border: 1px solid rgba(5, 171, 231, 0.97);
+      padding: 10px;
+      border-radius: 5px;
+    }
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    color: black;
-  }
+    /* Google Form Embed Container */
+    #contact-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: 0 auto;
+      padding: 20px;
+      max-width: 900px; /* Adjust as desired */
+    }
 
-  label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: black;
-  }
+    /* iFrame styling */
+    .google-form-iframe {
+      width: 640px;     /* As given by Google Forms snippet */
+      height: 991px;    /* As given by Google Forms snippet */
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-bottom: 40px;
+      background-color: #fff;
+    }
 
-  input[type="text"],
-  input[type="email"],
-  textarea {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-    background-color: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    resize: none;
-  }
-
-  button[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    color: #000000;
-    background-color: rgba(5, 171, 231, 0.97);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  button[type="submit"]:hover {
-    background-color: rgba(5, 171, 231, 0.97);
-  }
-
-  #contact {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 30vh;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-  margin-top: 50px; /* Add this line */
-}
-
-.contact-info h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-  text-align: center;
-  color: rgba(5, 171, 231, 0.97);
-}
-
-.contact-info ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  color: rgba(5, 171, 231, 0.97);
-}
-
-.contact-info li {
-  margin-bottom: 10px;
-  border: 1px solid rgba(5, 171, 231, 0.97);
-			padding: 10px;
-			border-radius: 5px;
-}
-
-	</style>
+    .form-note {
+      color: #ccc;
+      font-size: 0.9rem;
+      text-align: center;
+      max-width: 640px;
+    }
+  </style>
 </head>
 <body>
-	<header>
-		<nav>
+  <header>
+    <nav>
       <h1></h1>
-			<ul>
-				<li><a href="index.html">Home</a></li>
-				<li><a href="about.html">About</a></li>
-				<li><a href="projects.html">Projects</a></li>
-				<li><a href="contact.html"class = "active">Contact</a></li>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
         <li><a href="certificates.html">Certificates</a></li>
-        <li><a href="blog.html" >Blog</a></li> <!-- Added Blog to Nav -->
-			</ul>
-      <p>As GitHub only supports static websites, the message function only works when i call the func on my side. </p>
-		</nav>
-	</header>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+      <p>As GitHub only supports static websites, form submissions are handled via Google Forms.</p>
+    </nav>
+  </header>
 
+  <!-- Contact Info Section -->
   <section class="contact-info">
     <h2>Contact Information</h2>
     <ul>
-      <li>LinkedIn: <a href="https://www.linkedin.com/in/nick-holmes-90264a217/">https://www.linkedin.com/in/nick-holmes-90264a217/</a></li>
-      <li>GitHub: <a href="https://github.com/NickHolmes999">https://github.com/NickHolmes999</a></li>
-      <li>Youtube: <a href="https://www.youtube.com/channel/UCaCdd9lem_JPF_7-4c-qVnw">https://www.youtube.com/channel/UCaCdd9lem_JPF_7-4c-qVnw</a></li>
-      <li>Programming Email: <span id="programming-email" onclick="copyToClipboard('programming-email')">learncodewithnick@gmail.com</span></li>
-      <li>Personal Email: <span id="personal-email" onclick="copyToClipboard('personal-email')">NickHolmes2003@gmail.com</span></li>
-      <li>Work Email: <span id="work-email" onclick="copyToClipboard('work-email')">nick.holmes@jos-group.com</span></li>
+      <li>
+        LinkedIn:
+        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">
+          https://www.linkedin.com/in/nick-holmes-90264a217/
+        </a>
+      </li>
+      <li>
+        GitHub:
+        <a href="https://github.com/NickHolmes999" target="_blank">
+          https://github.com/NickHolmes999
+        </a>
+      </li>
+      <li>
+        YouTube:
+        <a href="https://www.youtube.com/channel/UCaCdd9lem_JPF_7-4c-qVnw" target="_blank">
+          https://www.youtube.com/channel/UCaCdd9lem_JPF_7-4c-qVnw
+        </a>
+      </li>
+      <li>
+        Programming Email:
+        <span id="programming-email" onclick="copyToClipboard('programming-email')">
+          learncodewithnick@gmail.com
+        </span>
+      </li>
+      <li>
+        Personal Email:
+        <span id="personal-email" onclick="copyToClipboard('personal-email')">
+          NickHolmes2003@gmail.com
+        </span>
+      </li>
+      <li>
+        Work Email:
+        <span id="work-email" onclick="copyToClipboard('work-email')">
+          nick.holmes@jos-group.com
+        </span>
+      </li>
       <li>Phone: 301-500-5152</li>
     </ul>
   </section>
 
+  <!-- Google Form Embed Section -->
+  <section id="contact-container">
+    <!-- Direct Google Form embed from your snippet, with the recommended width/height -->
+    <iframe
+      src="https://docs.google.com/forms/d/e/1FAIpQLSfF6Cbf5BsnGVius7ke0aaIwBz9mcN--COnakDLOSAc6AWemw/viewform?embedded=true"
+      width="640"
+      height="991"
+      frameborder="0"
+      marginheight="0"
+      marginwidth="0"
+      class="google-form-iframe">
+      Loading…
+    </iframe>
 
-	<section id="contact">
-  <form method="post" action="http://localhost:3000/send">
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
-    </div>
+    <p class="form-note">
+      Please fill out this form, and I'll get back to you soon!
+    </p>
+  </section>
 
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-    </div>
+  <script>
+    function copyToClipboard(elementId) {
+      var textToCopy = document.getElementById(elementId).textContent;
+      var textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("Copy");
+      textArea.remove();
+      alert("Copied: " + textToCopy);
+    }
+  </script>
 
-    <div class="form-group">
-      <label for="subject">Subject:</label>
-      <input type="text" id="subject" name="subject" required>
-    </div>
-
-    <div class="form-group">
-      <label for="message">Message:</label>
-      <textarea id="message" name="message" required></textarea>
-    </div>
-
-    <button type="submit">Send Message</button>
-  </form>
-</section>
-
-
-
-	<script src="../js/script.js"></script>
+  <script src="../js/script.js"></script> <!-- Any additional site-wide JS -->
 </body>
 </html>
-
