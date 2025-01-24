@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>About Me</title>
-  <link rel="stylesheet" href="../css/style.css"> <!-- In case you have global styles -->
+  <link rel="stylesheet" href="../css/style.css"> <!-- If you have global styles -->
 
   <style>
     /* ===== Base Body & Global Styles ===== */
@@ -30,13 +30,9 @@
       color: #00d9ff;
     }
 
-    /* ===== Navigation ===== */
-    header {
-      /* Possibly overridden by style.css if you have a custom nav. */
-    }
-    nav {
-      /* Possibly overridden by style.css */
-    }
+    /* ===== Navigation (if not overridden in style.css) ===== */
+    header {}
+
     nav ul {
       list-style: none;
       margin: 0;
@@ -94,11 +90,17 @@
       transform: scale(1.05);
     }
 
-    #about a {
+    /* ===== Skills Section ===== */
+    .skills-heading {
+      text-align: center;
+      margin: 40px auto 20px;
       color: rgba(5, 171, 231, 0.97);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 2rem;
+      text-shadow: 0 0 4px rgba(5, 171, 231, 0.6);
     }
 
-    /* ===== Skills Section ===== */
     .skills {
       display: flex;
       flex-wrap: wrap;
@@ -136,14 +138,12 @@
       font-size: 15px;
       line-height: 1.4;
     }
-
-    /* Sub-list for libraries */
     .library-list {
       margin-left: 20px;
       font-size: 14px;
     }
 
-    /* Skill-box hover effect */
+    /* Hover effect */
     .skill-box:hover {
       transform: scale(1.05);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
@@ -170,15 +170,15 @@
     .timeline {
       position: relative;
       min-height: 3000px;
-      padding-top: 100px; /* Added padding to push the first item down */
+      padding-top: 100px;
     }
 
     .line {
       position: absolute;
       width: 6px;
-      height: calc(100% - 100px); /* Matches the timeline's padding-top */
+      height: calc(100% - 100px);
       background-color: rgba(5, 171, 231, 0.97);
-      top: 100px; /* Start below the padded area */
+      top: 100px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1;
@@ -188,7 +188,7 @@
 
     .timeline-line {
       position: absolute;
-      top: 100px; /* Same offset so the year labels match the line start */
+      top: 100px;
       left: 50%;
       transform: translateX(-50%);
       width: 2px;
@@ -206,7 +206,7 @@
       border-radius: 4px;
     }
     .year-label-top {
-      top: 0; /* It's at the top of the timeline-line, which is offset by 100px inside the container */
+      top: 0;
       transform: translate(-50%, -110%);
     }
     .year-label-bottom {
@@ -220,13 +220,11 @@
       width: 100%;
       height: auto;
       left: 0;
-      /* Instead of top: var(--position), add 100px offset for the timeline's padding */
       top: calc(var(--position) + 100px);
       transform: translateY(-50%);
       display: flex;
       justify-content: flex-start;
     }
-    /* Even points align on the right, odd on the left */
     .point:nth-child(even) {
       justify-content: flex-end;
     }
@@ -243,7 +241,6 @@
       transition: transform 0.3s ease;
       position: relative;
     }
-
     .point .content h4 {
       margin: 0 0 8px;
       font-size: 1.2rem;
@@ -257,7 +254,6 @@
       font-weight: 600;
       color: #333;
     }
-
     .point .content:hover {
       transform: translateX(5px);
     }
@@ -310,7 +306,6 @@
     .preview-container:hover .preview-tooltip {
       display: block;
     }
-
     .preview-tooltip::after {
       content: '';
       position: absolute;
@@ -350,7 +345,7 @@
       display: block;
     }
 
-    /* Utility class for images inside detail sections */
+    /* Utility class for images in detail sections */
     .detail-image {
       max-width: 100%;
       height: auto;
@@ -358,9 +353,9 @@
       margin: 10px 0;
     }
 
-    /* ===== Footer Styles (matching the other page) ===== */
+    /* ===== Footer Styles ===== */
     footer {
-      background-color: #1f1f1f; /* Slightly different dark shade */
+      background-color: #1f1f1f;
       color: #999;
       text-align: center;
       padding: 20px;
@@ -399,6 +394,7 @@
     </nav>
   </header>
 
+  <!-- About Section -->
   <section id="about">
     <img src="../img/Nick.jpeg" alt="Profile Picture">
     <p>
@@ -428,11 +424,10 @@
         <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">^My LinkedIn^</a>
       </p>
     </div>
-
-    <p>My technical repertoire includes a diverse range of skills such as:</p>
   </section>
 
-  <!-- ===== Skills Boxes ===== -->
+  <!-- Technical Expertise Section -->
+  <h2 class="skills-heading">Technical Expertise</h2>
   <section class="skills">
     <div class="skill-box">
       <h3>SQL</h3>
@@ -450,7 +445,6 @@
         <li>Data Manipulation</li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>Python</h3>
       <ul>
@@ -461,7 +455,8 @@
         <li>Games</li>
         <li>Visualization</li>
         <li>Automation</li>
-        <li>Major Libraries:
+        <li>
+          Major Libraries:
           <ul class="library-list">
             <li>Pandas, Numpy, Matplotlib, Seaborn</li>
             <li>Scikit-Learn, TensorFlow, PyTorch</li>
@@ -471,7 +466,6 @@
         </li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>HTML</h3>
       <ul>
@@ -482,7 +476,6 @@
         <li>Responsive Design</li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>Java</h3>
       <ul>
@@ -493,7 +486,6 @@
         <li>Documentation & Comments</li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>Excel</h3>
       <ul>
@@ -504,7 +496,6 @@
         <li>Power Query & Power Pivot</li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>Access</h3>
       <ul>
@@ -515,7 +506,6 @@
         <li>Relationships</li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>Git/Github</h3>
       <ul>
@@ -525,7 +515,6 @@
         <li>Proper Documentation</li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>Artificial Intelligence</h3>
       <ul>
@@ -536,7 +525,6 @@
         <li>Azure Integration</li>
       </ul>
     </div>
-
     <div class="skill-box">
       <h3>Data Analytics</h3>
       <ul>
@@ -546,8 +534,7 @@
         <li>Predictive Analytics</li>
       </ul>
     </div>
-
-    <div class="skill-box" id="software-services">
+    <div class="skill-box">
       <h3>Software/Services</h3>
       <ul>
         <li>SkillsNetwork (Lab Creation)</li>
@@ -560,18 +547,17 @@
     </div>
   </section>
 
-  <!-- ===== Timeline ===== -->
+  <!-- Timeline -->
   <div class="timeline-container">
     <h2>My Tech Journey</h2>
     <div class="timeline">
       <div class="line"></div>
-
       <div class="timeline-line">
         <span class="year-label-top">2016</span>
         <span class="year-label-bottom">Present</span>
       </div>
 
-      <!-- Point 1: Started Coding -->
+      <!-- 1. Started Coding -->
       <div class="point" style="--position:100px">
         <div class="content coding">
           <h4>Started Coding</h4>
@@ -581,14 +567,14 @@
             <div class="preview-tooltip">
               <a href="#python-detail" class="preview-link">
                 <img src="../img/python_preview.jpg" alt="Python Project Preview">
-                <span class="preview-text">Click to learn more about my experience</span>
+                <span class="preview-text">Click to learn more</span>
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Point 2: C++ and OOP -->
+      <!-- 2. C++ and OOP -->
       <div class="point" style="--position:625px">
         <div class="content internship">
           <h4>C++ and OOP</h4>
@@ -598,23 +584,6 @@
             <div class="preview-tooltip">
               <a href="#cpp-detail">
                 <img src="../img/cpp_preview.jpg" alt="C++ Project Preview">
-                <span class="preview-text">Click to learn more about my experience</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Point 3: Advanced Python -->
-      <div class="point" style="--position:1025px">
-        <div class="content internship">
-          <h4>Advanced Python</h4>
-          <span>August, 2022</span>
-          <div class="preview-container">
-            <p>Explored decorators, testing, and web frameworks in depth.</p>
-            <div class="preview-tooltip">
-              <a href="#advanced-python-detail">
-                <img src="../img/advanced_python_preview.jpg" alt="Advanced Python Preview">
                 <span class="preview-text">Click to learn more</span>
               </a>
             </div>
@@ -622,7 +591,7 @@
         </div>
       </div>
 
-      <!-- Point 4: Began Daily Learning -->
+      <!-- 3. Began Daily Learning -->
       <div class="point" style="--position:900px">
         <div class="content promotion">
           <h4>Began Daily Learning</h4>
@@ -639,7 +608,24 @@
         </div>
       </div>
 
-      <!-- Point 5: Began Working With AI -->
+      <!-- 4. Advanced Python -->
+      <div class="point" style="--position:1025px">
+        <div class="content internship">
+          <h4>Advanced Python</h4>
+          <span>August, 2022</span>
+          <div class="preview-container">
+            <p>Explored decorators, testing, and web frameworks in depth.</p>
+            <div class="preview-tooltip">
+              <a href="#advanced-python-detail">
+                <img src="../img/advanced_python_preview.jpg" alt="Advanced Python Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Began Working With AI -->
       <div class="point" style="--position:1250px">
         <div class="content promotion">
           <h4>Began Working With AI</h4>
@@ -656,7 +642,7 @@
         </div>
       </div>
 
-      <!-- Point 6: First Python Dev Job -->
+      <!-- 6. First Python Developer Job -->
       <div class="point" style="--position:1450px">
         <div class="content job">
           <h4>First Python Developer Job</h4>
@@ -673,7 +659,7 @@
         </div>
       </div>
 
-      <!-- Point 7: Snowflake -->
+      <!-- 7. Snowflake -->
       <div class="point" style="--position:1575px">
         <div class="content internship">
           <h4>Snowflake</h4>
@@ -690,7 +676,7 @@
         </div>
       </div>
 
-      <!-- Point 8: First Government Contract -->
+      <!-- 8. First Government Contract -->
       <div class="point" style="--position:1780px">
         <div class="content job">
           <h4>First Government Contract</h4>
@@ -707,8 +693,25 @@
         </div>
       </div>
 
-      <!-- Point 9: Microsoft AutoML -->
+      <!-- 9. AI Chatbot for Company Website (March 2024) -->
       <div class="point" style="--position:1950px">
+        <div class="content promotion">
+          <h4>AI Chatbot for Company Website</h4>
+          <span>March, 2024</span>
+          <div class="preview-container">
+            <p>Developed and trained an AI chatbot on company data, enabling customers to submit inquiries and learn about our services, whether browsing on desktop or mobile.</p>
+            <div class="preview-tooltip">
+              <a href="#chatbot-detail">
+                <img src="../img/ai_chatbot_preview.jpg" alt="AI Chatbot Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Microsoft AutoML & Databricks -->
+      <div class="point" style="--position:2150px">
         <div class="content promotion">
           <h4>Microsoft AutoML & Databricks</h4>
           <span>Apr 9, 2024</span>
@@ -723,11 +726,27 @@
           </div>
         </div>
       </div>
+
+      <!-- 11. IMLS Contract for Museum/Library Data (November 2024) -->
+      <div class="point" style="--position:2600px">
+        <div class="content job">
+          <h4>IMLS Contract: National Museum & Library Data Analysis</h4>
+          <span>November, 2024</span>
+          <div class="preview-container">
+            <p>Partnered with IMLS to leverage AWS for analyzing national museum and library data, building robust AI models while adhering to stringent PII and compliance standards.</p>
+            <div class="preview-tooltip">
+              <a href="#imls-contract-detail">
+                <img src="../img/aws_data_preview.jpg" alt="AWS Data Analysis Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ===== Timeline Details ===== -->
-  <!-- Python Detail -->
+  <!-- Timeline Details -->
   <div id="python-detail" class="timeline-detail">
     <h3>Python: The Beginning of My Coding Journey</h3>
     <p>
@@ -737,7 +756,6 @@
     </p>
   </div>
 
-  <!-- Gov Contract Detail -->
   <div id="gov-contract-detail" class="timeline-detail">
     <h3>First Government Contract: Teaching AI/ML to CMS Users</h3>
     <p>
@@ -748,7 +766,6 @@
     </p>
   </div>
 
-  <!-- C++ Detail -->
   <div id="cpp-detail" class="timeline-detail">
     <h3>C++ and Object-Oriented Concepts</h3>
     <p>
@@ -758,17 +775,6 @@
     </p>
   </div>
 
-  <!-- Advanced Python Detail -->
-  <div id="advanced-python-detail" class="timeline-detail">
-    <h3>Advanced Python: Elevating My Coding Skills</h3>
-    <p>
-      By August 2022, I delved into advanced Python—mastering decorators, rigorous testing,
-      and various web frameworks. This deep dive expanded my capabilities in machine learning,
-      data analysis, and code optimization.
-    </p>
-  </div>
-
-  <!-- Daily Work Detail -->
   <div id="daily-work-detail" class="timeline-detail">
     <h3>Dedicated Daily Learning: A Self-Taught Journey</h3>
     <p>
@@ -778,27 +784,15 @@
     </p>
   </div>
 
-  <!-- Snowflake Detail -->
-  <div id="snowflake-detail" class="timeline-detail">
-    <h3>Snowflake: A New Chapter in Data Engineering</h3>
+  <div id="advanced-python-detail" class="timeline-detail">
+    <h3>Advanced Python: Elevating My Coding Skills</h3>
     <p>
-      In August 2023, I embraced Snowflake—a cloud data platform redefining data warehousing
-      and analytics. Its unique architecture empowered me to deploy solutions leveraging
-      scalable cloud performance for complex data challenges.
+      By August 2022, I delved into advanced Python—mastering decorators, rigorous testing,
+      and various web frameworks. This deep dive expanded my capabilities in machine learning,
+      data analysis, and code optimization.
     </p>
   </div>
 
-  <!-- First Job Detail -->
-  <div id="first-job-detail" class="timeline-detail">
-    <h3>My First Role as a Python Developer</h3>
-    <p>
-      On April 15, 2023, I joined JOS Group, where I tackled complex data-driven tasks and
-      collaborated with a talented team to build cutting-edge front-end solutions.
-      It was a pivotal leap in my professional journey.
-    </p>
-  </div>
-
-  <!-- AI Work Detail -->
   <div id="ai-work-detail" class="timeline-detail">
     <h3>AI and Machine Learning: The Future of Innovation</h3>
     <p>
@@ -808,7 +802,47 @@
     </p>
   </div>
 
-  <!-- FOOTER (same as in the other page) -->
+  <div id="first-job-detail" class="timeline-detail">
+    <h3>My First Role as a Python Developer</h3>
+    <p>
+      On April 15, 2023, I joined JOS Group, where I tackled complex data-driven tasks and
+      collaborated with a talented team to build cutting-edge front-end solutions.
+      It was a pivotal leap in my professional journey.
+    </p>
+  </div>
+
+  <div id="snowflake-detail" class="timeline-detail">
+    <h3>Snowflake: A New Chapter in Data Engineering</h3>
+    <p>
+      In August 2023, I embraced Snowflake—a cloud data platform redefining data warehousing
+      and analytics. Its unique architecture empowered me to deploy solutions leveraging
+      scalable cloud performance for complex data challenges.
+    </p>
+  </div>
+
+  <!-- NEW TIMELINE DETAILS -->
+  <div id="chatbot-detail" class="timeline-detail">
+    <h3>AI Chatbot for Company Website</h3>
+    <p>
+      In March 2024, I architected an AI chatbot solution for our company website. Leveraging
+      internal data, the chatbot provides instant responses, addresses user inquiries, and
+      educates visitors about the company's offerings. Deployed across both desktop and mobile
+      platforms, this chatbot streamlines customer interactions and showcases our technical
+      capabilities.
+    </p>
+  </div>
+
+  <div id="imls-contract-detail" class="timeline-detail">
+    <h3>IMLS Contract: National Museum & Library Data Analysis</h3>
+    <p>
+      By November 2024, I began collaborating with the Institute of Museum and Library Services
+      (IMLS) to harness AWS for analyzing vast datasets spanning museums and libraries nationwide.
+      In this role, I design and train AI models that process high-volume data while adhering to
+      rigorous PII and compliance requirements. This work accelerates data-driven insights and
+      informs strategic decisions within the museum and library sectors.
+    </p>
+  </div>
+
   <footer>
     <div class="footer-content">
       <p>
@@ -825,7 +859,7 @@
     </div>
   </footer>
 
-  <!-- Typing Text Effect (JS) -->
+  <!-- Typing Text Effect JS -->
   <script>
     const typingText = document.getElementById('typing-text');
     const words = ["Full Stack Developer", "Hybrid Database Engineer", "Software Developer"];
@@ -852,7 +886,9 @@
         setTimeout(erase, 50);
       } else {
         wordIndex++;
-        if (wordIndex >= words.length) wordIndex = 0;
+        if (wordIndex >= words.length) {
+          wordIndex = 0;
+        }
         setTimeout(type, 1000);
       }
     }
@@ -861,7 +897,6 @@
       setTimeout(type, 1000);
     });
   </script>
-
   <script src="script.js"></script> <!-- If you have additional JS -->
 </body>
 </html>
