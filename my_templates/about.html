@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>About Me</title>
   <link rel="stylesheet" href="../css/style.css"> <!-- In case you have global styles -->
+
   <style>
     /* ===== Base Body & Global Styles ===== */
     body {
@@ -31,10 +32,10 @@
 
     /* ===== Navigation ===== */
     header {
-      /* If you’re using the “pill” nav or a custom nav from style.css, keep that. */
+      /* Possibly overridden by style.css if you have a custom nav. */
     }
     nav {
-      /* Possibly overridden by your style.css */
+      /* Possibly overridden by style.css */
     }
     nav ul {
       list-style: none;
@@ -356,6 +357,31 @@
       border-radius: 5px;
       margin: 10px 0;
     }
+
+    /* ===== Footer Styles (matching the other page) ===== */
+    footer {
+      background-color: #1f1f1f; /* Slightly different dark shade */
+      color: #999;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    footer .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    footer a {
+      color: #999;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    .footer-note {
+      font-size: 0.85rem;
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
@@ -398,7 +424,9 @@
 
     <div>
       <img src="../img/qr-code.png" alt="My LinkedIn QR Code" style="max-width:120px;">
-      <p><a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">^My LinkedIn^</a></p>
+      <p>
+        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">^My LinkedIn^</a>
+      </p>
     </div>
 
     <p>My technical repertoire includes a diverse range of skills such as:</p>
@@ -779,6 +807,23 @@
       creativity drives novel solutions to complex industry challenges.
     </p>
   </div>
+
+  <!-- FOOTER (same as in the other page) -->
+  <footer>
+    <div class="footer-content">
+      <p>
+        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/">LinkedIn</a> |
+        <a href="https://github.com/NickHolmes999">GitHub</a> |
+        <a href="../img/NickHolmesResumeApril2024.pdf" download>Resume</a>
+      </p>
+      <p class="footer-note">
+        © 2025 Nick Holmes - All rights reserved
+      </p>
+      <p class="footer-note">
+        Built by hand using HTML, CSS, JavaScript, and some Python.
+      </p>
+    </div>
+  </footer>
 
   <!-- Typing Text Effect (JS) -->
   <script>

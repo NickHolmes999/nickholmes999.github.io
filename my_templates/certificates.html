@@ -15,9 +15,21 @@
       font-family: Arial, sans-serif;
     }
 
-    /* HEADER / NAV (from your style.css, presumably) */
-    header {
-      /* If you're using the "pill" nav, it might be styled in style.css */
+    /* NAV styling might come from style.css. Just ensuring no collisions here. */
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    nav li {
+      margin-right: 20px;
+    }
+    nav li:last-child {
+      margin-right: 0;
+    }
+    nav a.active {
+      text-decoration: underline;
     }
 
     /* CERTIFICATES HEADING + SUBTEXT */
@@ -26,10 +38,9 @@
       width: 100%;
       text-align: center;
       position: relative;
-      z-index: 2; /* so it's above any background */
+      z-index: 2; /* above any background if needed */
     }
 
-    /* Clean, modern styling for the main heading text */
     .certificates-heading-text {
       font-size: 48px;
       font-weight: bold;
@@ -38,17 +49,14 @@
       display: inline-block;
       position: relative;
       text-shadow: 0 0 6px rgba(5, 171, 231, 0.5);
-      text-decoration: none; /* no underline by default */
+      text-decoration: none;
       transition: color 0.3s ease;
     }
-
-    /* Subtle hover: lighten color slightly, no red */
     .certificates-heading-text:hover {
       color: rgba(5, 200, 255, 0.97);
-      text-decoration: underline; /* optional if you want an underline on hover */
+      text-decoration: underline;
     }
 
-    /* A simpler, more subtle line under the heading */
     .certificates-heading-line {
       margin: 8px auto 0;
       width: 220px;
@@ -67,7 +75,7 @@
       line-height: 1.5;
     }
 
-    /* SEARCH SECTION (moved below heading + subtext) */
+    /* SEARCH SECTION */
     #search-container {
       margin: 20px auto 40px;
       text-align: center;
@@ -83,12 +91,10 @@
       padding: 10px;
       border-radius: 5px;
     }
-
     #search-form label {
       margin-right: 8px;
       font-size: 16px;
     }
-
     #search-input {
       padding: 10px;
       border: none;
@@ -114,14 +120,12 @@
       transform: translateX(-50%);
       max-width: 400px;
     }
-
     #search-results div {
       color: black;
       padding: 12px 16px;
       text-decoration: none;
       display: block;
     }
-
     #search-results div:hover {
       background-color: #f1f1f1;
     }
@@ -137,7 +141,6 @@
       display: inline-block;
       margin: 10px;
     }
-
     .dropbtn {
       background-color: #333;
       color: #fff;
@@ -156,7 +159,6 @@
       transition: background-color 0.3s, transform 0.3s;
       box-shadow: 0 20px 500px 0 rgba(0, 0, 0, 0.5);
     }
-
     .dropbtn:hover {
       transform: scale(1.2);
     }
@@ -178,7 +180,6 @@
       overflow-y: auto;
       min-width: 200px;
     }
-
     .dropdown-content a {
       display: block;
       padding: 12px;
@@ -193,12 +194,10 @@
       color: #ffffff;
       transition: background-color 0.3s ease, transform 0.3s;
     }
-
     .dropdown-content a:hover {
       background-color: #555;
       transform: scale(1.05);
     }
-
     .dropdown:hover .dropdown-content {
       display: block;
       transform: translateY(0);
@@ -221,8 +220,8 @@
     </nav>
   </header>
 
+  <!-- Heading & Subtext -->
   <section class="certificates">
-    <!-- Certificates Heading -->
     <h2 class="certificates-heading">
       <a href="https://www.linkedin.com/in/nick-holmes-90264a217/details/certifications/"
          class="certificates-heading-text">
@@ -230,8 +229,6 @@
       </a>
     </h2>
     <div class="certificates-heading-line"></div>
-
-    <!-- Subtext -->
     <p class="certificates-subtext">
       Over 450 courses completed and 30 in-depth certifications from industry leaders like Google,
       Amazon, and Microsoft. Some of the important certificates can be clicked to send you to the
@@ -240,7 +237,7 @@
     </p>
   </section>
 
-  <!-- Search Bar (Below heading/subtext, above certificate categories) -->
+  <!-- Search Bar -->
   <section id="search-container">
     <form id="search-form">
       <label for="search-input">Search</label>
@@ -249,26 +246,155 @@
     <div id="search-results"></div>
   </section>
 
-  <!-- Dropdowns for each certificate category -->
+  <!-- All Certificate Categories -->
   <section class="certificates">
+
+    <!-- Python Certificates -->
     <div class="dropdown">
       <button class="dropbtn">Python Certificates</button>
       <div class="dropdown-content">
-        <!-- Python certificate links go here -->
         <a href="#">Advanced Python: Language Features</a>
         <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
-        <!-- etc... -->
+        <a href="#">Building Computer Vision Applications with Python</a>
+        <a href="#">Building Tools with Python</a>
+        <a href="#">Choose the Right Tool for Your Data: Python, R, or SQL</a>
+        <a href="#">Hands-On Generative AI with Multi-Agent LangChain: Building Real-World Applications</a>
+        <a href="#">Hands-On Generative AI: Getting Started with Vector Search</a>
+        <a href="#">Hands-On Introduction: Python</a>
+        <a href="#">Hands-On PyTorch Machine Learning</a>
+        <a href="#">Intermediate Python</a>
+        <a href="#">Intermediate Python for Non-Programmers</a>
+        <a href="#">Introduction to Python</a>
+        <a href="#">Learning Python</a>
+        <a href="#">Machine Learning with Python: Foundations</a>
+        <a href="#">Nail Your Python Interview</a>
+        <a href="#">Python</a>
+        <a href="#">Python 3 Certification Course</a>
+        <a href="#">Python Certification Course</a>
+        <a href="#">Python Core</a>
+        <a href="#">Python Data Structures</a>
+        <a href="#">Python Essential Libraries</a>
+        <a href="#">Python Essential Training</a>
+        <a href="#">Python for Non-Programmers</a>
+        <a href="#">Python Functions for Data Science</a>
+        <a href="#">Python in Excel</a>
+        <a href="#">Python Object-Oriented Programming</a>
+        <a href="#">Python Standard Library Essential Training</a>
+        <a href="#">Python vs. R for Data Science</a>
+        <a href="#">Python For Data Science</a>
+        <a href="#">Python For Finance</a>
+        <a href="#">Programming Fundamentals Certification Course</a>
+        <a href="#">Using Python for Automation</a>
       </div>
     </div>
 
+    <!-- AI Certificates -->
     <div class="dropdown">
       <button class="dropbtn">Artificial Intelligence Certificates</button>
       <div class="dropdown-content">
         <a href="#">AI 2041: Five Visions for Our Future (Book Bite)</a>
-        <!-- etc... -->
+        <a href="#">AI Challenges and Opportunities for Leadership</a>
+        <a href="#">AI Engineering Essentials: Navigating the Tech Revolution</a>
+        <a href="#">AI Fundamentals for Data Professionals</a>
+        <a href="#">AI in Connected Products (AIOT)</a>
+        <a href="#">AI Pair Programming with GitHub Copilot</a>
+        <a href="#">AI Productivity Hacks to Reimagine Your Workday and Career</a>
+        <a href="#">AI Show: Applied AI - Computer Vision and Optical Character Recognition (OCR)</a>
+        <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
+        <a href="#">AI Show: Building Recommender Systems</a>
+        <a href="#">AI Show: Deep Dive into Responsible AI Dashboard and Scorecard</a>
+        <a href="#">AI Show: Easier, Faster Training for your Hugging Face Models</a>
+        <a href="#">AI Show: Intelligent Recommendations</a>
+        <a href="#">AI Show: Medical Imaging with Azure Machine Learning</a>
+        <a href="#">Artificial Intelligence</a>
+        <a href="#">Artificial Intelligence and Business Strategy</a>
+        <a href="#">Artificial Intelligence Artificial Intelligence</a>
+        <a href="#">Artificial Intelligence Foundations: Machine Learning</a>
+        <a href="#">Artificial Intelligence Foundations: Neural Networks</a>
+        <a href="#">Artificial Intelligence Foundations: Neural Networks</a>
+        <a href="#">Artificial Intelligence Foundations: Thinking Machines</a>
+        <a href="#">Azure AI Studio First Look</a>
+        <a href="#">Azure AI Tips for Developers: Securing Your Data</a>
+        <a href="#">Big Data in the Age of AI</a>
+        <a href="#">Building ChatGPT Plugins: How They Work and How to Use Them</a>
+        <a href="#">Building Computer Vision Applications with Python</a>
+        <a href="#">Building Generative AI Skills for Business Professionals</a>
+        <a href="#">Causal AI: A Tech Primer</a>
+        <a href="#">Copilot in Excel: Supercharge Your Productivity</a>
+        <a href="#">Copilot in Outlook: Maximize Your Workday Efficiency</a>
+        <a href="#">Copilot in PowerPoint: From Prompt to Presentation</a>
+        <a href="#">Copilot in Teams: AI-Powered Collaboration</a>
+        <a href="#">Copilot in Word: Create and Refine Documents with AI</a>
+        <a href="#">Crash Course For Python - Issued by Coursera</a>
+        <a href="#">Deep Learning: Getting Started</a>
+        <a href="#">Ethics in the Age of Generative AI</a>
+        <a href="#">Executive Guide to AutoML</a>
+        <a href="#">Exploring AIOps</a>
+        <a href="#">Fine-tuning Your Own GPT Model</a>
+        <a href="#">Function Calling with the OpenAI API</a>
+        <a href="#">Generative AI Approaches to Business Challenges</a>
+        <a href="#">Generative AI for Business Leaders</a>
+        <a href="#">Generative AI for Creative Pros: Opportunities, Issues, and Ethics</a>
+        <a href="#">Generative AI in Cloud Computing: Core Concepts</a>
+        <a href="#">Generative AI Productivity Hacks with Miss Excel</a>
+        <a href="#">Generative AI vs. Traditional AI</a>
+        <a href="#">Generative AI: Working with Large Language Models</a>
+        <a href="#">Getting Hands-on with GPT-4: Tips and Tricks</a>
+        <a href="#">Getting Started with AI and Machine Learning</a>
+        <a href="#">GPT-4 Foundations: Building AI-Powered Apps</a>
+        <a href="#">GPT-4: The New GPT Release and What You Need to Know</a>
+        <a href="#">Hands-On Generative AI with Multi-Agent LangChain: Building Real-World Applications</a>
+        <a href="#">Hands-On Generative AI: Getting Started with Vector Search</a>
+        <a href="#">Hands-On PyTorch Machine Learning</a>
+        <a href="#">How to Boost Your Productivity with AI Tools</a>
+        <a href="#">How to Research and Write Using Generative AI Tools</a>
+        <a href="#">Introduction to Artificial Intelligence</a>
+        <a href="#">Introduction to Generative Adversarial Networks (GANs)</a>
+        <a href="#">Introduction to Large Language Models</a>
+        <a href="#">Introduction to Prompt Engineering for Generative AI</a>
+        <a href="#">IT Basics - Issued by Programming Hub</a>
+        <a href="#">Learning XAI: Explainable Artificial Intelligence</a>
+        <a href="#">LinkedIn AI Academy AI-100: 1 Demystifying AI</a>
+        <a href="#">Machine Learning and AI Foundations: Classification Modeling</a>
+        <a href="#">Machine Learning and AI Foundations: Prediction, Causation, and Statistical Inference</a>
+        <a href="#">Machine Learning and AI Foundations: Recommendations</a>
+        <a href="#">Machine Learning and AI Foundations: Value Estimations</a>
+        <a href="#">Machine Learning Foundations: Linear Algebra</a>
+        <a href="#">Machine Learning Foundations: Statistics</a>
+        <a href="#">Machine Learning with Python: Foundations</a>
+        <a href="#">Magic ToDo: An AI Tool to Make Complex Projects Simpler</a>
+        <a href="#">Microsoft 365 Chat: Get Secure Answers About Your Organization with AI</a>
+        <a href="#">Microsoft 365 Copilot First Look</a>
+        <a href="#">Midjourney: Tips and Techniques for Creating Images</a>
+        <a href="#">Multimodal Prompting with Google's Project Gemini</a>
+        <a href="#">Nano Tips for Using AI in the Job Search with Sho Dewan</a>
+        <a href="#">Nano Tips for Using ChatGPT for Business with Rachel Woods</a>
+        <a href="#">Nano Tips for Using Generative AI Tools for Better Marketing Outcomes with Joanna Yung</a>
+        <a href="#">No-Code AI: Building Your First Model</a>
+        <a href="#">Pair Programming with AI</a>
+        <a href="#">Powerful Custom GPTs You Can Build Right Now</a>
+        <a href="#">Prompt Engineering: How to Talk to the AIs</a>
+        <a href="#">Prompting ChatGPT with Multimodal Techniques</a>
+        <a href="#">RPA, AI, and Cognitive Tech for Leaders</a>
+        <a href="#">Safeguarding AI</a>
+        <a href="#">Software Is Eating Your Car</a>
+        <a href="#">Streamlining Your Work with Microsoft Copilot</a>
+        <a href="#">Supercharge Your Productivity with ChatGPT Plugins</a>
+        <a href="#">Tech For Everyone - Issued by Sololearn</a>
+        <a href="#">Technical Support Fundamentals - Issued by Coursera</a>
+        <a href="#">The Datapreneurs: How People Are Shaping the Future of AI (Book Bite)</a>
+        <a href="#">The Power of Accurate Prompting with Anthropic’s Claude</a>
+        <a href="#">Top 10 Skills for AI Engineer/AI Ops Engineers</a>
+        <a href="#">Top 10 Skills for AI Systems Designers</a>
+        <a href="#">Top 10 Skills for Machine Learning Cloud Architects</a>
+        <a href="#">Top 10 Skills for NLP Specialists</a>
+        <a href="#">Understanding Bias in AI</a>
+        <a href="#">What Is Generative AI?</a>
+        <a href="#">What is Copilot? Get Started with Microsoft's Everyday AI Companion</a>
       </div>
     </div>
 
+    <!-- HTML/CSS/JS Certificates -->
     <div class="dropdown">
       <button class="dropbtn">HTML/CSS/Javascript Certificates</button>
       <div class="dropdown-content">
@@ -279,6 +405,7 @@
       </div>
     </div>
 
+    <!-- SQL Certificates -->
     <div class="dropdown">
       <button class="dropbtn">SQL Certificates</button>
       <div class="dropdown-content">
@@ -291,32 +418,52 @@
       </div>
     </div>
 
+    <!-- Cloud Certificates -->
     <div class="dropdown">
       <button class="dropbtn">Cloud Certificates</button>
       <div class="dropdown-content">
         <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
         <a href="#">Google Cloud Foundations</a>
-        <!-- etc... -->
+        <a href="#">Choosing a Database: PostgreSQL, MySQL, Mongo, and Cloud</a>
+        <a href="#">Learning Cloud Computing: Core Concepts</a>
+        <a href="#">Cloud Architecture: Core Concepts</a>
+        <a href="#">Generative AI in Cloud Computing: Core Concepts</a>
+        <a href="#">Top 10 Skills for Machine Learning Cloud Architects</a>
       </div>
     </div>
 
+    <!-- Software Certificates -->
     <div class="dropdown">
       <button class="dropbtn">Software Certificates</button>
       <div class="dropdown-content">
         <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
-        <!-- etc... -->
+        <a href="#">AI Show: Medical Imaging with Azure Machine Learning</a>
+        <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
+        <a href="#">Azure AI Studio First Look</a>
+        <a href="#">Azure AI Tips for Developers: Securing Your Data</a>
+        <a href="#">Everybody's Introduction to Snowflake</a>
+        <a href="#">Learning SnowflakeDB</a>
       </div>
     </div>
 
+    <!-- Advanced Certificates -->
     <div class="dropdown">
       <button class="dropbtn">Advanced Certificates</button>
       <div class="dropdown-content">
         <a href="https://www.credly.com/badges/0b160894-196e-4d8d-b358-03ac0f7f4881/linked_in_profile">
           AWS Academy Graduate - AWS Academy Cloud Foundations
         </a>
-        <!-- etc... -->
+        <a href="#">Google Share Data Through the Art of Visualization Issuing Organization</a>
+        <a href="#">Google Foundations: Data, Data, Everywhere</a>
+        <a href="#">Google Data Analysis with R Programming</a>
+        <a href="#">Google Prepare Data for Exploration</a>
+        <a href="#">Google Process Data from Dirty to Clean</a>
+        <a href="#">Google Data Analytics Certificate</a>
+        <a href="#">Google Data Analytics Specialization</a>
+        <a href="#">Google Data Analytics Capstone: Complete a Case Study</a>
       </div>
     </div>
+
   </section>
 
   <script src="../js/script.js"></script>
