@@ -1,96 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-      body {
-        background-color: #1a1818;
-      }
-        #categories {
-            margin-top: 50px;
-            text-align: center;
-          color: rgba(5, 171, 231, 0.97);
-        }
-        #categories ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        #categories ul li {
-            display: inline-block;
-            margin: 0 10px;
-        }
-        #categories ul li a {
-            display: block;
-            background-color: rgba(5, 171, 231, 0.97);
-            color: white;
-            text-align: center;
-            font-size: 14px;
-            padding: 15px 30px;
-            text-decoration: none;
-        }
+  <meta charset="UTF-8">
+  <title>Projects</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- If you have a global style, it can be referenced here -->
 
-        #categories ul li:hover {
-          transition: all 0.2s ease-in-out;
-  transform: scale(1.2);
-        }
+  <style>
+    /* ==== Base Body Styles ==== */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1a1818;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
 
-        #categories ul li span {
-            font-size: 14px;
-            font-weight: bold;
-            margin-left: 5px;
-        }
-        #projects {
-            margin-top: 50px;
-            text-align: center;
-        }
-        .project {
-            display: inline-block;
-            margin: 0 10px;
-            text-align: center;
-        }
-        .project img {
-            width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        .project h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-    </style>
+    /* ==== Navigation Bar (could be overridden by your style.css) ==== */
+    nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 10px;
+      background-color: #000;
+    }
+    nav li {
+      margin-right: 20px;
+    }
+    nav li:last-child {
+      margin-right: 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: #fff;
+    }
+    nav a.active {
+      text-decoration: underline;
+    }
+
+    /* ==== Main Container ==== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* ==== Page Heading ==== */
+    .page-heading {
+      text-align: center;
+      margin: 40px 0 20px;
+    }
+    .page-heading h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: rgba(5, 171, 231, 0.97);
+      text-shadow: 0 0 8px rgba(5, 171, 231, 0.5);
+    }
+    .page-heading p {
+      font-size: 1rem;
+      color: #ccc;
+      margin: 0 auto;
+      max-width: 600px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ==== Tabs (Categories) ==== */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      flex-wrap: wrap; /* allows wrapping on smaller screens */
+    }
+    .tab-btn {
+      background-color: rgba(5, 171, 231, 0.97);
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 12px 20px;
+      margin: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s, background-color 0.3s;
+      box-shadow: 0 4px 15px rgba(5, 171, 231, 0.2);
+    }
+    .tab-btn:hover {
+      transform: scale(1.05);
+      background-color: rgba(5, 200, 255, 0.97);
+    }
+    .tab-btn.active {
+      background-color: #00b0ff;
+      transform: scale(1.05);
+    }
+
+    /* ==== Tab Content (Projects) ==== */
+    .tab-content {
+      display: none; /* hidden by default */
+      margin-top: 40px;
+      animation: fadeIn 0.4s ease;
+    }
+    .tab-content.active {
+      display: block; /* show only active category */
+    }
+
+    /* Keyframes for fade-in effect (optional) */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ==== Project Boxes (borrow from your existing game-box style) ==== */
+    .projects-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .project-box {
+      background-color: #2c2c2c;
+      width: 320px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    }
+
+    .project-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .project-content {
+      padding: 15px;
+      text-align: left;
+    }
+    .project-content h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .project-content p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #bbb;
+      margin-bottom: 10px;
+    }
+    .project-link {
+      display: inline-block;
+      color: #5dade2;
+      text-decoration: none;
+      border: 1px solid #5dade2;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+      font-size: 0.9rem;
+      margin-right: 8px; /* space between multiple links */
+      margin-bottom: 5px;
+    }
+    .project-link:hover {
+      background-color: #5dade2;
+      color: #1a1818;
+    }
+
+    /* ==== Footer (if desired) ==== */
+    footer {
+      text-align: center;
+      color: #999;
+      background-color: #1f1f1f;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    footer a {
+      color: #999;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <h1></h1>
-            <ul>
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link">About</a></li>
-                <li><a href="projects.html" class="nav-link active">Projects</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-              <li><a href="certificates.html">Certificates</a></li>
-              <li><a href="blog.html" >Blog</a></li> <!-- Added Blog to Nav -->
-            </ul>
-        </nav>
-    </header>
+  <!-- HEADER / NAV -->
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="projects.html" class="nav-link active">Projects</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <section id="categories">
-        <h2>Categories</h2>
-        <ul>
-            <li><a href="python.html" class="category-link">Python<span>(2)</span></a></li>
-            <li><a href="sql.html" class="category-link">SQL<span>(0)</span></a></li>
-            <li><a href="machine_learning.html" class="category-link">Machine Learning<span>(0)</span></a></li>
-            <li><a href="html.html" class="category-link">HTML<span>(0)</span></a></li>
-            <li><a href="games.html" class="category-link">Games<span>(3)</span></a></li>
-        </ul>
-    </section>
+  <div class="container">
+    <!-- PAGE HEADING -->
+    <div class="page-heading">
+      <h1>My Projects</h1>
+      <p>Explore my personal projects across Python, SQL, Machine Learning, HTML, and Games.</p>
+    </div>
 
+    <!-- CATEGORY TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" data-target="python-tab">Python</button>
+      <button class="tab-btn" data-target="sql-tab">SQL</button>
+      <button class="tab-btn" data-target="ml-tab">Machine Learning</button>
+      <button class="tab-btn" data-target="html-tab">HTML</button>
+      <button class="tab-btn" data-target="games-tab">Games</button>
+    </div>
+
+    <!-- PYTHON TAB CONTENT -->
+    <div id="python-tab" class="tab-content active">
+      <div class="projects-grid">
+        <!-- Example Project #1 -->
+        <div class="project-box">
+          <div class="project-img">
+            <img src="../img/Screen Shot 2023-11-01 at 2.01.12 PM.png" alt="Sudoku Solver" />
+          </div>
+          <div class="project-content">
+            <h3>Sudoku Solver</h3>
+            <p>Uses a backtracking algorithm in Python to solve any Sudoku puzzle efficiently.</p>
+            <a href="https://github.com/NickHolmes999/SudokuSolverBacktracing" class="project-link">GitHub</a>
+          </div>
+        </div>
+
+        <!-- Example Project #2 -->
+        <div class="project-box">
+          <div class="project-img">
+            <img src="../img/Screen Shot 2023-10-31 at 12.01.04 PM.png" alt="Healthcare Data" />
+          </div>
+          <div class="project-content">
+            <h3>Healthcare Data Manipulation</h3>
+            <p>Generating heatmaps, drive-time results, and future predictions with libraries like Pandas and Matplotlib.</p>
+            <a href="https://github.com/NickHolmes999/HealthOpioidStatistics" class="project-link">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL TAB CONTENT -->
+    <div id="sql-tab" class="tab-content">
+      <div class="projects-grid">
+        <!-- Example of no projects yet -->
+        <div class="project-box">
+          <div class="project-content">
+            <h3>SQL Projects Coming Soon</h3>
+            <p>Stay tuned for updates!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MACHINE LEARNING TAB CONTENT -->
+    <div id="ml-tab" class="tab-content">
+      <div class="projects-grid">
+        <div class="project-box">
+          <div class="project-content">
+            <h3>Machine Learning Projects Coming Soon</h3>
+            <p>Stay tuned for advanced ML projects!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HTML TAB CONTENT -->
+    <div id="html-tab" class="tab-content">
+      <div class="projects-grid">
+        <div class="project-box">
+          <div class="project-img">
+            <img src="../img/Screen Shot 2023-11-08 at 10.49.02 AM.png" alt="Portfolio Website" />
+          </div>
+          <div class="project-content">
+            <h3>Portfolio Website</h3>
+            <p>The very site you're viewing—handcrafted with HTML, CSS, and JS.</p>
+            <!-- If you have a link or code, include it -->
+            <a href="#" class="project-link">Live Demo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAMES TAB CONTENT -->
+    <div id="games-tab" class="tab-content">
+      <div class="projects-grid">
+        <!-- Time Warp Trials -->
+        <div class="project-box">
+          <div class="project-img">
+            <img src="../img/Screen Shot 2023-12-06 at 10.18.57 AM.png" alt="Time Warp Trials" />
+          </div>
+          <div class="project-content">
+            <h3>Time Warp Trials</h3>
+            <p>A vortex to a past civilization on the brink. Battle the dark psychic in a twisted race against time.</p>
+            <a href="https://nickholmes999.itch.io/time-warp-trials" class="project-link">Play Now</a>
+            <a href="https://youtu.be/7B5_ljT1T68" class="project-link">Video</a>
+            <a href="https://docs.google.com/document/d/1x7inG0F1QZsjq-WMKtcbn45JmDJ5dQdbhrfXW0Gk3m8" class="project-link">GDD</a>
+          </div>
+        </div>
+
+        <!-- Sudoku Solver (could be repeated here if you consider it a "game") -->
+        <div class="project-box">
+          <div class="project-img">
+            <img src="../img/Screen Shot 2023-11-01 at 2.01.12 PM.png" alt="Sudoku Solver" />
+          </div>
+          <div class="project-content">
+            <h3>Sudoku Solver</h3>
+            <p>Also found under Python—this puzzle solver can be enjoyed like a game or puzzle challenge!</p>
+            <a href="https://github.com/NickHolmes999/SudokuSolverBacktracing" class="project-link">GitHub</a>
+          </div>
+        </div>
+
+        <!-- Escape from Fort Veridian -->
+        <div class="project-box">
+          <div class="project-img">
+            <img src="../img/Screen Shot 2023-12-06 at 10.18.27 AM.png" alt="Escape from Fort Veridian" />
+          </div>
+          <div class="project-content">
+            <h3>Escape from Fort Veridian</h3>
+            <p>A textual odyssey of espionage, cunning, and stealth. Navigate hidden relics and precarious scenarios to break free.</p>
+            <a href="https://nickholmes999.itch.io/escape-fort-veridian-1" class="project-link">Play Now</a>
+            <a href="https://www.youtube.com/watch?v=dKkhTKFVGxE" class="project-link">Video</a>
+            <a href="https://docs.google.com/document/d/1a3jNIeT5dYmtz6iwn3SeUkVYzNIcNQOMM59Dndq6e1c" class="project-link">GDD</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- end .container -->
+
+  <!-- FOOTER (Optional) -->
+  <footer>
+    <div class="footer-content">
+      <p>
+        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/">LinkedIn</a> |
+        <a href="https://github.com/NickHolmes999">GitHub</a> |
+        <a href="../img/NickHolmesResumeApril2024.pdf" download>Resume</a>
+      </p>
+      <p class="footer-note">
+        © 2025 Nick Holmes - All rights reserved
+      </p>
+      <p class="footer-note">
+        Built by hand using HTML, CSS, JavaScript, and some Python.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Minimal Tab Switching Script -->
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove 'active' from all buttons
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        // Hide all content
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Activate this button and the corresponding tab content
+        button.classList.add('active');
+        const targetID = button.getAttribute('data-target');
+        document.getElementById(targetID).classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
-
-
-
-
