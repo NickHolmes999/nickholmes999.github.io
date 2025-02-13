@@ -64,22 +64,62 @@
       margin-top: 0;
       padding: 20px;
       border-radius: 20px;
-      overflow: hidden; /* keeps corners rounded */
+      overflow: hidden;
     }
-
     #banner h1,
     #banner p {
       border-radius: 20px;
-      background-color: rgba(255,255,255,0.95); /* slight transparency */
+      background-color: rgba(255,255,255,0.95);
       padding: 20px;
       color: black;
       margin: 10px 0;
       text-align: center;
     }
-
     /* Typing text in H1 */
     #typing-text {
       font-weight: bold;
+    }
+
+    /* ===== Contact Info Section ===== */
+    #contact-info {
+      max-width: 1100px;
+      margin: 40px auto;
+      text-align: center;
+      padding: 20px;
+    }
+    .contact-info-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+    }
+    .contact-info-container a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #fff;
+    }
+    .contact-info-container a .qr-code {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+    }
+    .resume-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #00bfff;
+      color: #000;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      text-decoration: none;
+    }
+    .resume-button:hover {
+      background-color: #007acc;
+      transform: scale(1.05);
     }
 
     /* ===== Services Section ===== */
@@ -89,25 +129,23 @@
       margin: 40px auto;
       text-align: center;
     }
-
     #services h2 {
-      color: #fff;
+      color: #00bfff;
       font-size: 2rem;
       margin-bottom: 20px;
+      border-bottom: 2px solid #00bfff;
+      padding-bottom: 10px;
     }
-
     .proficiency-note {
       color: #ccc;
       margin-bottom: 30px;
     }
-
     .service-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
     }
-
     .service-bar {
       position: relative;
       padding: 20px;
@@ -123,7 +161,6 @@
       transform: scale(1.03);
       z-index: 1;
     }
-
     .service-bar-fill {
       position: absolute;
       top: 0;
@@ -133,15 +170,13 @@
       background-color: #007bff;
       z-index: 1;
       transition: width 0.5s ease-out;
-      opacity: 0.2; /* Slight transparent overlay to illustrate proficiency */
+      opacity: 0.2;
     }
-
     .service-icon {
       font-size: 2rem;
       margin-bottom: 10px;
       color: #ffffff;
     }
-
     .service-text {
       position: relative;
       z-index: 2;
@@ -159,30 +194,6 @@
       color: #050505;
     }
 
-    /* QR code & resume button near top of services */
-    #services > div {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #services img {
-      display: inline-block;
-      margin: 10px;
-    }
-    #services a button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      background-color: #00bfff;
-      color: #000;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.3s;
-    }
-    #services a button:hover {
-      background-color: #007acc;
-      transform: scale(1.05);
-    }
-
     /* ===== Professional Summary Section ===== */
     #professional-summary {
       max-width: 1100px;
@@ -196,7 +207,9 @@
       text-align: center;
       margin-bottom: 20px;
       font-size: 1.8rem;
-      color: #fff;
+      color: #00bfff;
+      border-bottom: 2px solid #00bfff;
+      padding-bottom: 10px;
     }
     #professional-summary p {
       line-height: 1.6;
@@ -205,24 +218,31 @@
       max-width: 900px;
     }
 
-    /* ===== Skills Chart Section ===== */
-    #skills-chart {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    /* ===== Certificates Section ===== */
+    #certificate-section {
       padding: 40px 20px;
       max-width: 1100px;
-      margin: 0 auto;
+      margin: 40px auto;
+      text-align: center;
     }
-    #skills-chart canvas {
-      background-color: #1c1b1b;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    .certificate-header {
+      color: #00bfff;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #00bfff;
+      padding-bottom: 10px;
+    }
+    .certificate-description {
+      color: #ccc;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     /* ===== Footer ===== */
     footer {
-      background-color: #1f1f1f; /* Slightly different dark shade */
+      background-color: #1f1f1f;
       color: #999;
       text-align: center;
       padding: 20px;
@@ -245,7 +265,7 @@
       margin: 10px 0;
     }
 
-    /* Subtle fade-in animations with GSAP classes */
+    /* ===== Fade-in Animation (GSAP) ===== */
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
@@ -281,32 +301,25 @@
     <p>Explore my work and hopefully I can provide value!</p>
   </section>
 
+  <!-- CONTACT INFO SECTION -->
+  <section id="contact-info" class="fade-in">
+    <div class="contact-info-container">
+      <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">
+        <img src="../img/qr-code.png" alt="LinkedIn QR Code" class="qr-code">
+        <span>LinkedIn</span>
+      </a>
+      <a href="../img/NickHolmesResumeApril2024.pdf" download class="resume-button">
+        Download Resume
+      </a>
+    </div>
+  </section>
+
   <!-- SERVICES SECTION -->
   <section id="services" class="fade-in">
-    <div>
-      <img
-        src="../img/qr-code.png"
-        alt="My LinkedIn QR Code"
-        style="width: 100px; height: 100px;"
-      >
-      <p>
-        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/"
-           target="_blank"
-        >
-          ^My LinkedIn^
-        </a>
-      </p>
-    </div>
-    <a href="../img/NickHolmesResumeApril2024.pdf" download>
-      <button>Click Here to download my up to date resume!</button>
-    </a>
-
     <h2>My Services</h2>
     <p class="proficiency-note">
-      The highlights below represent my proficiency in each skill,
-      indicating how adept I am at one compared to the others.
+      The highlights below represent my proficiency in each skill, indicating how adept I am at one compared to the others.
     </p>
-
     <div class="service-container">
       <div class="service-bar">
         <i class="fa fa-code service-icon"></i>
@@ -371,29 +384,20 @@
   <section id="professional-summary" class="fade-in">
     <h2>Professional Summary</h2>
     <p>
-      I currently serve as a Data/AI Engineer at JOS Group, contributing to several
-      federal government contracts with a focus on AI-driven solutions and data analysis.
-      On one contract, I collaborate with the AI team to develop interactive labs and
-      courses—built in Python—to teach AI concepts to federal government CMS users as part
-      of a broader workforce resilience initiative. This initiative also covers leadership,
-      cloud computing, CMS, Human-Centered Design, and Product Management.
+      I currently serve as a Data/AI Engineer at JOS Group, contributing to several federal government contracts with a focus on AI-driven solutions and data analysis. On one contract, I collaborate with the AI team to develop interactive labs and courses—built in Python—to teach AI concepts to federal government CMS users as part of a broader workforce resilience initiative. This initiative also covers leadership, cloud computing, CMS, Human-Centered Design, and Product Management.
     </p>
     <br>
     <p>
-      Alongside these responsibilities, I support the Operations team by analyzing learner
-      data, setting up registration processes, and conducting thorough evaluations of our
-      training programs. Furthermore, on an IMLS contract, I work extensively with museum
-      and library data from across the United States, harnessing AWS and performing diverse
-      analytic tasks to derive actionable insights. Through these experiences, I leverage
-      my expertise in AI, data analysis, and software engineering to drive innovation and
-      achieve organizational objectives.
+      Alongside these responsibilities, I support the Operations team by analyzing learner data, setting up registration processes, and conducting thorough evaluations of our training programs. Furthermore, on an IMLS contract, I work extensively with museum and library data from across the United States, harnessing AWS and performing diverse analytic tasks to derive actionable insights. Through these experiences, I leverage my expertise in AI, data analysis, and software engineering to drive innovation and achieve organizational objectives.
     </p>
   </section>
 
-  <!-- SKILLS CHART SECTION -->
-  <section id="skills-chart" class="fade-in">
-    <h2></h2>
-    <canvas id="skillsPieChart"></canvas>
+  <!-- CERTIFICATES SECTION -->
+  <section id="certificate-section" class="fade-in">
+    <h2 class="certificate-header"><span id="certificateCount">0</span> Certificates</h2>
+    <p class="certificate-description">
+      .....Sort of! I have completed 460 different learning experiences—some grand, some modest—provided by renowned platforms such as LinkedIn Learning, AWS, Google, SoloLearn, and more. While I hold some professional certificates, this count stands as a testament to my relentless commitment to daily growth and my aspiration to be an indispensable asset to any team.
+    </p>
   </section>
 
   <!-- FOOTER -->
@@ -433,7 +437,7 @@
       if (charIndex < words[wordIndex].length) {
         typingText.innerHTML += words[wordIndex].charAt(charIndex);
         charIndex++;
-        let typingSpeed = 200 - Math.random() * 100; // Variation
+        let typingSpeed = 200 - Math.random() * 100;
         setTimeout(type, typingSpeed);
       } else {
         setTimeout(erase, 1250);
@@ -444,14 +448,13 @@
       if (charIndex > 0) {
         typingText.innerHTML = words[wordIndex].substring(0, charIndex - 1);
         charIndex--;
-        let erasingSpeed = 100 - Math.random() * 50; // Variation
+        let erasingSpeed = 100 - Math.random() * 50;
         setTimeout(erase, erasingSpeed);
       } else {
         wordIndex++;
         if (wordIndex >= words.length) {
           wordIndex = 0;
         }
-        // Change color smoothly
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         typingText.style.transition = "color 0.4s ease-in-out";
         typingText.style.color = randomColor;
@@ -467,12 +470,8 @@
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.10.4/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.10.4/dist/ScrollTrigger.min.js"></script>
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <script>
-    // Animate Bars
+    // Animate Service Bars
     gsap.registerPlugin(ScrollTrigger);
     gsap.utils.toArray('.service-bar').forEach(bar => {
       let barFill = bar.querySelector('.service-bar-fill');
@@ -485,82 +484,7 @@
       });
     });
 
-    // Chart.js Pie
-    document.addEventListener("DOMContentLoaded", function() {
-      const skillsData = {
-        labels: [
-          'Web Development',
-          'Graphic Design',
-          'Python Dev/ML',
-          'Artificial Intelligence',
-          'SQL',
-          'Data Manipulation/Analysis',
-          'Full-Stack'
-        ],
-        datasets: [{
-          label: 'Skill Proficiency',
-          data: [90, 75, 95, 85, 60, 90, 80],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(246,0,255,0.7)',
-            'rgba(255, 206, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)',
-            'rgba(153, 102, 255, 0.7)',
-            'rgba(255, 159, 64, 0.7)',
-            'rgba(199, 199, 199, 0.7)'
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(246,0,255,1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(199, 199, 199, 1)'
-          ],
-          borderWidth: 1
-        }]
-      };
-
-      const config = {
-        type: 'pie',
-        data: skillsData,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: { duration: 500 },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'bottom',
-              labels: {
-                color: 'white',
-                font: { size: 14 },
-                padding: 20,
-                boxWidth: 20,
-                boxHeight: 20,
-                usePointStyle: true,
-              }
-            },
-            tooltip: {
-              enabled: true,
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              borderColor: 'black',
-              borderWidth: 2,
-              titleFont: { size: 16, weight: 'bold' },
-              bodyFont: { size: 14 },
-              cornerRadius: 6,
-              displayColors: false,
-            }
-          }
-        },
-      };
-
-      const ctx = document.getElementById('skillsPieChart').getContext('2d');
-      new Chart(ctx, config);
-    });
-
-    // Fade-in animation on scroll
+    // Fade-in Animation on Scroll
     const fadeElems = document.querySelectorAll('.fade-in');
     fadeElems.forEach(elem => {
       gsap.fromTo(elem,
@@ -576,6 +500,26 @@
           }
         }
       );
+    });
+
+    // Certificates Count Animation (4 seconds)
+    document.addEventListener("DOMContentLoaded", function() {
+      ScrollTrigger.create({
+        trigger: "#certificate-section",
+        start: "top 80%",
+        once: true,
+        onEnter: () => {
+          let countObj = { val: 0 };
+          gsap.to(countObj, {
+            duration: 4,
+            val: 460,
+            ease: "power1.inOut",
+            onUpdate: function() {
+              document.getElementById("certificateCount").textContent = Math.floor(countObj.val);
+            }
+          });
+        }
+      });
     });
   </script>
 </body>
