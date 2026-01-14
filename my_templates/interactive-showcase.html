@@ -1,0 +1,2967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Showcase | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      animation: gradientShift 15s ease infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    /* Code Matrix Rain Effect */
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    header, section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 100px 20px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero p {
+      font-size: 1.4rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    /* Category Navigation */
+    .category-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .category-btn {
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(0, 217, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .category-btn.active {
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.2));
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .category-btn i {
+      font-size: 1.1rem;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .demo-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .demo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .demo-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
+      border-color: var(--primary-color);
+      background: rgba(0, 217, 255, 0.05);
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .demo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .demo-card h3 {
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .demo-card p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .demo-content {
+      margin-top: 20px;
+    }
+
+    /* Typing Speed Test */
+    .typing-area {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .typing-input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      margin: 10px 0;
+      transition: all 0.3s ease;
+    }
+
+    .typing-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.1);
+    }
+
+    .typing-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* Color Picker */
+    .color-display {
+      width: 100%;
+      height: 150px;
+      border-radius: 15px;
+      margin: 15px 0;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .color-input-group {
+      display: flex;
+      gap: 15px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+
+    .color-input-wrapper {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .color-input-wrapper label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .color-input-wrapper input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    /* Calculator */
+    .calculator {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 300px;
+      margin: 20px auto;
+    }
+
+    .calc-display {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: right;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+      min-height: 60px;
+      word-wrap: break-word;
+    }
+
+    .calc-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .calc-btn {
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .calc-btn:hover {
+      background: rgba(0, 217, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+    }
+
+    .calc-btn:active {
+      transform: translateY(0);
+    }
+
+    .calc-btn.operator {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .calc-btn.equals {
+      background: linear-gradient(135deg, var(--accent-color), #e85d04);
+      grid-column: span 2;
+    }
+
+    /* Password Generator */
+    .password-display {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 10px;
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      margin: 15px 0;
+      word-break: break-all;
+      text-align: center;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .password-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .password-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .password-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .password-option label {
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .slider-group {
+      margin: 15px 0;
+    }
+
+    .slider-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .slider-group input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      appearance: none;
+    }
+
+    .slider-group input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      cursor: pointer;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5);
+    }
+
+    .btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Code Editor */
+    .code-editor {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .editor-header {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px 15px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .editor-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .editor-dot.red { background: #ff5f56; }
+    .editor-dot.yellow { background: #ffbd2e; }
+    .editor-dot.green { background: #27c93f; }
+
+    .editor-content {
+      padding: 20px;
+    }
+
+    .editor-content textarea {
+      width: 100%;
+      min-height: 200px;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+    }
+
+    .editor-output {
+      background: rgba(0, 217, 255, 0.1);
+      border-top: 1px solid rgba(0, 217, 255, 0.3);
+      padding: 15px 20px;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-secondary);
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    /* Todo List */
+    .todo-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .todo-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .todo-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .todo-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .todo-item:hover {
+      background: rgba(0, 217, 255, 0.05);
+      border-color: var(--primary-color);
+    }
+
+    .todo-item.completed {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .todo-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .todo-item span {
+      flex: 1;
+      color: var(--text-primary);
+    }
+
+    .todo-item button {
+      background: rgba(255, 59, 48, 0.2);
+      border: 1px solid rgba(255, 59, 48, 0.5);
+      color: #ff3b30;
+      padding: 5px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .todo-item button:hover {
+      background: rgba(255, 59, 48, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html" class="active">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Interactive Showcase</h1>
+    <p>Experience my technical skills through these interactive demos. Built with vanilla JavaScript to demonstrate coding proficiency.</p>
+  </section>
+
+  <!-- Category Navigation -->
+  <div class="category-nav">
+    <button class="category-btn active" data-category="all" onclick="filterCategory('all')">
+      <i class="fas fa-th"></i> All
+    </button>
+    <button class="category-btn" data-category="games" onclick="filterCategory('games')">
+      <i class="fas fa-gamepad"></i> Games
+    </button>
+    <button class="category-btn" data-category="utilities" onclick="filterCategory('utilities')">
+      <i class="fas fa-tools"></i> Utilities
+    </button>
+    <button class="category-btn" data-category="creative" onclick="filterCategory('creative')">
+      <i class="fas fa-paint-brush"></i> Creative
+    </button>
+    <button class="category-btn" data-category="data-viz" onclick="filterCategory('data-viz')">
+      <i class="fas fa-chart-line"></i> Data Viz
+    </button>
+    <button class="category-btn" data-category="ai-ml" onclick="filterCategory('ai-ml')">
+      <i class="fas fa-brain"></i> AI/ML
+    </button>
+  </div>
+
+  <div class="showcase-grid">
+    <!-- Typing Speed Test -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-keyboard"></i></div>
+        <h3>Typing Speed Test</h3>
+      </div>
+      <p>Test your typing speed and accuracy!</p>
+      
+      <div class="demo-content">
+        <div class="typing-area" id="typingText">The quick brown fox jumps over the lazy dog. Programming requires practice and patience.</div>
+        <input type="text" class="typing-input" id="typingInput" placeholder="Start typing here...">
+        
+        <div class="typing-stats">
+          <div class="stat">
+            <div class="stat-value" id="wpm">0</div>
+            <div class="stat-label">WPM</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="accuracy">100%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="time">0s</div>
+            <div class="stat-label">Time</div>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="resetTypingTest()">Reset</button>
+      </div>
+    </div>
+
+    <!-- Color Mixer -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-palette"></i></div>
+        <h3>Color Mixer</h3>
+      </div>
+      <p>Create and visualize custom colors!</p>
+      
+      <div class="demo-content">
+        <div class="color-display" id="colorDisplay"></div>
+        
+        <div class="color-input-group">
+          <div class="color-input-wrapper">
+            <label>Red (0-255)</label>
+            <input type="number" id="redInput" min="0" max="255" value="0" onchange="updateColor()">
+          </div>
+          <div class="color-input-wrapper">
+            <label>Green (0-255)</label>
+            <input type="number" id="greenInput" min="0" max="255" value="217" onchange="updateColor()">
+          </div>
+          <div class="color-input-wrapper">
+            <label>Blue (0-255)</label>
+            <input type="number" id="blueInput" min="0" max="255" value="255" onchange="updateColor()">
+          </div>
+        </div>
+        
+        <div style="text-align: center; color: var(--text-secondary); margin-top: 10px;">
+          <strong>HEX:</strong> <span id="hexOutput">#00d9ff</span>
+        </div>
+        
+        <button class="btn" onclick="copyColor()">Copy HEX Code</button>
+      </div>
+    </div>
+
+    <!-- Calculator -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-calculator"></i></div>
+        <h3>Calculator</h3>
+      </div>
+      <p>A functional calculator built with JavaScript!</p>
+      
+      <div class="demo-content">
+        <div class="calculator">
+          <div class="calc-display" id="calcDisplay">0</div>
+          <div class="calc-buttons">
+            <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+            <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+            <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+            <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
+            
+            <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+            <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+            <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+            <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+            
+            <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+            <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+            <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+            <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+            
+            <button class="calc-btn" onclick="appendToCalc('0')">0</button>
+            <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+            <button class="calc-btn operator" onclick="clearCalc()">C</button>
+            <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+            
+            <button class="calc-btn equals" onclick="calculateResult()">=</button>
+            <button class="calc-btn operator" onclick="backspace()">←</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Generator -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-lock"></i></div>
+        <h3>Password Generator</h3>
+      </div>
+      <p>Generate secure passwords with custom options!</p>
+      
+      <div class="demo-content">
+        <div class="password-display" id="passwordDisplay">Click generate to create a password</div>
+        
+        <div class="slider-group">
+          <label>Length: <span id="lengthValue">16</span></label>
+          <input type="range" id="lengthSlider" min="8" max="32" value="16" oninput="document.getElementById('lengthValue').textContent = this.value">
+        </div>
+        
+        <div class="password-options">
+          <div class="password-option">
+            <input type="checkbox" id="includeUpper" checked>
+            <label for="includeUpper">Include Uppercase Letters</label>
+          </div>
+          <div class="password-option">
+            <input type="checkbox" id="includeLower" checked>
+            <label for="includeLower">Include Lowercase Letters</label>
+          </div>
+          <div class="password-option">
+            <input type="checkbox" id="includeNumbers" checked>
+            <label for="includeNumbers">Include Numbers</label>
+          </div>
+          <div class="password-option">
+            <input type="checkbox" id="includeSymbols" checked>
+            <label for="includeSymbols">Include Symbols (!@#$%^&*)</label>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="generatePassword()">Generate Password</button>
+        <button class="btn" onclick="copyPassword()">Copy to Clipboard</button>
+      </div>
+    </div>
+
+    <!-- Interactive Todo List -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-tasks"></i></div>
+        <h3>Todo List</h3>
+      </div>
+      <p>Manage tasks with this interactive todo list!</p>
+      
+      <div class="demo-content">
+        <div class="todo-input">
+          <input type="text" id="todoInput" placeholder="Add a new task...">
+          <button class="btn" onclick="addTodo()" style="width: auto; padding: 12px 25px; margin: 0;">Add</button>
+        </div>
+        
+        <ul class="todo-list" id="todoList">
+          <!-- Todos will be added here -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- Code Formatter -->
+    <div class="demo-card" data-category="utilities" style="grid-column: span 2;">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-code"></i></div>
+        <h3>JSON Formatter</h3>
+      </div>
+      <p>Format and validate JSON data!</p>
+      
+      <div class="demo-content">
+        <div class="code-editor">
+          <div class="editor-header">
+            <div class="editor-dot red"></div>
+            <div class="editor-dot yellow"></div>
+            <div class="editor-dot green"></div>
+            <span style="margin-left: 10px; color: var(--text-secondary); font-size: 0.9rem;">JSON Input</span>
+          </div>
+          <div class="editor-content">
+            <textarea id="jsonInput" placeholder='Enter JSON here... e.g., {"name": "Nick", "role": "Developer"}'></textarea>
+          </div>
+          <div class="editor-output" id="jsonOutput">Formatted JSON will appear here...</div>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+          <button class="btn" onclick="formatJSON()">Format JSON</button>
+          <button class="btn" onclick="minifyJSON()">Minify JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory Game Demo -->
+    <div class="demo-card" data-category="games">
+      <div class="demo-header">
+        <i class="fas fa-brain demo-icon"></i>
+        <h3>Memory Match Game</h3>
+      </div>
+      <div class="demo-content">
+        <p>Test your memory by matching pairs of cards!</p>
+        
+        <div style="margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div>Moves: <span id="memoryMoves" style="color: var(--primary-color); font-weight: bold;">0</span></div>
+            <div>Matches: <span id="memoryMatches" style="color: var(--secondary-color); font-weight: bold;">0/8</span></div>
+            <div>Time: <span id="memoryTime" style="color: var(--accent-color); font-weight: bold;">0s</span></div>
+          </div>
+          <div id="memoryGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 400px; margin: 0 auto;"></div>
+        </div>
+        
+        <button class="btn" onclick="resetMemoryGame()">Reset Game</button>
+      </div>
+    </div>
+
+    <!-- Stopwatch Demo -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <i class="fas fa-stopwatch demo-icon"></i>
+        <h3>Precision Stopwatch</h3>
+      </div>
+      <div class="demo-content">
+        <p>High-precision stopwatch with lap tracking.</p>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div id="stopwatchDisplay" style="font-size: 3rem; font-weight: bold; color: var(--primary-color); font-family: 'Courier New', monospace; margin: 20px 0;">00:00:00.000</div>
+          
+          <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+            <button class="btn" id="stopwatchStartBtn" onclick="startStopwatch()">Start</button>
+            <button class="btn" onclick="stopStopwatch()" style="background: var(--secondary-color);">Stop</button>
+            <button class="btn" onclick="lapStopwatch()" style="background: var(--accent-color);">Lap</button>
+            <button class="btn" onclick="resetStopwatch()">Reset</button>
+          </div>
+          
+          <div id="lapsContainer" style="max-height: 200px; overflow-y: auto; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unit Converter Demo -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <i class="fas fa-exchange-alt demo-icon"></i>
+        <h3>Unit Converter</h3>
+      </div>
+      <div class="demo-content">
+        <p>Convert between different units of measurement.</p>
+        
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Category:</label>
+          <select id="converterCategory" onchange="updateConverterUnits()" style="width: 100%; padding: 10px; background: rgba(10,10,15,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 15px;">
+            <option value="length" style="background: #0a0a0f; color: white;">Length</option>
+            <option value="weight" style="background: #0a0a0f; color: white;">Weight</option>
+            <option value="temperature" style="background: #0a0a0f; color: white;">Temperature</option>
+            <option value="data" style="background: #0a0a0f; color: white;">Data Storage</option>
+          </select>
+          
+          <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: end;">
+            <div>
+              <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">From:</label>
+              <input type="number" id="converterInput" oninput="convertUnits()" placeholder="Enter value" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text-primary);">
+              <select id="converterFromUnit" onchange="convertUnits()" style="width: 100%; padding: 10px; background: rgba(10,10,15,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-top: 5px;"></select>
+            </div>
+            
+            <div style="padding-bottom: 45px;">
+              <i class="fas fa-arrow-right" style="color: var(--primary-color); font-size: 1.5rem;"></i>
+            </div>
+            
+            <div>
+              <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">To:</label>
+              <input type="text" id="converterOutput" readonly placeholder="Result" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--primary-color); font-weight: bold;">
+              <select id="converterToUnit" onchange="convertUnits()" style="width: 100%; padding: 10px; background: rgba(10,10,15,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-top: 5px;"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawing Canvas Demo -->
+    <div class="demo-card" data-category="creative">
+      <div class="demo-header">
+        <i class="fas fa-paint-brush demo-icon"></i>
+        <h3>Drawing Canvas</h3>
+      </div>
+      <div class="demo-content">
+        <p>Express your creativity with this interactive drawing canvas.</p>
+        
+        <div style="margin-bottom: 15px;">
+          <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; align-items: center;">
+            <label style="color: var(--text-secondary);">Brush Size:</label>
+            <input type="range" id="brushSize" min="1" max="20" value="5" style="flex: 1; min-width: 150px;">
+            <span id="brushSizeValue" style="color: var(--primary-color); font-weight: bold;">5px</span>
+            
+            <label style="color: var(--text-secondary); margin-left: 20px;">Color:</label>
+            <input type="color" id="brushColor" value="#00d9ff" style="width: 50px; height: 35px; border: none; border-radius: 5px; cursor: pointer;">
+          </div>
+          
+          <canvas id="drawingCanvas" style="width: 100%; max-width: 600px; height: 400px; background: white; border-radius: 8px; cursor: crosshair; display: block; margin: 0 auto; touch-action: none;"></canvas>
+          
+          <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
+            <button class="btn" onclick="clearCanvas()">Clear Canvas</button>
+            <button class="btn" onclick="downloadDrawing()" style="background: var(--secondary-color);">Download</button>
+            <button class="btn" onclick="toggleEraser()" id="eraserBtn" style="background: var(--accent-color);">Eraser Mode</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Particle System -->
+    <div class="demo-card" data-category="creative">
+      <div class="demo-header">
+        <i class="fas fa-cube demo-icon"></i>
+        <h3>3D Particle System</h3>
+      </div>
+      <div class="demo-content">
+        <p>Interactive 3D particle animation with mouse control</p>
+        <canvas id="particleCanvas" style="width: 100%; height: 400px; background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%); border-radius: 12px; cursor: move;"></canvas>
+        <div style="display: flex; gap: 10px; margin-top: 15px; align-items: center; flex-wrap: wrap;">
+          <label style="color: var(--text-secondary);">Particle Count:</label>
+          <input type="range" id="particleCount" min="50" max="500" value="200" onchange="resetParticles()" style="flex: 1; min-width: 150px;">
+          <span id="particleCountValue" style="color: var(--primary-color); font-weight: bold;">200</span>
+          <button class="btn" onclick="resetParticles()" style="margin-left: auto;">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-time Code Editor -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <i class="fas fa-code demo-icon"></i>
+        <h3>Live Code Editor</h3>
+      </div>
+      <div class="demo-content">
+        <p>Write HTML/CSS/JS and see results instantly!</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+          <div>
+            <label style="color: var(--text-secondary); display: block; margin-bottom: 5px;">HTML</label>
+            <textarea id="htmlCode" onkeyup="runCode()" style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,217,255,0.3); border-radius: 8px; color: var(--text-primary); font-family: 'Fira Code', monospace; padding: 10px; resize: vertical;"><h1>Hello!</h1></textarea>
+          </div>
+          <div>
+            <label style="color: var(--text-secondary); display: block; margin-bottom: 5px;">CSS</label>
+            <textarea id="cssCode" onkeyup="runCode()" style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; color: var(--text-primary); font-family: 'Fira Code', monospace; padding: 10px; resize: vertical;">h1 { color: #00d9ff; }</textarea>
+          </div>
+        </div>
+        <div>
+          <label style="color: var(--text-secondary); display: block; margin-bottom: 5px;">JavaScript</label>
+          <textarea id="jsCode" onkeyup="runCode()" style="width: 100%; height: 80px; background: rgba(255,255,255,0.05); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; color: var(--text-primary); font-family: 'Fira Code', monospace; padding: 10px; resize: vertical; margin-bottom: 10px;">// Try: document.querySelector('h1').onclick = () => alert('Clicked!');</textarea>
+        </div>
+        <label style="color: var(--text-secondary); display: block; margin-bottom: 5px;">Preview</label>
+        <iframe id="codePreview" style="width: 100%; height: 200px; background: white; border-radius: 8px; border: 2px solid rgba(0,217,255,0.2);"></iframe>
+      </div>
+    </div>
+
+    <!-- Data Visualization Chart Builder -->
+    <div class="demo-card" data-category="data-viz">
+      <div class="demo-header">
+        <i class="fas fa-chart-bar demo-icon"></i>
+        <h3>Chart Builder</h3>
+      </div>
+      <div class="demo-content">
+        <p>Create beautiful charts from your data</p>
+        <div style="margin: 15px 0;">
+          <label style="color: var(--text-secondary); display: block; margin-bottom: 5px;">Enter data (comma-separated):</label>
+          <input type="text" id="chartData" value="10,25,15,40,30,50,35" oninput="updateChart()" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,217,255,0.3); border-radius: 8px; color: var(--text-primary); margin-bottom: 10px;">
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <select id="chartType" onchange="updateChart()" style="flex: 1; padding: 10px; background: rgba(10,10,15,0.95); border: 1px solid rgba(0,217,255,0.3); border-radius: 8px; color: var(--text-primary);">
+              <option value="bar" style="background: #0a0a0f; color: white;">Bar Chart</option>
+              <option value="line" style="background: #0a0a0f; color: white;">Line Chart</option>
+              <option value="pie" style="background: #0a0a0f; color: white;">Pie Chart</option>
+            </select>
+          </div>
+          <canvas id="dataChart" style="width: 100%; height: 300px; background: rgba(255,255,255,0.02); border-radius: 8px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Snake Game -->
+    <div class="demo-card" data-category="games">
+      <div class="demo-header">
+        <i class="fas fa-gamepad demo-icon"></i>
+        <h3>Classic Snake Game</h3>
+      </div>
+      <div class="demo-content">
+        <p>Use arrow keys to control the snake. Eat food to grow!</p>
+        <div style="text-align: center; margin: 15px 0;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div>Score: <span id="snakeScore" style="color: var(--primary-color); font-weight: bold; font-size: 1.2rem;">0</span></div>
+            <div>High: <span id="snakeHigh" style="color: var(--accent-color); font-weight: bold; font-size: 1.2rem;">0</span></div>
+          </div>
+          <canvas id="snakeCanvas" style="width: 100%; max-width: 400px; height: 400px; background: #0a0a0f; border: 2px solid rgba(0,217,255,0.3); border-radius: 12px; display: block; margin: 0 auto;"></canvas>
+          <button class="btn" onclick="startSnakeGame()" style="margin-top: 10px;">Start Game</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sentiment Analysis -->
+    <div class="demo-card" data-category="ai-ml">
+      <div class="demo-header">
+        <i class="fas fa-brain demo-icon"></i>
+        <h3>Sentiment Analyzer</h3>
+      </div>
+      <div class="demo-content">
+        <p>AI-powered text sentiment analysis</p>
+        <textarea id="sentimentText" placeholder="Type or paste text here to analyze its sentiment..." style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,217,255,0.3); border-radius: 8px; color: var(--text-primary); padding: 15px; margin: 15px 0; resize: vertical;">I love this amazing portfolio! The interactive features are incredible.</textarea>
+        <button class="btn" onclick="analyzeSentiment()">Analyze Sentiment</button>
+        <div id="sentimentResult" style="margin-top: 15px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; display: none;">
+          <div style="display: flex; justify-content: space-around; margin-bottom: 15px;">
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold;" id="sentimentEmoji">😊</div>
+              <div style="color: var(--text-secondary); margin-top: 5px;" id="sentimentLabel">Positive</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);" id="sentimentScore">85%</div>
+              <div style="color: var(--text-secondary); margin-top: 5px;">Confidence</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <div style="flex: 1;">
+              <div style="color: var(--text-secondary); margin-bottom: 5px;">Positive</div>
+              <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                <div id="positiveBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #34d399); width: 0%; transition: width 0.5s ease;"></div>
+              </div>
+            </div>
+            <div style="flex: 1;">
+              <div style="color: var(--text-secondary); margin-bottom: 5px;">Negative</div>
+              <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                <div id="negativeBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f87171); width: 0%; transition: width 0.5s ease;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maze Generator & Solver -->
+    <div class="demo-card" data-category="games">
+      <div class="demo-header">
+        <i class="fas fa-project-diagram demo-icon"></i>
+        <h3>Maze Generator & Solver</h3>
+      </div>
+      <div class="demo-content">
+        <p>Generate random mazes and watch AI solve them!</p>
+        <canvas id="mazeCanvas" style="width: 100%; max-width: 500px; height: 500px; background: #0a0a0f; border: 2px solid rgba(0,217,255,0.3); border-radius: 12px; display: block; margin: 15px auto;"></canvas>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn" onclick="generateMaze()">New Maze</button>
+          <button class="btn" onclick="solveMaze()" style="background: var(--secondary-color);">Solve with AI</button>
+          <button class="btn" onclick="resetMaze()" style="background: var(--accent-color);">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Filters -->
+    <div class="demo-card" data-category="creative">
+      <div class="demo-header">
+        <i class="fas fa-images demo-icon"></i>
+        <h3>Image Filter Studio</h3>
+      </div>
+      <div class="demo-content">
+        <p>Apply professional filters to images in real-time</p>
+        <input type="file" id="imageUpload" accept="image/*" onchange="loadImage(event)" style="display: block; margin: 15px 0; color: var(--text-secondary);">
+        <canvas id="imageCanvas" style="width: 100%; max-width: 500px; height: auto; background: rgba(255,255,255,0.02); border-radius: 12px; display: block; margin: 15px auto; min-height: 300px;"></canvas>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;">
+          <button class="btn" onclick="applyFilter('grayscale')">Grayscale</button>
+          <button class="btn" onclick="applyFilter('sepia')">Sepia</button>
+          <button class="btn" onclick="applyFilter('invert')">Invert</button>
+          <button class="btn" onclick="applyFilter('blur')">Blur</button>
+          <button class="btn" onclick="applyFilter('brightness')">Brighten</button>
+          <button class="btn" onclick="applyFilter('contrast')">Contrast</button>
+          <button class="btn" onclick="applyFilter('reset')" style="background: var(--accent-color);">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Physics Simulator -->
+    <div class="demo-card" data-category="creative">
+      <div class="demo-header">
+        <i class="fas fa-atom demo-icon"></i>
+        <h3>Physics Simulator</h3>
+      </div>
+      <div class="demo-content">
+        <p>Interactive physics engine with gravity, collisions, and bounce dynamics</p>
+        <canvas id="physicsCanvas" width="600" height="400" style="width: 100%; max-width: 600px; height: auto; aspect-ratio: 3/2; background: linear-gradient(180deg, rgba(10,10,20,0.8), rgba(20,10,30,0.8)); border-radius: 12px; cursor: crosshair; display: block; margin: 15px auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);"></canvas>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+          <button class="btn" onclick="addPhysicsBall()">Add Ball</button>
+          <button class="btn" onclick="toggleGravity()">Toggle Gravity: <span id="gravityStatus">ON</span></button>
+          <button class="btn" onclick="clearPhysicsBalls()" style="background: var(--accent-color);">Clear All</button>
+        </div>
+        <div style="text-align: center; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem;">Click canvas to add balls • Watch them bounce and interact!</div>
+      </div>
+    </div>
+
+    <!-- Music Visualizer -->
+    <div class="demo-card" data-category="creative">
+      <div class="demo-header">
+        <i class="fas fa-music demo-icon"></i>
+        <h3>Audio Visualizer</h3>
+      </div>
+      <div class="demo-content">
+        <p>Real-time frequency analysis and stunning audio visualization</p>
+        <canvas id="audioCanvas" width="600" height="300" style="width: 100%; max-width: 600px; height: auto; aspect-ratio: 2/1; background: radial-gradient(circle at center, rgba(10,10,30,0.9), rgba(5,5,15,1)); border-radius: 12px; display: block; margin: 15px auto; box-shadow: 0 0 30px rgba(0,217,255,0.3);"></canvas>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+          <button class="btn" id="audioStartBtn" onclick="startAudioVisualizer()">Start Microphone</button>
+          <button class="btn" onclick="toggleVisualizerStyle()" id="visualizerStyleBtn">Style: Bars</button>
+        </div>
+        <div style="text-align: center; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem;">🎤 Uses your microphone to create real-time visualizations</div>
+      </div>
+    </div>
+
+    <!-- Neural Network Visualizer -->
+    <div class="demo-card" data-category="ai-ml">
+      <div class="demo-header">
+        <i class="fas fa-brain demo-icon"></i>
+        <h3>Neural Network Visualizer</h3>
+      </div>
+      <div class="demo-content">
+        <p>Watch a neural network learn patterns in real-time with animated training</p>
+        <canvas id="neuralCanvas" width="600" height="400" style="width: 100%; max-width: 600px; height: auto; aspect-ratio: 3/2; background: linear-gradient(135deg, rgba(10,10,25,0.9), rgba(25,10,40,0.9)); border-radius: 12px; display: block; margin: 15px auto; box-shadow: 0 0 40px rgba(168,85,247,0.2);"></canvas>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;">
+          <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+            <div style="font-size: 1.5rem; color: var(--primary-color); font-weight: bold;" id="nnEpoch">0</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">Epoch</div>
+          </div>
+          <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+            <div style="font-size: 1.5rem; color: var(--secondary-color); font-weight: bold;" id="nnLoss">0.000</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">Loss</div>
+          </div>
+          <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+            <div style="font-size: 1.5rem; color: #00ff88; font-weight: bold;" id="nnAccuracy">0%</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">Accuracy</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn" onclick="startNeuralTraining()" id="nnTrainBtn">Start Training</button>
+          <button class="btn" onclick="resetNeuralNetwork()" style="background: var(--accent-color);">Reset Network</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weather Dashboard -->
+    <div class="demo-card" data-category="data-viz">
+      <div class="demo-header">
+        <i class="fas fa-cloud-sun demo-icon"></i>
+        <h3>Weather Dashboard</h3>
+      </div>
+      <div class="demo-content">
+        <p>Real-time weather data with beautiful visualizations and forecasts</p>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <input type="text" id="weatherCity" placeholder="Enter city name..." style="flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border: 2px solid rgba(0,217,255,0.3); border-radius: 10px; color: white; font-size: 1rem;" onkeypress="if(event.key==='Enter') getWeather()">
+          <button class="btn" onclick="getWeather()">Get Weather</button>
+        </div>
+        <div id="weatherDisplay" style="padding: 20px; background: linear-gradient(135deg, rgba(0,100,200,0.1), rgba(100,0,200,0.1)); border-radius: 12px; min-height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+          Enter a city name to see weather data
+        </div>
+        <div style="text-align: center; margin-top: 10px; color: var(--text-secondary); font-size: 0.85rem;">Try: New York, London, Tokyo, or your city!</div>
+      </div>
+    </div>
+
+    <!-- Code Syntax Highlighter -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <i class="fas fa-code demo-icon"></i>
+        <h3>Code Syntax Highlighter</h3>
+      </div>
+      <div class="demo-content">
+        <p>Beautiful syntax highlighting for multiple programming languages</p>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <select id="syntaxLang" style="padding: 10px; background: rgba(10,10,15,0.95); border: 2px solid rgba(0,217,255,0.3); border-radius: 8px; color: white; flex: 1;" onchange="highlightCode()">
+            <option value="javascript" style="background: #0a0a0f; color: white;">JavaScript</option>
+            <option value="python" style="background: #0a0a0f; color: white;">Python</option>
+            <option value="html" style="background: #0a0a0f; color: white;">HTML</option>
+            <option value="css" style="background: #0a0a0f; color: white;">CSS</option>
+            <option value="sql" style="background: #0a0a0f; color: white;">SQL</option>
+          </select>
+          <button class="btn" onclick="highlightCode()">Highlight</button>
+        </div>
+        <textarea id="codeInput" placeholder="Paste your code here..." style="width: 100%; min-height: 150px; padding: 15px; background: rgba(255,255,255,0.03); border: 2px solid rgba(0,217,255,0.2); border-radius: 10px; color: var(--text-secondary); font-family: 'Courier New', monospace; font-size: 0.95rem; resize: vertical;"></textarea>
+        <div id="highlightedCode" style="margin-top: 15px; padding: 20px; background: linear-gradient(135deg, rgba(10,10,20,0.9), rgba(20,10,30,0.9)); border-radius: 12px; overflow-x: auto; min-height: 100px; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.6; display: none; box-shadow: inset 0 0 20px rgba(0,0,0,0.3);"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Matrix Rain Effect
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.fillStyle = '#00d9ff';
+      ctx.font = fontSize + 'px monospace';
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 50);
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Typing Speed Test
+    let startTime = null;
+    let typingTimer = null;
+    const typingInput = document.getElementById('typingInput');
+    const typingText = document.getElementById('typingText').textContent;
+
+    typingInput.addEventListener('input', () => {
+      if (!startTime) {
+        startTime = new Date();
+        typingTimer = setInterval(updateTypingStats, 100);
+      }
+      updateTypingStats();
+    });
+
+    function updateTypingStats() {
+      const typed = typingInput.value;
+      const timePassed = (new Date() - startTime) / 1000;
+      const words = typed.trim().split(/\s+/).length;
+      const wpm = Math.round((words / timePassed) * 60) || 0;
+      
+      let correct = 0;
+      for (let i = 0; i < typed.length; i++) {
+        if (typed[i] === typingText[i]) correct++;
+      }
+      const accuracy = typed.length ? Math.round((correct / typed.length) * 100) : 100;
+      
+      document.getElementById('wpm').textContent = wpm;
+      document.getElementById('accuracy').textContent = accuracy + '%';
+      document.getElementById('time').textContent = Math.round(timePassed) + 's';
+    }
+
+    function resetTypingTest() {
+      typingInput.value = '';
+      startTime = null;
+      clearInterval(typingTimer);
+      document.getElementById('wpm').textContent = '0';
+      document.getElementById('accuracy').textContent = '100%';
+      document.getElementById('time').textContent = '0s';
+    }
+
+    // Color Mixer
+    function updateColor() {
+      const r = document.getElementById('redInput').value;
+      const g = document.getElementById('greenInput').value;
+      const b = document.getElementById('blueInput').value;
+      
+      const hex = '#' + [r, g, b].map(x => {
+        const hex = parseInt(x).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      }).join('');
+      
+      document.getElementById('colorDisplay').style.background = `linear-gradient(135deg, rgb(${r},${g},${b}), rgb(${Math.max(0, r-50)},${Math.max(0, g-50)},${Math.max(0, b-50)}))`;
+      document.getElementById('hexOutput').textContent = hex.toUpperCase();
+    }
+
+    function copyColor() {
+      const hex = document.getElementById('hexOutput').textContent;
+      navigator.clipboard.writeText(hex);
+      alert('Color code copied: ' + hex);
+    }
+
+    updateColor();
+
+    // Calculator
+    let calcExpression = '';
+
+    function appendToCalc(value) {
+      calcExpression += value;
+      document.getElementById('calcDisplay').textContent = calcExpression || '0';
+    }
+
+    function clearCalc() {
+      calcExpression = '';
+      document.getElementById('calcDisplay').textContent = '0';
+    }
+
+    function backspace() {
+      calcExpression = calcExpression.slice(0, -1);
+      document.getElementById('calcDisplay').textContent = calcExpression || '0';
+    }
+
+    function calculateResult() {
+      try {
+        const result = eval(calcExpression);
+        document.getElementById('calcDisplay').textContent = result;
+        calcExpression = result.toString();
+      } catch (e) {
+        document.getElementById('calcDisplay').textContent = 'Error';
+        calcExpression = '';
+      }
+    }
+
+    // Password Generator
+    function generatePassword() {
+      const length = document.getElementById('lengthSlider').value;
+      const upper = document.getElementById('includeUpper').checked;
+      const lower = document.getElementById('includeLower').checked;
+      const numbers = document.getElementById('includeNumbers').checked;
+      const symbols = document.getElementById('includeSymbols').checked;
+      
+      let chars = '';
+      if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+      if (numbers) chars += '0123456789';
+      if (symbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+      
+      if (!chars) {
+        alert('Please select at least one character type!');
+        return;
+      }
+      
+      let password = '';
+      for (let i = 0; i < length; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      
+      document.getElementById('passwordDisplay').textContent = password;
+    }
+
+    function copyPassword() {
+      const password = document.getElementById('passwordDisplay').textContent;
+      if (password === 'Click generate to create a password') {
+        alert('Generate a password first!');
+        return;
+      }
+      navigator.clipboard.writeText(password);
+      alert('Password copied to clipboard!');
+    }
+
+    // Todo List
+    let todos = [];
+
+    function addTodo() {
+      const input = document.getElementById('todoInput');
+      const text = input.value.trim();
+      
+      if (!text) return;
+      
+      todos.push({ id: Date.now(), text, completed: false });
+      input.value = '';
+      renderTodos();
+    }
+
+    function toggleTodo(id) {
+      todos = todos.map(todo => 
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      );
+      renderTodos();
+    }
+
+    function deleteTodo(id) {
+      todos = todos.filter(todo => todo.id !== id);
+      renderTodos();
+    }
+
+    function renderTodos() {
+      const list = document.getElementById('todoList');
+      list.innerHTML = todos.map(todo => `
+        <li class="todo-item ${todo.completed ? 'completed' : ''}">
+          <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
+          <span>${todo.text}</span>
+          <button onclick="deleteTodo(${todo.id})">Delete</button>
+        </li>
+      `).join('');
+    }
+
+    // JSON Formatter
+    function formatJSON() {
+      const input = document.getElementById('jsonInput').value;
+      const output = document.getElementById('jsonOutput');
+      
+      try {
+        const parsed = JSON.parse(input);
+        output.textContent = JSON.stringify(parsed, null, 2);
+        output.style.color = 'var(--text-primary)';
+      } catch (e) {
+        output.textContent = 'Invalid JSON: ' + e.message;
+        output.style.color = '#ff3b30';
+      }
+    }
+
+    function minifyJSON() {
+      const input = document.getElementById('jsonInput').value;
+      const output = document.getElementById('jsonOutput');
+      
+      try {
+        const parsed = JSON.parse(input);
+        output.textContent = JSON.stringify(parsed);
+        output.style.color = 'var(--text-primary)';
+      } catch (e) {
+        output.textContent = 'Invalid JSON: ' + e.message;
+        output.style.color = '#ff3b30';
+      }
+    }
+
+    // Enter key support for todo
+    document.getElementById('todoInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addTodo();
+    });
+
+    // ===== MEMORY GAME =====
+    let memoryCards = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let memoryMoves = 0;
+    let memoryTimer = null;
+    let memorySeconds = 0;
+
+    const emojis = ['🚀', '💻', '🎮', '🎯', '⚡', '🔥', '💡', '🌟'];
+    
+    function initMemoryGame() {
+      const grid = document.getElementById('memoryGrid');
+      memoryCards = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+      
+      grid.innerHTML = memoryCards.map((emoji, index) => `
+        <div class="memory-card" data-index="${index}" onclick="flipCard(${index})">
+          <div class="card-inner">
+            <div class="card-front">?</div>
+            <div class="card-back">${emoji}</div>
+          </div>
+        </div>
+      `).join('');
+      
+      // Add styles for memory cards
+      if (!document.getElementById('memoryStyles')) {
+        const style = document.createElement('style');
+        style.id = 'memoryStyles';
+        style.textContent = `
+          .memory-card {
+            aspect-ratio: 1;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            perspective: 1000px;
+          }
+          .memory-card:hover { transform: scale(1.05); }
+          .memory-card.flipped .card-inner { transform: rotateY(180deg); }
+          .memory-card.matched { opacity: 0.5; pointer-events: none; }
+          .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+          }
+          .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border-radius: 12px;
+          }
+          .card-front {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.2));
+          }
+          .card-back {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.3), rgba(168, 85, 247, 0.3));
+            transform: rotateY(180deg);
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    function flipCard(index) {
+      if (flippedCards.length === 2 || flippedCards.includes(index)) return;
+      
+      const card = document.querySelector(`[data-index="${index}"]`);
+      card.classList.add('flipped');
+      flippedCards.push(index);
+      
+      if (!memoryTimer) {
+        memoryTimer = setInterval(() => {
+          memorySeconds++;
+          document.getElementById('memoryTime').textContent = memorySeconds + 's';
+        }, 1000);
+      }
+      
+      if (flippedCards.length === 2) {
+        memoryMoves++;
+        document.getElementById('memoryMoves').textContent = memoryMoves;
+        
+        setTimeout(checkMatch, 800);
+      }
+    }
+
+    function checkMatch() {
+      const [index1, index2] = flippedCards;
+      const card1 = document.querySelector(`[data-index="${index1}"]`);
+      const card2 = document.querySelector(`[data-index="${index2}"]`);
+      
+      if (memoryCards[index1] === memoryCards[index2]) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        matchedPairs++;
+        document.getElementById('memoryMatches').textContent = matchedPairs + '/8';
+        
+        if (matchedPairs === 8) {
+          clearInterval(memoryTimer);
+          setTimeout(() => alert(`🎉 You won! Moves: ${memoryMoves}, Time: ${memorySeconds}s`), 300);
+        }
+      } else {
+        card1.classList.remove('flipped');
+        card2.classList.remove('flipped');
+      }
+      
+      flippedCards = [];
+    }
+
+    function resetMemoryGame() {
+      flippedCards = [];
+      matchedPairs = 0;
+      memoryMoves = 0;
+      memorySeconds = 0;
+      clearInterval(memoryTimer);
+      memoryTimer = null;
+      document.getElementById('memoryMoves').textContent = '0';
+      document.getElementById('memoryMatches').textContent = '0/8';
+      document.getElementById('memoryTime').textContent = '0s';
+      initMemoryGame();
+    }
+
+    initMemoryGame();
+
+    // ===== STOPWATCH =====
+    let stopwatchRunning = false;
+    let stopwatchStartTime = 0;
+    let stopwatchElapsed = 0;
+    let stopwatchInterval = null;
+    let lapCounter = 0;
+
+    function startStopwatch() {
+      if (stopwatchRunning) return;
+      stopwatchRunning = true;
+      stopwatchStartTime = Date.now() - stopwatchElapsed;
+      
+      stopwatchInterval = setInterval(() => {
+        stopwatchElapsed = Date.now() - stopwatchStartTime;
+        updateStopwatchDisplay();
+      }, 10);
+    }
+
+    function stopStopwatch() {
+      stopwatchRunning = false;
+      clearInterval(stopwatchInterval);
+    }
+
+    function resetStopwatch() {
+      stopwatchRunning = false;
+      clearInterval(stopwatchInterval);
+      stopwatchElapsed = 0;
+      lapCounter = 0;
+      updateStopwatchDisplay();
+      document.getElementById('lapsContainer').innerHTML = '';
+    }
+
+    function lapStopwatch() {
+      if (!stopwatchRunning) return;
+      lapCounter++;
+      const lapTime = formatStopwatchTime(stopwatchElapsed);
+      const lapsContainer = document.getElementById('lapsContainer');
+      
+      const lapElement = document.createElement('div');
+      lapElement.style.cssText = 'padding: 8px; margin: 5px 0; background: rgba(0,217,255,0.1); border-radius: 5px; display: flex; justify-content: space-between;';
+      lapElement.innerHTML = `<span>Lap ${lapCounter}</span><span style="color: var(--primary-color); font-weight: bold;">${lapTime}</span>`;
+      
+      lapsContainer.insertBefore(lapElement, lapsContainer.firstChild);
+    }
+
+    function updateStopwatchDisplay() {
+      document.getElementById('stopwatchDisplay').textContent = formatStopwatchTime(stopwatchElapsed);
+    }
+
+    function formatStopwatchTime(ms) {
+      const hours = Math.floor(ms / 3600000);
+      const minutes = Math.floor((ms % 3600000) / 60000);
+      const seconds = Math.floor((ms % 60000) / 1000);
+      const milliseconds = ms % 1000;
+      
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(milliseconds).padStart(3, '0')}`;
+    }
+
+    // ===== UNIT CONVERTER =====
+    const conversionData = {
+      length: {
+        units: ['Meters', 'Kilometers', 'Miles', 'Feet', 'Inches', 'Centimeters'],
+        toBase: { Meters: 1, Kilometers: 1000, Miles: 1609.34, Feet: 0.3048, Inches: 0.0254, Centimeters: 0.01 }
+      },
+      weight: {
+        units: ['Kilograms', 'Grams', 'Pounds', 'Ounces', 'Tons'],
+        toBase: { Kilograms: 1, Grams: 0.001, Pounds: 0.453592, Ounces: 0.0283495, Tons: 1000 }
+      },
+      temperature: {
+        units: ['Celsius', 'Fahrenheit', 'Kelvin'],
+        convert: (value, from, to) => {
+          let celsius = from === 'Celsius' ? value : from === 'Fahrenheit' ? (value - 32) * 5/9 : value - 273.15;
+          if (to === 'Celsius') return celsius;
+          if (to === 'Fahrenheit') return celsius * 9/5 + 32;
+          return celsius + 273.15;
+        }
+      },
+      data: {
+        units: ['Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes'],
+        toBase: { Bytes: 1, Kilobytes: 1024, Megabytes: 1048576, Gigabytes: 1073741824, Terabytes: 1099511627776 }
+      }
+    };
+
+    function updateConverterUnits() {
+      const category = document.getElementById('converterCategory').value;
+      const units = conversionData[category].units;
+      
+      const fromSelect = document.getElementById('converterFromUnit');
+      const toSelect = document.getElementById('converterToUnit');
+      
+      fromSelect.innerHTML = units.map(u => `<option value="${u}" style="background: #0a0a0f; color: white;">${u}</option>`).join('');
+      toSelect.innerHTML = units.map(u => `<option value="${u}" style="background: #0a0a0f; color: white;">${u}</option>`).join('');
+      toSelect.selectedIndex = 1;
+      
+      convertUnits();
+    }
+
+    function convertUnits() {
+      const category = document.getElementById('converterCategory').value;
+      const value = parseFloat(document.getElementById('converterInput').value);
+      const fromUnit = document.getElementById('converterFromUnit').value;
+      const toUnit = document.getElementById('converterToUnit').value;
+      const output = document.getElementById('converterOutput');
+      
+      if (isNaN(value)) {
+        output.value = '';
+        return;
+      }
+      
+      let result;
+      if (category === 'temperature') {
+        result = conversionData.temperature.convert(value, fromUnit, toUnit);
+      } else {
+        const data = conversionData[category];
+        const baseValue = value * data.toBase[fromUnit];
+        result = baseValue / data.toBase[toUnit];
+      }
+      
+      output.value = result.toFixed(6).replace(/\.?0+$/, '');
+    }
+
+    updateConverterUnits();
+
+    // ===== DRAWING CANVAS =====
+    const drawCanvas = document.getElementById('drawingCanvas');
+    const drawCtx = drawCanvas.getContext('2d');
+    let isDrawing = false;
+    let eraserMode = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // Set canvas size
+    drawCanvas.width = drawCanvas.offsetWidth;
+    drawCanvas.height = drawCanvas.offsetHeight;
+
+    // Brush size control
+    document.getElementById('brushSize').addEventListener('input', (e) => {
+      document.getElementById('brushSizeValue').textContent = e.target.value + 'px';
+    });
+
+    function getCanvasCoordinates(e) {
+      const rect = drawCanvas.getBoundingClientRect();
+      const scaleX = drawCanvas.width / rect.width;
+      const scaleY = drawCanvas.height / rect.height;
+      
+      let clientX, clientY;
+      if (e.type.includes('touch')) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+      };
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      const coords = getCanvasCoordinates(e);
+      lastX = coords.x;
+      lastY = coords.y;
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      
+      const coords = getCanvasCoordinates(e);
+      const brushSize = document.getElementById('brushSize').value;
+      const brushColor = document.getElementById('brushColor').value;
+      
+      drawCtx.beginPath();
+      drawCtx.moveTo(lastX, lastY);
+      drawCtx.lineTo(coords.x, coords.y);
+      drawCtx.strokeStyle = eraserMode ? 'white' : brushColor;
+      drawCtx.lineWidth = brushSize;
+      drawCtx.lineCap = 'round';
+      drawCtx.stroke();
+      
+      lastX = coords.x;
+      lastY = coords.y;
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    // Mouse events
+    drawCanvas.addEventListener('mousedown', startDrawing);
+    drawCanvas.addEventListener('mousemove', draw);
+    drawCanvas.addEventListener('mouseup', stopDrawing);
+    drawCanvas.addEventListener('mouseout', stopDrawing);
+
+    // Touch events
+    drawCanvas.addEventListener('touchstart', startDrawing);
+    drawCanvas.addEventListener('touchmove', draw);
+    drawCanvas.addEventListener('touchend', stopDrawing);
+
+    function clearCanvas() {
+      drawCtx.fillStyle = 'white';
+      drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+    }
+
+    function downloadDrawing() {
+      const link = document.createElement('a');
+      link.download = 'my-drawing.png';
+      link.href = drawCanvas.toDataURL();
+      link.click();
+    }
+
+    function toggleEraser() {
+      eraserMode = !eraserMode;
+      const btn = document.getElementById('eraserBtn');
+      btn.textContent = eraserMode ? 'Draw Mode' : 'Eraser Mode';
+      btn.style.background = eraserMode ? '#ff3b30' : 'var(--accent-color)';
+    }
+
+    // Initialize canvas with white background
+    clearCanvas();
+
+    // ===== CATEGORY FILTERING =====
+    function filterCategory(category) {
+      const cards = document.querySelectorAll('.demo-card');
+      const buttons = document.querySelectorAll('.category-btn');
+      
+      // Update active button
+      buttons.forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[data-category="${category}"]`).classList.add('active');
+      
+      // Filter cards
+      cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'block';
+          card.style.animation = 'fadeInUp 0.5s ease';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // ===== 3D PARTICLE SYSTEM =====
+    const partCanvas = document.getElementById('particleCanvas');
+    const partCtx = partCanvas.getContext('2d');
+    let particles = [];
+    let mouseX = 0;
+    let mouseY = 0;
+
+    partCanvas.width = partCanvas.offsetWidth;
+    partCanvas.height = 400;
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * partCanvas.width;
+        this.y = Math.random() * partCanvas.height;
+        this.z = Math.random() * 1000;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.vz = (Math.random() - 0.5) * 2;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.z += this.vz;
+
+        // Mouse attraction
+        const dx = mouseX - this.x;
+        const dy = mouseY - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100) {
+          this.x += dx * 0.01;
+          this.y += dy * 0.01;
+        }
+
+        // Wrap around edges
+        if (this.x < 0) this.x = partCanvas.width;
+        if (this.x > partCanvas.width) this.x = 0;
+        if (this.y < 0) this.y = partCanvas.height;
+        if (this.y > partCanvas.height) this.y = 0;
+        if (this.z < 0) this.z = 1000;
+        if (this.z > 1000) this.z = 0;
+      }
+
+      draw() {
+        const scale = 1000 / (1000 - this.z);
+        const x2d = (this.x - partCanvas.width / 2) * scale + partCanvas.width / 2;
+        const y2d = (this.y - partCanvas.height / 2) * scale + partCanvas.height / 2;
+        const size = 2 * scale;
+
+        partCtx.fillStyle = `hsla(${(this.z / 1000) * 180 + 180}, 100%, 60%, ${scale / 2})`;
+        partCtx.beginPath();
+        partCtx.arc(x2d, y2d, size, 0, Math.PI * 2);
+        partCtx.fill();
+      }
+    }
+
+    function resetParticles() {
+      const count = parseInt(document.getElementById('particleCount').value);
+      document.getElementById('particleCountValue').textContent = count;
+      particles = [];
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      partCtx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+      partCtx.fillRect(0, 0, partCanvas.width, partCanvas.height);
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      requestAnimationFrame(animateParticles);
+    }
+
+    partCanvas.addEventListener('mousemove', (e) => {
+      const rect = partCanvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    });
+
+    resetParticles();
+    animateParticles();
+
+    // ===== LIVE CODE EDITOR =====
+    function runCode() {
+      const html = document.getElementById('htmlCode').value;
+      const css = document.getElementById('cssCode').value;
+      const js = document.getElementById('jsCode').value;
+      const iframe = document.getElementById('codePreview');
+      
+      const code = `
+        <!DOCTYPE html>
+        <html>
+        <head><style>${css}</style></head>
+        <body>${html}<script>${js}<\/script></body>
+        </html>
+      `;
+      
+      iframe.srcdoc = code;
+    }
+    runCode();
+
+    // ===== CHART BUILDER =====
+    const chartCanvas = document.getElementById('dataChart');
+    const chartCtx = chartCanvas.getContext('2d');
+    chartCanvas.width = chartCanvas.offsetWidth;
+    chartCanvas.height = 300;
+
+    function updateChart() {
+      const data = document.getElementById('chartData').value.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+      const type = document.getElementById('chartType').value;
+      
+      chartCtx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+      
+      if (type === 'bar') drawBarChart(data);
+      else if (type === 'line') drawLineChart(data);
+      else if (type === 'pie') drawPieChart(data);
+    }
+
+    function drawBarChart(data) {
+      const max = Math.max(...data);
+      const barWidth = chartCanvas.width / data.length - 10;
+      const colors = ['#00d9ff', '#a855f7', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#06b6d4'];
+      
+      data.forEach((value, i) => {
+        const height = (value / max) * (chartCanvas.height - 40);
+        const x = i * (barWidth + 10) + 5;
+        const y = chartCanvas.height - height - 20;
+        
+        chartCtx.fillStyle = colors[i % colors.length];
+        chartCtx.fillRect(x, y, barWidth, height);
+        
+        chartCtx.fillStyle = '#fff';
+        chartCtx.font = '12px Inter';
+        chartCtx.textAlign = 'center';
+        chartCtx.fillText(value, x + barWidth / 2, chartCanvas.height - 5);
+      });
+    }
+
+    function drawLineChart(data) {
+      const max = Math.max(...data);
+      const stepX = chartCanvas.width / (data.length - 1);
+      
+      chartCtx.strokeStyle = '#00d9ff';
+      chartCtx.lineWidth = 3;
+      chartCtx.beginPath();
+      
+      data.forEach((value, i) => {
+        const x = i * stepX;
+        const y = chartCanvas.height - (value / max) * (chartCanvas.height - 40) - 20;
+        
+        if (i === 0) chartCtx.moveTo(x, y);
+        else chartCtx.lineTo(x, y);
+        
+        // Draw points
+        chartCtx.fillStyle = '#a855f7';
+        chartCtx.beginPath();
+        chartCtx.arc(x, y, 5, 0, Math.PI * 2);
+        chartCtx.fill();
+      });
+      
+      chartCtx.stroke();
+    }
+
+    function drawPieChart(data) {
+      const total = data.reduce((a, b) => a + b, 0);
+      const colors = ['#00d9ff', '#a855f7', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#06b6d4'];
+      const centerX = chartCanvas.width / 2;
+      const centerY = chartCanvas.height / 2;
+      const radius = Math.min(centerX, centerY) - 20;
+      
+      let currentAngle = -Math.PI / 2;
+      
+      data.forEach((value, i) => {
+        const sliceAngle = (value / total) * Math.PI * 2;
+        
+        chartCtx.fillStyle = colors[i % colors.length];
+        chartCtx.beginPath();
+        chartCtx.moveTo(centerX, centerY);
+        chartCtx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+        chartCtx.closePath();
+        chartCtx.fill();
+        
+        // Labels
+        const labelAngle = currentAngle + sliceAngle / 2;
+        const labelX = centerX + Math.cos(labelAngle) * (radius * 0.7);
+        const labelY = centerY + Math.sin(labelAngle) * (radius * 0.7);
+        
+        chartCtx.fillStyle = '#fff';
+        chartCtx.font = 'bold 14px Inter';
+        chartCtx.textAlign = 'center';
+        chartCtx.fillText(`${Math.round((value / total) * 100)}%`, labelX, labelY);
+        
+        currentAngle += sliceAngle;
+      });
+    }
+
+    updateChart();
+
+    // ===== SNAKE GAME =====
+    const snakeCanvas = document.getElementById('snakeCanvas');
+    const snakeCtx = snakeCanvas.getContext('2d');
+    snakeCanvas.width = 400;
+    snakeCanvas.height = 400;
+    
+    let snake = [{x: 10, y: 10}];
+    let food = {x: 15, y: 15};
+    let dx = 0, dy = 0;
+    let score = 0;
+    let highScore = localStorage.getItem('snakeHigh') || 0;
+    let gameLoop = null;
+    
+    document.getElementById('snakeHigh').textContent = highScore;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -1; }
+      if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
+      if (e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; }
+      if (e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
+    });
+
+    function startSnakeGame() {
+      snake = [{x: 10, y: 10}];
+      dx = 1; dy = 0;
+      score = 0;
+      document.getElementById('snakeScore').textContent = score;
+      spawnFood();
+      if (gameLoop) clearInterval(gameLoop);
+      gameLoop = setInterval(updateSnake, 100);
+    }
+
+    function updateSnake() {
+      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+      
+      // Check collision with walls
+      if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
+        endGame();
+        return;
+      }
+      
+      // Check collision with self
+      if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        endGame();
+        return;
+      }
+      
+      snake.unshift(head);
+      
+      // Check food
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        document.getElementById('snakeScore').textContent = score;
+        spawnFood();
+      } else {
+        snake.pop();
+      }
+      
+      drawSnake();
+    }
+
+    function drawSnake() {
+      snakeCtx.fillStyle = '#0a0a0f';
+      snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+      
+      // Draw snake
+      snake.forEach((segment, i) => {
+        snakeCtx.fillStyle = i === 0 ? '#00d9ff' : '#a855f7';
+        snakeCtx.fillRect(segment.x * 20, segment.y * 20, 18, 18);
+      });
+      
+      // Draw food
+      snakeCtx.fillStyle = '#f59e0b';
+      snakeCtx.fillRect(food.x * 20, food.y * 20, 18, 18);
+    }
+
+    function spawnFood() {
+      food = {
+        x: Math.floor(Math.random() * 20),
+        y: Math.floor(Math.random() * 20)
+      };
+    }
+
+    function endGame() {
+      clearInterval(gameLoop);
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('snakeHigh', highScore);
+        document.getElementById('snakeHigh').textContent = highScore;
+      }
+      
+      // Create professional modal
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+      modal.innerHTML = `
+        <div style="background: linear-gradient(135deg, #1a1a2e, #0a0a0f); padding: 40px; border-radius: 20px; border: 2px solid #00d9ff; box-shadow: 0 0 40px rgba(0,217,255,0.3); text-align: center; max-width: 400px;">
+          <h2 style="color: #00d9ff; font-size: 2rem; margin-bottom: 20px;">🎮 Game Over!</h2>
+          <p style="color: white; font-size: 1.5rem; margin: 20px 0;">Score: <span style="color: #f59e0b; font-weight: bold;">${score}</span></p>
+          ${score > highScore ? '<p style="color: #10b981; font-size: 1.2rem; margin: 10px 0;">🏆 New High Score!</p>' : `<p style="color: #a0aec0; font-size: 1rem;">High Score: ${highScore}</p>`}
+          <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #00d9ff, #a855f7); border: none; border-radius: 10px; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: transform 0.2s;">Play Again</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    }
+
+    drawSnake();
+
+    // ===== SENTIMENT ANALYZER =====
+    function analyzeSentiment() {
+      const text = document.getElementById('sentimentText').value.toLowerCase();
+      const resultDiv = document.getElementById('sentimentResult');
+      
+      // Simple keyword-based sentiment analysis
+      const positiveWords = ['love', 'amazing', 'great', 'excellent', 'wonderful', 'fantastic', 'good', 'best', 'awesome', 'incredible', 'perfect', 'beautiful'];
+      const negativeWords = ['hate', 'terrible', 'awful', 'bad', 'worst', 'horrible', 'poor', 'disappointing', 'sad', 'angry', 'frustrating'];
+      
+      let positiveCount = 0;
+      let negativeCount = 0;
+      
+      positiveWords.forEach(word => {
+        const regex = new RegExp(word, 'gi');
+        const matches = text.match(regex);
+        if (matches) positiveCount += matches.length;
+      });
+      
+      negativeWords.forEach(word => {
+        const regex = new RegExp(word, 'gi');
+        const matches = text.match(regex);
+        if (matches) negativeCount += matches.length;
+      });
+      
+      const total = positiveCount + negativeCount || 1;
+      const positivePercent = (positiveCount / total) * 100;
+      const negativePercent = (negativeCount / total) * 100;
+      
+      let sentiment, emoji, score;
+      if (positiveCount > negativeCount) {
+        sentiment = 'Positive';
+        emoji = '😊';
+        score = Math.min(Math.round(positivePercent), 95);
+      } else if (negativeCount > positiveCount) {
+        sentiment = 'Negative';
+        emoji = '😔';
+        score = Math.min(Math.round(negativePercent), 95);
+      } else {
+        sentiment = 'Neutral';
+        emoji = '😐';
+        score = 50;
+      }
+      
+      document.getElementById('sentimentEmoji').textContent = emoji;
+      document.getElementById('sentimentLabel').textContent = sentiment;
+      document.getElementById('sentimentScore').textContent = score + '%';
+      document.getElementById('positiveBar').style.width = positivePercent + '%';
+      document.getElementById('negativeBar').style.width = negativePercent + '%';
+      
+      resultDiv.style.display = 'block';
+    }
+
+    // ===== MAZE GENERATOR & SOLVER =====
+    const mazeCanvas = document.getElementById('mazeCanvas');
+    const mazeCtx = mazeCanvas.getContext('2d');
+    mazeCanvas.width = 500;
+    mazeCanvas.height = 500;
+    
+    const mazeSize = 20;
+    const cellSize = mazeCanvas.width / mazeSize;
+    let maze = [];
+    let mazePath = [];
+
+    function generateMaze() {
+      maze = Array(mazeSize).fill().map(() => Array(mazeSize).fill(1));
+      const stack = [];
+      const start = {x: 0, y: 0};
+      maze[0][0] = 0;
+      stack.push(start);
+      
+      while (stack.length > 0) {
+        const current = stack[stack.length - 1];
+        const neighbors = [];
+        
+        // Check all 4 directions
+        [[0, -2], [2, 0], [0, 2], [-2, 0]].forEach(([dx, dy]) => {
+          const nx = current.x + dx;
+          const ny = current.y + dy;
+          if (nx >= 0 && nx < mazeSize && ny >= 0 && ny < mazeSize && maze[ny][nx] === 1) {
+            neighbors.push({x: nx, y: ny, dx, dy});
+          }
+        });
+        
+        if (neighbors.length > 0) {
+          const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+          maze[next.y][next.x] = 0;
+          maze[current.y + next.dy / 2][current.x + next.dx / 2] = 0;
+          stack.push({x: next.x, y: next.y});
+        } else {
+          stack.pop();
+        }
+      }
+      
+      maze[mazeSize - 1][mazeSize - 1] = 0; // Ensure exit is open
+      mazePath = [];
+      drawMaze();
+    }
+
+    function drawMaze() {
+      mazeCtx.fillStyle = '#0a0a0f';
+      mazeCtx.fillRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+      
+      for (let y = 0; y < mazeSize; y++) {
+        for (let x = 0; x < mazeSize; x++) {
+          if (maze[y][x] === 1) {
+            mazeCtx.fillStyle = '#00d9ff';
+            mazeCtx.fillRect(x * cellSize, y * cellSize, cellSize - 1, cellSize - 1);
+          }
+        }
+      }
+      
+      // Draw start
+      mazeCtx.fillStyle = '#10b981';
+      mazeCtx.fillRect(0, 0, cellSize - 1, cellSize - 1);
+      
+      // Draw end
+      mazeCtx.fillStyle = '#ef4444';
+      mazeCtx.fillRect((mazeSize - 1) * cellSize, (mazeSize - 1) * cellSize, cellSize - 1, cellSize - 1);
+      
+      // Draw path
+      mazeCtx.fillStyle = '#f59e0b';
+      mazePath.forEach(({x, y}) => {
+        mazeCtx.fillRect(x * cellSize + 2, y * cellSize + 2, cellSize - 5, cellSize - 5);
+      });
+    }
+
+    function solveMaze() {
+      if (!maze || maze.length === 0) {
+        console.error('Maze not initialized');
+        return;
+      }
+      
+      const visited = Array(mazeSize).fill().map(() => Array(mazeSize).fill(false));
+      const path = [];
+      
+      function dfs(x, y) {
+        if (x < 0 || x >= mazeSize || y < 0 || y >= mazeSize || visited[y][x] || maze[y][x] === 1) {
+          return false;
+        }
+        
+        visited[y][x] = true;
+        path.push({x, y});
+        
+        if (x === mazeSize - 1 && y === mazeSize - 1) {
+          return true;
+        }
+        
+        if (dfs(x + 1, y) || dfs(x, y + 1) || dfs(x - 1, y) || dfs(x, y - 1)) {
+          return true;
+        }
+        
+        path.pop();
+        return false;
+      }
+      
+      if (dfs(0, 0)) {
+        mazePath = path;
+        
+        // Animate solution
+        let i = 0;
+        const interval = setInterval(() => {
+          if (i < mazePath.length) {
+            drawMaze();
+            i++;
+          } else {
+            clearInterval(interval);
+          }
+        }, 30);
+      } else {
+        console.log('No solution found');
+      }
+    }
+
+    function resetMaze() {
+      mazePath = [];
+      drawMaze();
+    }
+
+    generateMaze();
+
+    // ===== IMAGE FILTER STUDIO =====
+    const imgCanvas = document.getElementById('imageCanvas');
+    const imgCtx = imgCanvas.getContext('2d');
+    let originalImage = null;
+    let currentImageData = null;
+
+    function loadImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          imgCanvas.width = img.width;
+          imgCanvas.height = img.height;
+          imgCtx.drawImage(img, 0, 0);
+          originalImage = imgCtx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
+          currentImageData = imgCtx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyFilter(filterType) {
+      if (!originalImage) {
+        alert('Please upload an image first!');
+        return;
+      }
+      
+      if (filterType === 'reset') {
+        imgCtx.putImageData(originalImage, 0, 0);
+        currentImageData = imgCtx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
+        return;
+      }
+      
+      const imageData = imgCtx.getImageData(0, 0, imgCanvas.width, imgCanvas.height);
+      const data = imageData.data;
+      
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        
+        switch(filterType) {
+          case 'grayscale':
+            const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+            data[i] = data[i + 1] = data[i + 2] = gray;
+            break;
+          case 'sepia':
+            data[i] = Math.min(255, (r * 0.393) + (g * 0.769) + (b * 0.189));
+            data[i + 1] = Math.min(255, (r * 0.349) + (g * 0.686) + (b * 0.168));
+            data[i + 2] = Math.min(255, (r * 0.272) + (g * 0.534) + (b * 0.131));
+            break;
+          case 'invert':
+            data[i] = 255 - r;
+            data[i + 1] = 255 - g;
+            data[i + 2] = 255 - b;
+            break;
+          case 'brightness':
+            data[i] = Math.min(255, r * 1.2);
+            data[i + 1] = Math.min(255, g * 1.2);
+            data[i + 2] = Math.min(255, b * 1.2);
+            break;
+          case 'contrast':
+            const factor = 1.5;
+            data[i] = Math.min(255, Math.max(0, factor * (r - 128) + 128));
+            data[i + 1] = Math.min(255, Math.max(0, factor * (g - 128) + 128));
+            data[i + 2] = Math.min(255, Math.max(0, factor * (b - 128) + 128));
+            break;
+        }
+      }
+      
+      if (filterType === 'blur') {
+        // Simple box blur
+        const tempData = new Uint8ClampedArray(data);
+        const width = imgCanvas.width;
+        const radius = 2;
+        
+        for (let y = radius; y < imgCanvas.height - radius; y++) {
+          for (let x = radius; x < width - radius; x++) {
+            let r = 0, g = 0, b = 0, count = 0;
+            
+            for (let dy = -radius; dy <= radius; dy++) {
+              for (let dx = -radius; dx <= radius; dx++) {
+                const idx = ((y + dy) * width + (x + dx)) * 4;
+                r += tempData[idx];
+                g += tempData[idx + 1];
+                b += tempData[idx + 2];
+                count++;
+              }
+            }
+            
+            const idx = (y * width + x) * 4;
+            data[idx] = r / count;
+            data[idx + 1] = g / count;
+            data[idx + 2] = b / count;
+          }
+        }
+      }
+      
+      imgCtx.putImageData(imageData, 0, 0);
+    }
+
+    // ===== PHYSICS SIMULATOR =====
+    const physCanvas = document.getElementById('physicsCanvas');
+    const physCtx = physCanvas.getContext('2d');
+    let physicsBalls = [];
+    let gravityEnabled = true;
+    let physicsAnimationId;
+
+    class Ball {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = Math.random() * 15 + 10;
+        this.vx = (Math.random() - 0.5) * 8;
+        this.vy = (Math.random() - 0.5) * 8;
+        this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        this.mass = this.radius;
+      }
+
+      update() {
+        if (gravityEnabled) this.vy += 0.3;
+        
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        // Wall collisions with bounce
+        if (this.x + this.radius > physCanvas.width) {
+          this.x = physCanvas.width - this.radius;
+          this.vx *= -0.8;
+        }
+        if (this.x - this.radius < 0) {
+          this.x = this.radius;
+          this.vx *= -0.8;
+        }
+        if (this.y + this.radius > physCanvas.height) {
+          this.y = physCanvas.height - this.radius;
+          this.vy *= -0.8;
+          this.vx *= 0.98; // Friction
+        }
+        if (this.y - this.radius < 0) {
+          this.y = this.radius;
+          this.vy *= -0.8;
+        }
+      }
+
+      draw() {
+        physCtx.beginPath();
+        physCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        physCtx.fillStyle = this.color;
+        physCtx.fill();
+        physCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+        physCtx.lineWidth = 2;
+        physCtx.stroke();
+      }
+    }
+
+    function animatePhysics() {
+      physCtx.clearRect(0, 0, physCanvas.width, physCanvas.height);
+      
+      physicsBalls.forEach((ball, index) => {
+        ball.update();
+        
+        // Ball-to-ball collisions
+        for (let i = index + 1; i < physicsBalls.length; i++) {
+          const other = physicsBalls[i];
+          const dx = other.x - ball.x;
+          const dy = other.y - ball.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < ball.radius + other.radius) {
+            const angle = Math.atan2(dy, dx);
+            const sin = Math.sin(angle);
+            const cos = Math.cos(angle);
+            
+            // Rotate velocities
+            const vx1 = ball.vx * cos + ball.vy * sin;
+            const vy1 = ball.vy * cos - ball.vx * sin;
+            const vx2 = other.vx * cos + other.vy * sin;
+            const vy2 = other.vy * cos - other.vx * sin;
+            
+            // Collision response
+            const totalMass = ball.mass + other.mass;
+            const vx1Final = ((ball.mass - other.mass) * vx1 + 2 * other.mass * vx2) / totalMass;
+            const vx2Final = ((other.mass - ball.mass) * vx2 + 2 * ball.mass * vx1) / totalMass;
+            
+            // Rotate back
+            ball.vx = vx1Final * cos - vy1 * sin;
+            ball.vy = vy1 * cos + vx1Final * sin;
+            other.vx = vx2Final * cos - vy2 * sin;
+            other.vy = vy2 * cos + vx2Final * sin;
+            
+            // Separate balls
+            const overlap = ball.radius + other.radius - distance;
+            ball.x -= overlap * cos * 0.5;
+            ball.y -= overlap * sin * 0.5;
+            other.x += overlap * cos * 0.5;
+            other.y += overlap * sin * 0.5;
+          }
+        }
+        
+        ball.draw();
+      });
+      
+      physicsAnimationId = requestAnimationFrame(animatePhysics);
+    }
+
+    function addPhysicsBall() {
+      const x = Math.random() * (physCanvas.width - 50) + 25;
+      const y = Math.random() * 100 + 50;
+      physicsBalls.push(new Ball(x, y));
+    }
+
+    function toggleGravity() {
+      gravityEnabled = !gravityEnabled;
+      document.getElementById('gravityStatus').textContent = gravityEnabled ? 'ON' : 'OFF';
+    }
+
+    function clearPhysicsBalls() {
+      physicsBalls = [];
+    }
+
+    physCanvas.addEventListener('click', (e) => {
+      const rect = physCanvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (physCanvas.width / rect.width);
+      const y = (e.clientY - rect.top) * (physCanvas.height / rect.height);
+      physicsBalls.push(new Ball(x, y));
+    });
+
+    // Start with a few balls
+    for (let i = 0; i < 5; i++) addPhysicsBall();
+    animatePhysics();
+
+    // ===== AUDIO VISUALIZER =====
+    const audioCanvas = document.getElementById('audioCanvas');
+    const audioCtx = audioCanvas.getContext('2d');
+    let audioContext, analyser, microphone, dataArray;
+    let visualizerStyle = 'bars';
+    let audioAnimationId;
+
+    async function startAudioVisualizer() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        analyser.fftSize = 256;
+        
+        const bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+        
+        document.getElementById('audioStartBtn').textContent = 'Listening...';
+        document.getElementById('audioStartBtn').style.background = 'var(--accent-color)';
+        
+        animateAudio();
+      } catch (err) {
+        alert('Microphone access denied. Please allow microphone access.');
+      }
+    }
+
+    function animateAudio() {
+      analyser.getByteFrequencyData(dataArray);
+      
+      audioCtx.clearRect(0, 0, audioCanvas.width, audioCanvas.height);
+      
+      if (visualizerStyle === 'bars') {
+        const barWidth = (audioCanvas.width / dataArray.length) * 2.5;
+        let x = 0;
+        
+        for (let i = 0; i < dataArray.length; i++) {
+          const barHeight = (dataArray[i] / 255) * audioCanvas.height;
+          const hue = (i / dataArray.length) * 360;
+          
+          const gradient = audioCtx.createLinearGradient(0, audioCanvas.height, 0, audioCanvas.height - barHeight);
+          gradient.addColorStop(0, `hsla(${hue}, 100%, 50%, 0.8)`);
+          gradient.addColorStop(1, `hsla(${hue + 60}, 100%, 60%, 0.9)`);
+          
+          audioCtx.fillStyle = gradient;
+          audioCtx.fillRect(x, audioCanvas.height - barHeight, barWidth - 2, barHeight);
+          
+          x += barWidth;
+        }
+      } else {
+        // Circular waveform
+        audioCtx.beginPath();
+        audioCtx.arc(audioCanvas.width / 2, audioCanvas.height / 2, 50, 0, Math.PI * 2);
+        audioCtx.strokeStyle = 'rgba(0,217,255,0.3)';
+        audioCtx.lineWidth = 2;
+        audioCtx.stroke();
+        
+        for (let i = 0; i < dataArray.length; i++) {
+          const angle = (i / dataArray.length) * Math.PI * 2;
+          const radius = 50 + (dataArray[i] / 255) * 100;
+          const x = audioCanvas.width / 2 + Math.cos(angle) * radius;
+          const y = audioCanvas.height / 2 + Math.sin(angle) * radius;
+          const hue = (i / dataArray.length) * 360;
+          
+          audioCtx.beginPath();
+          audioCtx.arc(x, y, 3, 0, Math.PI * 2);
+          audioCtx.fillStyle = `hsl(${hue}, 100%, 60%)`;
+          audioCtx.fill();
+        }
+      }
+      
+      audioAnimationId = requestAnimationFrame(animateAudio);
+    }
+
+    function toggleVisualizerStyle() {
+      visualizerStyle = visualizerStyle === 'bars' ? 'circular' : 'bars';
+      document.getElementById('visualizerStyleBtn').textContent = `Style: ${visualizerStyle === 'bars' ? 'Bars' : 'Circular'}`;
+    }
+
+    // ===== NEURAL NETWORK VISUALIZER =====
+    const neuralCanvas = document.getElementById('neuralCanvas');
+    const neuralCtx = neuralCanvas.getContext('2d');
+    let nnEpoch = 0;
+    let nnLoss = 1.0;
+    let nnAccuracy = 0;
+    let nnTraining = false;
+    let nnAnimationId;
+    
+    const layers = [4, 6, 6, 3];
+    let neurons = [];
+    let connections = [];
+
+    function initNeuralNetwork() {
+      neurons = [];
+      connections = [];
+      
+      const layerSpacing = neuralCanvas.width / (layers.length + 1);
+      
+      layers.forEach((count, layerIndex) => {
+        const neuronSpacing = neuralCanvas.height / (count + 1);
+        for (let i = 0; i < count; i++) {
+          neurons.push({
+            x: layerSpacing * (layerIndex + 1),
+            y: neuronSpacing * (i + 1),
+            layer: layerIndex,
+            activation: Math.random()
+          });
+        }
+      });
+      
+      // Create connections
+      let neuronIndex = 0;
+      for (let l = 0; l < layers.length - 1; l++) {
+        const currentLayerSize = layers[l];
+        const nextLayerSize = layers[l + 1];
+        const currentLayerStart = neuronIndex;
+        const nextLayerStart = neuronIndex + currentLayerSize;
+        
+        for (let i = 0; i < currentLayerSize; i++) {
+          for (let j = 0; j < nextLayerSize; j++) {
+            connections.push({
+              from: currentLayerStart + i,
+              to: nextLayerStart + j,
+              weight: Math.random() * 2 - 1
+            });
+          }
+        }
+        neuronIndex += currentLayerSize;
+      }
+    }
+
+    function drawNeuralNetwork() {
+      neuralCtx.clearRect(0, 0, neuralCanvas.width, neuralCanvas.height);
+      
+      // Draw connections
+      connections.forEach(conn => {
+        const from = neurons[conn.from];
+        const to = neurons[conn.to];
+        const opacity = Math.abs(conn.weight) * 0.3;
+        
+        neuralCtx.beginPath();
+        neuralCtx.moveTo(from.x, from.y);
+        neuralCtx.lineTo(to.x, to.y);
+        neuralCtx.strokeStyle = conn.weight > 0 ? 
+          `rgba(0,217,255,${opacity})` : 
+          `rgba(168,85,247,${opacity})`;
+        neuralCtx.lineWidth = Math.abs(conn.weight) * 2;
+        neuralCtx.stroke();
+      });
+      
+      // Draw neurons
+      neurons.forEach((neuron, index) => {
+        const pulseSize = neuron.activation * 5;
+        
+        neuralCtx.beginPath();
+        neuralCtx.arc(neuron.x, neuron.y, 15 + pulseSize, 0, Math.PI * 2);
+        
+        const gradient = neuralCtx.createRadialGradient(
+          neuron.x, neuron.y, 0,
+          neuron.x, neuron.y, 15 + pulseSize
+        );
+        gradient.addColorStop(0, `rgba(0,217,255,${neuron.activation})`);
+        gradient.addColorStop(1, `rgba(168,85,247,${neuron.activation * 0.5})`);
+        
+        neuralCtx.fillStyle = gradient;
+        neuralCtx.fill();
+        neuralCtx.strokeStyle = 'rgba(255,255,255,0.5)';
+        neuralCtx.lineWidth = 2;
+        neuralCtx.stroke();
+      });
+    }
+
+    function startNeuralTraining() {
+      if (nnTraining) return;
+      nnTraining = true;
+      document.getElementById('nnTrainBtn').textContent = 'Training...';
+      document.getElementById('nnTrainBtn').style.background = 'var(--accent-color)';
+      
+      function trainStep() {
+        if (!nnTraining) return;
+        
+        // Simulate training
+        nnEpoch++;
+        nnLoss = Math.max(0.001, nnLoss * 0.95 + Math.random() * 0.02);
+        nnAccuracy = Math.min(99, nnAccuracy + Math.random() * 2);
+        
+        // Update neuron activations
+        neurons.forEach(neuron => {
+          neuron.activation = Math.random() * 0.7 + 0.3;
+        });
+        
+        // Update connection weights
+        connections.forEach(conn => {
+          conn.weight += (Math.random() - 0.5) * 0.1;
+          conn.weight = Math.max(-1, Math.min(1, conn.weight));
+        });
+        
+        document.getElementById('nnEpoch').textContent = nnEpoch;
+        document.getElementById('nnLoss').textContent = nnLoss.toFixed(3);
+        document.getElementById('nnAccuracy').textContent = nnAccuracy.toFixed(1) + '%';
+        
+        drawNeuralNetwork();
+        
+        if (nnEpoch < 100) {
+          setTimeout(trainStep, 100);
+        } else {
+          nnTraining = false;
+          document.getElementById('nnTrainBtn').textContent = 'Training Complete!';
+        }
+      }
+      
+      trainStep();
+    }
+
+    function resetNeuralNetwork() {
+      nnTraining = false;
+      nnEpoch = 0;
+      nnLoss = 1.0;
+      nnAccuracy = 0;
+      document.getElementById('nnEpoch').textContent = '0';
+      document.getElementById('nnLoss').textContent = '1.000';
+      document.getElementById('nnAccuracy').textContent = '0%';
+      document.getElementById('nnTrainBtn').textContent = 'Start Training';
+      document.getElementById('nnTrainBtn').style.background = '';
+      initNeuralNetwork();
+      drawNeuralNetwork();
+    }
+
+    initNeuralNetwork();
+    drawNeuralNetwork();
+
+    // ===== WEATHER DASHBOARD =====
+    async function getWeather() {
+      const city = document.getElementById('weatherCity').value.trim();
+      const display = document.getElementById('weatherDisplay');
+      
+      if (!city) {
+        display.innerHTML = '<p style="color: var(--accent-color);">Please enter a city name</p>';
+        return;
+      }
+      
+      display.innerHTML = '<p style="color: var(--primary-color);">Loading weather data...</p>';
+      
+      try {
+        // Using Open-Meteo API (no API key required)
+        const geoResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
+        const geoData = await geoResponse.json();
+        
+        if (!geoData.results || geoData.results.length === 0) {
+          throw new Error('City not found');
+        }
+        
+        const { latitude, longitude, name, country } = geoData.results[0];
+        
+        const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=fahrenheit`);
+        const weatherData = await weatherResponse.json();
+        
+        const { temperature, windspeed, weathercode } = weatherData.current_weather;
+        
+        const weatherDescriptions = {
+          0: '☀️ Clear sky',
+          1: '🌤️ Mainly clear',
+          2: '⛅ Partly cloudy',
+          3: '☁️ Overcast',
+          45: '🌫️ Foggy',
+          48: '🌫️ Foggy',
+          51: '🌦️ Light drizzle',
+          61: '🌧️ Light rain',
+          63: '🌧️ Moderate rain',
+          65: '🌧️ Heavy rain',
+          71: '🌨️ Light snow',
+          73: '🌨️ Moderate snow',
+          75: '🌨️ Heavy snow',
+          95: '⛈️ Thunderstorm'
+        };
+        
+        const description = weatherDescriptions[weathercode] || '🌍 Weather';
+        
+        display.innerHTML = `
+          <div style="text-align: center;">
+            <h2 style="font-size: 2.5rem; margin: 0 0 10px 0; color: var(--primary-color);">${name}, ${country}</h2>
+            <div style="font-size: 4rem; margin: 20px 0;">${description.split(' ')[0]}</div>
+            <div style="font-size: 3rem; font-weight: bold; color: var(--secondary-color); margin: 15px 0;">${temperature}°F</div>
+            <div style="font-size: 1.2rem; color: var(--text-secondary); margin: 10px 0;">${description.substring(2)}</div>
+            <div style="display: flex; gap: 30px; justify-content: center; margin-top: 20px; font-size: 1.1rem;">
+              <div>
+                <div style="color: var(--text-secondary);">Wind Speed</div>
+                <div style="color: var(--primary-color); font-weight: bold;">${windspeed} mph</div>
+              </div>
+              <div>
+                <div style="color: var(--text-secondary);">Coordinates</div>
+                <div style="color: var(--primary-color); font-weight: bold; font-size: 0.9rem;">${latitude.toFixed(2)}°, ${longitude.toFixed(2)}°</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        display.innerHTML = `<p style="color: var(--accent-color);">❌ Could not fetch weather data. Please try another city.</p>`;
+        console.error('Weather error:', error);
+      }
+    }
+
+    // ===== CODE SYNTAX HIGHLIGHTER =====
+    function highlightCode() {
+      const code = document.getElementById('codeInput').value;
+      const lang = document.getElementById('syntaxLang').value;
+      const output = document.getElementById('highlightedCode');
+      
+      if (!code.trim()) {
+        output.style.display = 'none';
+        return;
+      }
+      
+      let highlighted = code;
+      
+      // Simple syntax highlighting patterns
+      const patterns = {
+        javascript: [
+          { regex: /(const|let|var|function|return|if|else|for|while|class|async|await|import|export)\b/g, color: '#ff79c6' },
+          { regex: /'([^']+)'/g, color: '#50fa7b' },
+          { regex: /"([^"]+)"/g, color: '#50fa7b' },
+          { regex: /\b(\d+)\b/g, color: '#bd93f9' },
+          { regex: /(\/\/.*$)/gm, color: '#6272a4' },
+        ],
+        python: [
+          { regex: /(def|class|import|from|if|elif|else|for|while|return|async|await)\b/g, color: '#ff79c6' },
+          { regex: /'([^']+)'/g, color: '#50fa7b' },
+          { regex: /"([^"]+)"/g, color: '#50fa7b' },
+          { regex: /\b(\d+)\b/g, color: '#bd93f9' },
+          { regex: /(#.*$)/gm, color: '#6272a4' },
+        ],
+        html: [
+          { regex: /(&lt;\/?[a-z]+[^&]*&gt;)/gi, color: '#ff79c6' },
+          { regex: /([a-z-]+)=/gi, color: '#50fa7b' },
+          { regex: /"([^"]+)"/g, color: '#f1fa8c' },
+        ],
+        css: [
+          { regex: /([.#][a-z-]+)/gi, color: '#50fa7b' },
+          { regex: /([a-z-]+):/gi, color: '#8be9fd' },
+          { regex: /"([^"]+)"/g, color: '#f1fa8c' },
+          { regex: /(\/\*.*?\*\/)/gs, color: '#6272a4' },
+        ],
+        sql: [
+          { regex: /(SELECT|FROM|WHERE|INSERT|UPDATE|DELETE|JOIN|ON|GROUP BY|ORDER BY|HAVING|CREATE|TABLE|DATABASE)\b/gi, color: '#ff79c6' },
+          { regex: /'([^']+)'/g, color: '#50fa7b' },
+          { regex: /\b(\d+)\b/g, color: '#bd93f9' },
+          { regex: /(--.*$)/gm, color: '#6272a4' },
+        ]
+      };
+      
+      highlighted = highlighted
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      
+      if (patterns[lang]) {
+        patterns[lang].forEach(pattern => {
+          highlighted = highlighted.replace(pattern.regex, `<span style="color: ${pattern.color}">$&</span>`);
+        });
+      }
+      
+      output.innerHTML = `<pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">${highlighted}</pre>`;
+      output.style.display = 'block';
+    }
+  </script>
+
+  <!-- AI Chatbot -->
+  <script src="../js/ai-chatbot.js"></script>
+  <script>
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatbot = new PortfolioChatbot();
+        chatbot.init();
+      });
+    } else {
+      const chatbot = new PortfolioChatbot();
+      chatbot.init();
+    }
+  </script>
+</body>
+</html>

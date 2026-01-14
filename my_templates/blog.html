@@ -2,56 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Blog</title>
+    <title>Blog | Nick Holmes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Your existing styles ... */
+        :root {
+            --primary-color: #00d9ff;
+            --secondary-color: #a855f7;
+            --accent-color: #f59e0b;
+            --bg-dark: #0a0a0f;
+            --bg-card: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+        }
 
-        /* Style for the blog posts */
-        .blog-post {
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .blog-post h2 {
+        body {
             margin: 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eaeaea;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        header, main, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .blog-post {
+            margin: 30px auto;
+            padding: 40px;
+            max-width: 900px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .blog-post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 217, 255, 0.3);
+            border-color: var(--primary-color);
+        }
+
+        .blog-post h2 {
+            margin: 0 0 15px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
         .blog-post time {
-            font-size: 0.8em;
-            color: #666;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 20px;
         }
+
+        .blog-post p {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
         .blog-posts-container {
-            max-width: 800px;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin: 60px auto 40px;
+            padding: 0 20px;
+        }
+
+        .blog-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .blog-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
             margin: 0 auto;
         }
     </style>
 </head>
 <body>
     <header>
-        <!-- Reusing your existing navigation -->
         <nav>
             <h1></h1>
             <ul>
-                <li><a href="index.html">Home</a></li>
+                <li><a href="../index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="projects.html">Projects</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="certificates.html">Certificates</a></li>
-                <li><a href="#" class="active">Blog</a></li> <!-- Added Blog to Nav -->
+                <li><a href="services-faq.html">Services FAQ</a></li>
+                <li><a href="interactive-showcase.html">Showcase</a></li>
+                <li><a href="#" class="active">Blog</a></li>
             </ul>
         </nav>
     </header>
 
+    <div class="blog-header">
+        <h1>My Blog</h1>
+        <p>Thoughts on AI, ethics, technology, and the future of software development</p>
+    </div>
+
     <main class="blog-posts-container">
-        <!-- Blog posts will go here -->
         <article class="blog-post">
-            <h2>Ethics in the Age of AI: Navigating the benefits and pitfalls of ChatGPT
-</h2>
-            <time datetime="2023-01-01T15:00">November 3rd, 2023 at 3:00 PM</time>
+            <h2>Ethics in the Age of AI: Navigating the benefits and pitfalls of ChatGPT</h2>
+            <time datetime="2023-11-03T15:00">November 3rd, 2023 at 3:00 PM</time>
             <p>With the pace of tech moving at breakneck speed, OpenAI's ChatGPT highlights how AI is shaking things up. ChatGPT is similar to having a human library as our best friend - knowledgeable, eager to help, and always ready to learn more. However, it is about more than what this technology can do for us individually. It is about looking at the future of ChatGPT and its ability to revolutionize education as we know it or to transform professional landscapes! All these advancements do not excuse the ethical questions that need addressing. We will explore the benefits and pitfalls of ChatGPT's power on society.
 Further, we will address concerns ranging from data privacy and algorithmic bias to accountability and digital accessibility, along with the roles of various agents, such as students, teachers, and freelancers. With a solid understanding of normative ethical theories, including utilitarianism, duty-based deontology, and character development virtue ethics, we will explore what to expect from those developing and using this technology. We will suggest checks to ensure we use this revolutionary tech ethically. It is vital to highlight the truth about ChatGPT's potentially capricious future.
 As we examine the ethical dimensions of ChatGPT, we will first use the lens of utilitarianism. Utilitarianism is a normative ethical theory whose basis is maximizing societal benefits (Dehghani et al.). ChatGPT has the potential to provide many societal benefits, such as enhancing education and improving professional services. This innovation can offer personalized learning experiences in education and make knowledge more accessible to a larger demographic. Various professionals utilize AI to automate tasks and boost productivity, holding great promise in advancing professions.
@@ -89,6 +190,20 @@ Wang, Changyu, et al. “Ethical Considerations of Using CHATGPT in Health Care.
 
     <script>
         // If you want to dynamically load posts or sort them, you'll need some JavaScript here.
+    </script>
+
+    <!-- AI Chatbot -->
+    <script src="../js/ai-chatbot.js"></script>
+    <script>
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          const chatbot = new PortfolioChatbot();
+          chatbot.init();
+        });
+      } else {
+        const chatbot = new PortfolioChatbot();
+        chatbot.init();
+      }
     </script>
 </body>
 </html>

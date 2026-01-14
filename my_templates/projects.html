@@ -2,186 +2,355 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Projects</title>
+  <title>Projects | Nick Holmes Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/style.css">
-  <!-- If you have a global style, it can be referenced here -->
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ==== Base Body Styles ==== */
+    /* Modern CSS Variables */
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+    }
+
+    /* Base Body Styles */
     body {
       margin: 0;
       padding: 0;
-      background-color: #1a1818;
-      color: #fff;
-      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
     }
 
-    /* ==== Navigation Bar (could be overridden by your style.css) ==== */
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      animation: gradientShift 15s ease infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    nav, header, section, footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation Bar */
     nav ul {
       list-style: none;
       display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
       margin: 0;
-      padding: 10px;
-      background-color: #000;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      max-width: 1100px;
+      margin: 20px auto;
     }
     nav li {
-      margin-right: 20px;
-    }
-    nav li:last-child {
-      margin-right: 0;
+      margin: 0;
     }
     nav a {
       text-decoration: none;
-      color: #fff;
+      color: var(--text-primary);
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 0.95rem;
+      white-space: nowrap;
     }
+    nav a:hover,
     nav a.active {
-      text-decoration: underline;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+      transform: translateY(-2px);
     }
 
-    /* ==== Main Container ==== */
+    /* Main Container */
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 20px;
     }
 
-    /* ==== Page Heading ==== */
+    /* Page Heading */
     .page-heading {
       text-align: center;
-      margin: 40px 0 20px;
+      margin: 60px 0 40px;
     }
     .page-heading h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-      color: rgba(5, 171, 231, 0.97);
-      text-shadow: 0 0 8px rgba(5, 171, 231, 0.5);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      text-shadow: 0 0 8px rgba(0, 217, 255, 0.5);
     }
     .page-heading p {
-      font-size: 1rem;
-      color: #ccc;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
       margin: 0 auto;
-      max-width: 600px;
-      line-height: 1.5;
-      text-align: center;
+      max-width: 700px;
+      line-height: 1.7;
     }
 
-    /* ==== Tabs (Categories) ==== */
+    /* Tabs (Categories) */
     .tabs {
       display: flex;
       justify-content: center;
-      margin-top: 30px;
-      flex-wrap: wrap; /* allows wrapping on smaller screens */
+      margin: 50px 0;
+      flex-wrap: wrap;
+      gap: 15px;
     }
     .tab-btn {
-      background-color: rgba(5, 171, 231, 0.97);
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      padding: 12px 20px;
-      margin: 5px;
-      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      color: var(--text-primary);
+      padding: 14px 28px;
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform 0.3s, background-color 0.3s;
-      box-shadow: 0 4px 15px rgba(5, 171, 231, 0.2);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     .tab-btn:hover {
-      transform: scale(1.05);
-      background-color: rgba(5, 200, 255, 0.97);
+      transform: translateY(-3px);
+      background: rgba(0, 217, 255, 0.1);
+      border-color: var(--primary-color);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.3);
     }
     .tab-btn.active {
-      background-color: #00b0ff;
-      transform: scale(1.05);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: transparent;
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 217, 255, 0.4);
     }
 
-    /* ==== Tab Content (Projects) ==== */
+    /* Tab Content (Projects) */
     .tab-content {
-      display: none; /* hidden by default */
-      margin-top: 40px;
-      animation: fadeIn 0.4s ease;
+      display: none;
+      margin-top: 50px;
+      animation: fadeInUp 0.5s ease;
     }
     .tab-content.active {
-      display: block; /* show only active category */
+      display: block;
     }
 
-    /* Keyframes for fade-in effect (optional) */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* ==== Project Boxes (borrow from your existing game-box style) ==== */
+    /* Project Grid */
     .projects-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      padding: 20px 0;
     }
+
     .project-box {
-      background-color: #2c2c2c;
-      width: 320px;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
     }
+
+    .project-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
     .project-box:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      transform: translateY(-10px);
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+      border-color: var(--primary-color);
+      background: rgba(0, 217, 255, 0.05);
+    }
+
+    .project-img {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      position: relative;
     }
 
     .project-img img {
       width: 100%;
-      height: auto;
-      display: block;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .project-box:hover .project-img img {
+      transform: scale(1.1);
     }
 
     .project-content {
-      padding: 15px;
+      padding: 25px;
       text-align: left;
     }
+
     .project-content h3 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-    .project-content p {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: #bbb;
-      margin-bottom: 10px;
-    }
-    .project-link {
-      display: inline-block;
-      color: #5dade2;
-      text-decoration: none;
-      border: 1px solid #5dade2;
-      padding: 5px 10px;
-      border-radius: 5px;
-      transition: background-color 0.3s, color 0.3s;
-      font-size: 0.9rem;
-      margin-right: 8px; /* space between multiple links */
-      margin-bottom: 5px;
-    }
-    .project-link:hover {
-      background-color: #5dade2;
-      color: #1a1818;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--text-primary);
+      font-weight: 700;
     }
 
-    /* ==== Footer (if desired) ==== */
+    .project-content p {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .project-link {
+      display: inline-block;
+      color: var(--primary-color);
+      text-decoration: none;
+      border: 2px solid var(--primary-color);
+      padding: 10px 20px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .project-link:hover {
+      background: var(--primary-color);
+      color: var(--bg-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
+    }
+
+    /* Footer */
     footer {
       text-align: center;
-      color: #999;
-      background-color: #1f1f1f;
-      padding: 20px;
-      margin-top: 40px;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 40px 20px;
+      margin-top: 80px;
     }
+
     footer a {
-      color: #999;
+      color: var(--text-secondary);
       text-decoration: none;
-      margin: 0 10px;
+      margin: 0 15px;
+      transition: all 0.3s ease;
+      position: relative;
     }
+
+    footer a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
     footer a:hover {
-      color: #fff;
+      color: var(--primary-color);
+    }
+
+    footer a:hover::after {
+      width: 100%;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      nav a {
+        padding: 10px 18px;
+        font-size: 14px;
+      }
+
+      .page-heading h1 {
+        font-size: 2.5rem;
+      }
+
+      .tabs {
+        gap: 10px;
+      }
+
+      .tab-btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
@@ -191,11 +360,13 @@
     <nav>
       <h1></h1>
       <ul>
-        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="../index.html" class="nav-link">Home</a></li>
         <li><a href="about.html" class="nav-link">About</a></li>
         <li><a href="projects.html" class="nav-link active">Projects</a></li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
         <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
         <li><a href="blog.html">Blog</a></li>
       </ul>
     </nav>
@@ -205,134 +376,150 @@
     <!-- PAGE HEADING -->
     <div class="page-heading">
       <h1>My Projects</h1>
-      <p>Explore my personal projects across Python, SQL, Machine Learning, HTML, and Games.</p>
+      <p>Explore my personal projects showcasing current expertise in data engineering and modern web development.</p>
     </div>
 
     <!-- CATEGORY TABS -->
     <div class="tabs">
-      <button class="tab-btn active" data-target="python-tab">Python</button>
-      <button class="tab-btn" data-target="sql-tab">SQL</button>
-      <button class="tab-btn" data-target="ml-tab">Machine Learning</button>
-      <button class="tab-btn" data-target="html-tab">HTML</button>
-      <button class="tab-btn" data-target="games-tab">Games</button>
+      <button class="tab-btn active" data-target="current-tab">Current Projects</button>
+      <button class="tab-btn" onclick="openArchivedModal()" style="background: rgba(168, 85, 247, 0.2); border: 1px solid var(--secondary-color);">🔒 Archived Projects</button>
     </div>
 
-    <!-- PYTHON TAB CONTENT -->
-    <div id="python-tab" class="tab-content active">
+    <!-- CURRENT PROJECTS TAB CONTENT -->
+    <div id="current-tab" class="tab-content active">
       <div class="projects-grid">
-        <!-- Example Project #1 -->
-        <div class="project-box">
-          <div class="project-img">
-            <img src="../img/Screen Shot 2023-11-01 at 2.01.12 PM.png" alt="Sudoku Solver" />
-          </div>
-          <div class="project-content">
-            <h3>Sudoku Solver</h3>
-            <p>Uses a backtracking algorithm in Python to solve any Sudoku puzzle efficiently.</p>
-            <a href="https://github.com/NickHolmes999/SudokuSolverBacktracing" class="project-link">GitHub</a>
-          </div>
-        </div>
-
-        <!-- Example Project #2 -->
+        <!-- Healthcare Data Project -->
         <div class="project-box">
           <div class="project-img">
             <img src="../img/Screen Shot 2023-10-31 at 12.01.04 PM.png" alt="Healthcare Data" />
           </div>
           <div class="project-content">
             <h3>Healthcare Data Manipulation</h3>
-            <p>Generating heatmaps, drive-time results, and future predictions with libraries like Pandas and Matplotlib.</p>
-            <a href="https://github.com/NickHolmes999/HealthOpioidStatistics" class="project-link">GitHub</a>
+            <p>Advanced data engineering project generating heatmaps, drive-time analytics, and predictive insights using Python libraries including Pandas, Matplotlib, and advanced statistical modeling techniques.</p>
+            <a href="https://github.com/NickHolmes999/HealthOpioidStatistics" class="project-link">View on GitHub</a>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- SQL TAB CONTENT -->
-    <div id="sql-tab" class="tab-content">
-      <div class="projects-grid">
-        <!-- Example of no projects yet -->
-        <div class="project-box">
-          <div class="project-content">
-            <h3>SQL Projects Coming Soon</h3>
-            <p>Stay tuned for updates!</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MACHINE LEARNING TAB CONTENT -->
-    <div id="ml-tab" class="tab-content">
-      <div class="projects-grid">
-        <div class="project-box">
-          <div class="project-content">
-            <h3>Machine Learning Projects Coming Soon</h3>
-            <p>Stay tuned for advanced ML projects!</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- HTML TAB CONTENT -->
-    <div id="html-tab" class="tab-content">
-      <div class="projects-grid">
+        <!-- Portfolio Website Project -->
         <div class="project-box">
           <div class="project-img">
             <img src="../img/Screen Shot 2023-11-08 at 10.49.02 AM.png" alt="Portfolio Website" />
           </div>
           <div class="project-content">
-            <h3>Portfolio Website</h3>
-            <p>The very site you're viewing—handcrafted with HTML, CSS, and JS.</p>
-            <!-- If you have a link or code, include it -->
-            <a href="#" class="project-link">Live Demo</a>
+            <h3>Interactive Portfolio Website</h3>
+            <p>Modern portfolio featuring 17+ interactive demos, AI chatbot integration, real-time data visualizations, 3D particle systems, and professional glassmorphism design. Built with vanilla JavaScript showcasing DOM manipulation, Canvas API, and algorithmic problem-solving.</p>
+            <a href="interactive-showcase.html" class="project-link">View Showcase</a>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- GAMES TAB CONTENT -->
-    <div id="games-tab" class="tab-content">
-      <div class="projects-grid">
-        <!-- Time Warp Trials -->
-        <div class="project-box">
-          <div class="project-img">
-            <img src="../img/Screen Shot 2023-12-06 at 10.18.57 AM.png" alt="Time Warp Trials" />
-          </div>
-          <div class="project-content">
-            <h3>Time Warp Trials</h3>
-            <p>A vortex to a past civilization on the brink. Battle the dark psychic in a twisted race against time.</p>
-            <a href="https://nickholmes999.itch.io/time-warp-trials" class="project-link">Play Now</a>
-            <a href="https://youtu.be/7B5_ljT1T68" class="project-link">Video</a>
-            <a href="https://docs.google.com/document/d/1x7inG0F1QZsjq-WMKtcbn45JmDJ5dQdbhrfXW0Gk3m8" class="project-link">GDD</a>
-          </div>
+  <!-- ARCHIVED PROJECTS MODAL -->
+  <div id="archivedModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
+    <div id="archivedModalContent" style="background: linear-gradient(135deg, #1a1a2e, #0a0a0f); padding: 40px; border-radius: 20px; border: 2px solid var(--secondary-color); box-shadow: 0 0 40px rgba(168, 85, 247, 0.4); max-width: 500px; width: 90%; position: relative;">
+      <button onclick="closeArchivedModal()" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1); border: none; color: white; font-size: 1.5rem; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; transition: all 0.3s;">×</button>
+      
+      <!-- Password Entry Screen -->
+      <div id="passwordScreen">
+        <h2 style="color: var(--secondary-color); text-align: center; margin-bottom: 20px;">🔒 Archived Projects</h2>
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 25px; line-height: 1.6;">These projects are old and do not reflect my current expertise, thus they are only viewable via interview.</p>
+        
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 10px;">Enter Access Password:</label>
+          <input type="password" id="archivePassword" placeholder="••••••••" style="width: 100%; padding: 15px; background: rgba(255,255,255,0.05); border: 2px solid rgba(168, 85, 247, 0.3); border-radius: 10px; color: white; font-size: 1.1rem;" onkeypress="if(event.key==='Enter') checkPassword()">
+          <div id="passwordError" style="color: #ff3b30; margin-top: 10px; display: none; text-align: center; font-weight: bold;">❌ Incorrect password. Please try again.</div>
         </div>
+        
+        <button onclick="checkPassword()" style="width: 100%; padding: 15px; background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); border: none; border-radius: 10px; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: transform 0.2s;">Unlock Archives</button>
+      </div>
 
-        <!-- Sudoku Solver (could be repeated here if you consider it a "game") -->
-        <div class="project-box">
-          <div class="project-img">
-            <img src="../img/Screen Shot 2023-11-01 at 2.01.12 PM.png" alt="Sudoku Solver" />
+      <!-- Archived Projects Display (Hidden initially) -->
+      <div id="archivedProjects" style="display: none;">
+        <h2 style="color: var(--secondary-color); text-align: center; margin-bottom: 25px;">📦 Archived Projects</h2>
+        
+        <div style="max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+          <!-- Sudoku Solver -->
+          <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+            <img src="../img/Screen Shot 2023-11-01 at 2.01.12 PM.png" alt="Sudoku Solver" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+            <h3 style="color: var(--primary-color); margin: 10px 0;">Sudoku Solver</h3>
+            <p style="color: var(--text-secondary); margin: 10px 0; font-size: 0.95rem;">Backtracking algorithm implementation in Python to solve Sudoku puzzles efficiently.</p>
+            <a href="https://github.com/NickHolmes999/SudokuSolverBacktracing" target="_blank" style="display: inline-block; padding: 8px 16px; background: rgba(0,217,255,0.2); border: 1px solid var(--primary-color); border-radius: 6px; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; transition: all 0.3s;">View on GitHub</a>
           </div>
-          <div class="project-content">
-            <h3>Sudoku Solver</h3>
-            <p>Also found under Python—this puzzle solver can be enjoyed like a game or puzzle challenge!</p>
-            <a href="https://github.com/NickHolmes999/SudokuSolverBacktracing" class="project-link">GitHub</a>
-          </div>
-        </div>
 
-        <!-- Escape from Fort Veridian -->
-        <div class="project-box">
-          <div class="project-img">
-            <img src="../img/Screen Shot 2023-12-06 at 10.18.27 AM.png" alt="Escape from Fort Veridian" />
+          <!-- Time Warp Trials -->
+          <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+            <img src="../img/Screen Shot 2023-12-06 at 10.18.57 AM.png" alt="Time Warp Trials" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+            <h3 style="color: var(--primary-color); margin: 10px 0;">Time Warp Trials</h3>
+            <p style="color: var(--text-secondary); margin: 10px 0; font-size: 0.95rem;">2D adventure platformer game with time manipulation mechanics, built using Python and Pygame.</p>
+            <a href="https://github.com/NickHolmes999/TimeWarpTrials" target="_blank" style="display: inline-block; padding: 8px 16px; background: rgba(0,217,255,0.2); border: 1px solid var(--primary-color); border-radius: 6px; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; transition: all 0.3s;">View on GitHub</a>
           </div>
-          <div class="project-content">
-            <h3>Escape from Fort Veridian</h3>
-            <p>A textual odyssey of espionage, cunning, and stealth. Navigate hidden relics and precarious scenarios to break free.</p>
-            <a href="https://nickholmes999.itch.io/escape-fort-veridian-1" class="project-link">Play Now</a>
-            <a href="https://www.youtube.com/watch?v=dKkhTKFVGxE" class="project-link">Video</a>
-            <a href="https://docs.google.com/document/d/1a3jNIeT5dYmtz6iwn3SeUkVYzNIcNQOMM59Dndq6e1c" class="project-link">GDD</a>
+
+          <!-- Adventure Game -->
+          <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+            <img src="../img/Screen Shot 2023-12-06 at 10.18.27 AM.png" alt="Adventure Game" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+            <h3 style="color: var(--primary-color); margin: 10px 0;">Adventure Game (Early Work)</h3>
+            <p style="color: var(--text-secondary); margin: 10px 0; font-size: 0.95rem;">Text-based adventure game demonstrating early programming concepts and game logic implementation.</p>
+            <a href="https://github.com/NickHolmes999/AdventureGame" target="_blank" style="display: inline-block; padding: 8px 16px; background: rgba(0,217,255,0.2); border: 1px solid var(--primary-color); border-radius: 6px; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; transition: all 0.3s;">View on GitHub</a>
           </div>
         </div>
       </div>
     </div>
-  </div> <!-- end .container -->
+  </div>
+
+  <script>
+    const ARCHIVE_PASSWORD = "Nicholas243$";
+
+    function openArchivedModal() {
+      document.getElementById('archivedModal').style.display = 'flex';
+      document.getElementById('passwordScreen').style.display = 'block';
+      document.getElementById('archivedProjects').style.display = 'none';
+      document.getElementById('archivePassword').value = '';
+      document.getElementById('passwordError').style.display = 'none';
+      setTimeout(() => document.getElementById('archivePassword').focus(), 100);
+    }
+
+    function closeArchivedModal() {
+      document.getElementById('archivedModal').style.display = 'none';
+    }
+
+    function checkPassword() {
+      const password = document.getElementById('archivePassword').value;
+      const errorDiv = document.getElementById('passwordError');
+      
+      if (password === ARCHIVE_PASSWORD) {
+        document.getElementById('passwordScreen').style.display = 'none';
+        document.getElementById('archivedProjects').style.display = 'block';
+      } else {
+        errorDiv.style.display = 'block';
+        document.getElementById('archivePassword').value = '';
+        document.getElementById('archivePassword').focus();
+        
+        // Shake animation
+        const modal = document.getElementById('archivedModalContent');
+        modal.style.animation = 'shake 0.5s';
+        setTimeout(() => modal.style.animation = '', 500);
+      }
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('archivedModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeArchivedModal();
+      }
+    });
+
+    // Add shake animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+        20%, 40%, 60%, 80% { transform: translateX(10px); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 
   <!-- FOOTER (Optional) -->
   <footer>
@@ -369,6 +556,20 @@
         document.getElementById(targetID).classList.add('active');
       });
     });
+  </script>
+
+  <!-- AI Chatbot -->
+  <script src="../js/ai-chatbot.js"></script>
+  <script>
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatbot = new PortfolioChatbot();
+        chatbot.init();
+      });
+    } else {
+      const chatbot = new PortfolioChatbot();
+      chatbot.init();
+    }
   </script>
 </body>
 </html>

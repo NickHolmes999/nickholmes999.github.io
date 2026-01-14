@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Services & Role Fit | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      animation: gradientShift 15s ease infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    header, section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-hero p {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 30px;
+      line-height: 1.7;
+    }
+
+    .search-box {
+      max-width: 600px;
+      margin: 30px auto;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 18px 50px 18px 20px;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .search-box input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .search-box i {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
+
+    .faq-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+
+    .faq-categories {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 50px;
+    }
+
+    .category-btn {
+      padding: 12px 30px;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .category-btn:hover,
+    .category-btn.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: transparent;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+    }
+
+    .faq-item {
+      margin-bottom: 20px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--primary-color);
+      box-shadow: 0 8px 30px rgba(0, 217, 255, 0.2);
+    }
+
+    .faq-question {
+      padding: 25px 30px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .faq-question::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .faq-item:hover .faq-question::before,
+    .faq-item.active .faq-question::before {
+      opacity: 1;
+    }
+
+    .faq-question h3 {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .faq-question i.icon {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+
+    .faq-question .toggle-icon {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      padding: 0 30px;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 1000px;
+      padding: 0 30px 30px;
+    }
+
+    .faq-answer-content {
+      padding: 20px;
+      background: rgba(0, 217, 255, 0.05);
+      border-radius: 15px;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .faq-answer p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-size: 1.05rem;
+      margin-bottom: 15px;
+    }
+
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .skill-tag {
+      padding: 6px 16px;
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.2));
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid rgba(0, 217, 255, 0.3);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .faq-question h3 {
+        font-size: 1.05rem;
+      }
+
+      .faq-question,
+      .faq-answer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .category-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html" class="active">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="page-hero">
+    <h1>How Can I Help You?</h1>
+    <p>Looking for a specific role or service? Click on any question below to see how my experience and skills make me the perfect fit for your needs.</p>
+    
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search for a role or skill...">
+      <i class="fas fa-search"></i>
+    </div>
+  </section>
+
+  <section class="faq-container">
+    <div class="faq-categories">
+      <button class="category-btn active" data-category="all">All Roles</button>
+      <button class="category-btn" data-category="development">Development</button>
+      <button class="category-btn" data-category="ai-ml">AI & ML</button>
+      <button class="category-btn" data-category="data">Data & Analytics</button>
+      <button class="category-btn" data-category="fullstack">Full-Stack</button>
+    </div>
+
+    <div id="faqList">
+      <!-- FAQ items will be generated here -->
+    </div>
+
+    <div id="noResults" class="no-results" style="display: none;">
+      <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+      <p>No matching roles found. Try a different search term!</p>
+    </div>
+  </section>
+
+  <script>
+    const faqData = [
+      {
+        category: 'fullstack',
+        icon: 'fa-code',
+        question: 'I need a Full-Stack Developer',
+        answer: `I'm an excellent fit for full-stack development roles with <span class="highlight">extensive experience across both frontend and backend technologies</span>. At JOS Group, I've built end-to-end applications serving federal government contracts, working with Python, JavaScript, and modern frameworks. I'm proficient in React, Node.js, Flask, Django, and have hands-on experience with both SQL and NoSQL databases. My approach combines clean code practices with scalable architecture design, ensuring applications are not just functional but maintainable and performant.`,
+        tags: ['Python', 'JavaScript', 'React', 'Node.js', 'SQL', 'REST APIs']
+      },
+      {
+        category: 'ai-ml',
+        icon: 'fa-robot',
+        question: 'I need an AI/Machine Learning Engineer',
+        answer: `With my role as a <span class="highlight">Data/AI Engineer at JOS Group</span>, I've developed AI-driven solutions for federal government contracts. I specialize in building machine learning models, natural language processing applications, and working with frameworks like TensorFlow, PyTorch, and scikit-learn. I've completed <span class="highlight">460+ certifications</span> including extensive AI and ML training from AWS, Google, and LinkedIn Learning. My AI Resume Navigator project showcases my ability to apply advanced analytics and ML algorithms to solve real-world recruitment challenges.`,
+        tags: ['Machine Learning', 'TensorFlow', 'PyTorch', 'NLP', 'Deep Learning', 'Python']
+      },
+      {
+        category: 'ai-ml',
+        icon: 'fa-brain',
+        question: 'I need someone who understands GenAI and LLMs',
+        answer: `I have <span class="highlight">deep expertise in Generative AI and Large Language Models</span>, having worked extensively with GPT models, prompt engineering, and fine-tuning. I've developed interactive AI labs and courses teaching AI concepts to federal government users. My experience includes building RAG (Retrieval-Augmented Generation) systems, implementing vector databases, and creating chatbots using OpenAI and similar APIs. I understand both the technical implementation and ethical considerations of AI systems.`,
+        tags: ['GPT', 'LangChain', 'Prompt Engineering', 'RAG', 'Vector DB', 'OpenAI API']
+      },
+      {
+        category: 'development',
+        icon: 'fa-python',
+        question: 'I need a Python Developer',
+        answer: `Python is my <span class="highlight">strongest language with years of professional experience</span>. I've completed 30+ Python certifications and use it daily in my work at JOS Group. My expertise spans data analysis (Pandas, NumPy), web development (Flask, Django, FastAPI), automation, scripting, and machine learning. I write clean, well-documented, and efficient Python code following PEP 8 standards. Whether it's building APIs, data pipelines, or complex applications, I can deliver production-ready Python solutions.`,
+        tags: ['Python', 'Flask', 'Django', 'Pandas', 'NumPy', 'FastAPI']
+      },
+      {
+        category: 'data',
+        icon: 'fa-database',
+        question: 'I need a Data Analyst',
+        answer: `As a Data/AI Engineer, I excel at <span class="highlight">transforming raw data into actionable insights</span>. I work extensively with museum and library data across the United States on IMLS contracts, performing diverse analytic tasks using AWS services. My skills include data cleaning, statistical analysis, visualization (Matplotlib, Seaborn, Plotly), and creating comprehensive reports. I'm proficient in SQL, Excel, and Python for data manipulation, and I understand how to communicate findings effectively to both technical and non-technical stakeholders.`,
+        tags: ['SQL', 'Python', 'Excel', 'Data Viz', 'AWS', 'Statistics']
+      },
+      {
+        category: 'data',
+        icon: 'fa-chart-line',
+        question: 'I need a Data Engineer',
+        answer: `I'm experienced in <span class="highlight">building robust data pipelines and infrastructure</span>. At JOS Group, I work with AWS services to process and analyze large datasets. I design ETL processes, implement data warehousing solutions, and ensure data quality and integrity. My technical stack includes SQL databases, cloud data services (AWS S3, Redshift, Lambda), and Python for data processing. I understand data modeling, normalization, and can architect scalable data systems that support business intelligence and analytics needs.`,
+        tags: ['ETL', 'AWS', 'SQL', 'Data Pipelines', 'Python', 'Data Modeling']
+      },
+      {
+        category: 'ai-ml',
+        icon: 'fa-project-diagram',
+        question: 'I need someone to build an AI-powered application',
+        answer: `I specialize in <span class="highlight">developing AI-powered applications from concept to deployment</span>. My AI Resume Navigator project demonstrates this - it uses multiple analysis techniques to help recruiters efficiently screen candidates based on requirements, job descriptions, and certificates. I can integrate various AI services, build custom ML models, design intuitive UIs, and deploy scalable solutions. I understand the full lifecycle: data collection, model training, API integration, frontend development, and production deployment.`,
+        tags: ['AI Applications', 'Full Stack', 'ML Models', 'APIs', 'Deployment']
+      },
+      {
+        category: 'development',
+        icon: 'fa-react',
+        question: 'I need a Frontend Developer',
+        answer: `I create <span class="highlight">modern, responsive, and visually stunning web interfaces</span>. This portfolio itself showcases my frontend skills with glassmorphism effects, smooth animations, and responsive design. I'm proficient in HTML5, CSS3 (including modern features like Grid, Flexbox, and animations), JavaScript ES6+, and frameworks like React. I understand UX/UI principles, accessibility standards, and performance optimization. I can transform designs into pixel-perfect implementations that work seamlessly across all devices.`,
+        tags: ['React', 'JavaScript', 'HTML/CSS', 'Responsive Design', 'UI/UX']
+      },
+      {
+        category: 'development',
+        icon: 'fa-server',
+        question: 'I need a Backend Developer',
+        answer: `My <span class="highlight">backend development expertise ensures robust and scalable server-side applications</span>. I design and implement RESTful APIs, manage databases (PostgreSQL, MySQL, MongoDB), handle authentication and authorization, and ensure security best practices. I'm experienced with Python frameworks (Flask, Django, FastAPI), Node.js, and have worked with microservices architecture. I understand caching, load balancing, and can optimize backend performance for high-traffic applications.`,
+        tags: ['REST API', 'Database Design', 'Authentication', 'Flask', 'Node.js', 'Security']
+      },
+      {
+        category: 'development',
+        icon: 'fa-mobile-alt',
+        question: 'I need someone who can build responsive websites',
+        answer: `Every project I build is <span class="highlight">mobile-first and fully responsive</span>. I understand modern CSS techniques, media queries, and responsive design patterns. My portfolio demonstrates responsive layouts that adapt beautifully from mobile phones to large desktop screens. I ensure consistent user experience across all devices, optimize touch interactions for mobile, and implement progressive enhancement strategies. I test thoroughly on various devices and screen sizes.`,
+        tags: ['Responsive Design', 'Mobile-First', 'CSS Grid', 'Flexbox', 'Media Queries']
+      },
+      {
+        category: 'data',
+        icon: 'fa-table',
+        question: 'I need a SQL/Database Expert',
+        answer: `I have <span class="highlight">strong SQL skills and database management experience</span>. I can write complex queries with joins, subqueries, and window functions, optimize query performance, design normalized database schemas, and implement indexing strategies. I've worked with PostgreSQL, MySQL, and SQL Server, and understand database administration tasks. Whether it's data retrieval, database design, or performance tuning, I can ensure your data is organized, accessible, and efficient.`,
+        tags: ['SQL', 'PostgreSQL', 'MySQL', 'Database Design', 'Query Optimization']
+      },
+      {
+        category: 'ai-ml',
+        icon: 'fa-magic',
+        question: 'I need help with Natural Language Processing',
+        answer: `NLP is one of my specialties. I've worked on <span class="highlight">text analysis, sentiment analysis, and language model applications</span>. I'm experienced with libraries like NLTK, spaCy, and transformers from Hugging Face. I can build chatbots, implement document classification, perform named entity recognition, and work with embeddings and vector representations. My AI Resume Navigator project extensively uses NLP to parse and analyze resume content for matching against job requirements.`,
+        tags: ['NLP', 'NLTK', 'spaCy', 'Transformers', 'Text Analysis', 'Sentiment Analysis']
+      },
+      {
+        category: 'development',
+        icon: 'fa-cogs',
+        question: 'I need someone to build REST APIs',
+        answer: `I excel at <span class="highlight">designing and implementing RESTful APIs</span> that are well-documented, secure, and performant. I follow REST principles, implement proper HTTP methods and status codes, handle error responses gracefully, and include authentication (JWT, OAuth). I've built APIs using Flask, Django REST Framework, FastAPI, and Express.js. I understand API versioning, rate limiting, and can create comprehensive API documentation using tools like Swagger/OpenAPI.`,
+        tags: ['REST API', 'Flask', 'FastAPI', 'JWT', 'API Design', 'Swagger']
+      },
+      {
+        category: 'fullstack',
+        icon: 'fa-cloud',
+        question: 'I need someone familiar with Cloud Services (AWS)',
+        answer: `I work extensively with <span class="highlight">AWS services in my role at JOS Group</span>. My experience includes S3 for storage, Lambda for serverless functions, EC2 for compute, RDS for databases, and various analytics services. I understand cloud architecture patterns, cost optimization, security best practices, and can design scalable cloud-native applications. I've completed multiple AWS certifications and regularly leverage cloud services for data processing and application deployment.`,
+        tags: ['AWS', 'S3', 'Lambda', 'EC2', 'Cloud Architecture', 'Serverless']
+      },
+      {
+        category: 'ai-ml',
+        icon: 'fa-chart-bar',
+        question: 'I need someone for Predictive Analytics',
+        answer: `I have strong experience in <span class="highlight">building predictive models and forecasting solutions</span>. I use machine learning algorithms (regression, classification, time series) to predict outcomes and identify patterns. My toolkit includes scikit-learn, XGBoost, and statsmodels. I understand feature engineering, model selection, cross-validation, and can interpret and communicate model results. I've applied predictive analytics in various contexts including user behavior prediction and trend analysis.`,
+        tags: ['Predictive Modeling', 'Regression', 'Classification', 'scikit-learn', 'Forecasting']
+      },
+      {
+        category: 'development',
+        icon: 'fa-code-branch',
+        question: 'I need someone proficient in Version Control (Git)',
+        answer: `I use <span class="highlight">Git daily and follow best practices for version control</span>. I'm comfortable with branching strategies, pull requests, code reviews, and resolving merge conflicts. I understand Git workflows (Git Flow, GitHub Flow), write meaningful commit messages, and use Git for collaboration in team environments. My GitHub profile showcases various projects demonstrating clean commit history and proper repository management.`,
+        tags: ['Git', 'GitHub', 'Version Control', 'Code Review', 'CI/CD']
+      },
+      {
+        category: 'fullstack',
+        icon: 'fa-paint-brush',
+        question: 'I need someone with UI/UX Design skills',
+        answer: `While I'm primarily a developer, I have <span class="highlight">strong UI/UX sensibilities</span> as demonstrated by this portfolio. I understand color theory, typography, spacing, and layout principles. I can implement modern design trends like glassmorphism, create smooth animations, and ensure accessibility. I use Figma for wireframing and can translate designs into code accurately. I believe great applications need both solid functionality and intuitive, beautiful interfaces.`,
+        tags: ['UI/UX', 'Figma', 'Design Systems', 'Accessibility', 'Animations']
+      },
+      {
+        category: 'data',
+        icon: 'fa-file-csv',
+        question: 'I need help with Data Visualization',
+        answer: `I create <span class="highlight">compelling data visualizations that tell stories</span>. I'm proficient with libraries like Matplotlib, Seaborn, Plotly, and D3.js for interactive visualizations. I understand which chart types work best for different data scenarios, how to use color effectively, and how to make visualizations accessible. I can build interactive dashboards, create reports with clear visual insights, and present complex data in understandable ways.`,
+        tags: ['Matplotlib', 'Plotly', 'D3.js', 'Dashboards', 'Data Storytelling']
+      },
+      {
+        category: 'development',
+        icon: 'fa-flask',
+        question: 'I need a Flask/Django Developer',
+        answer: `I have <span class="highlight">extensive experience with both Flask and Django frameworks</span>. I've built complete web applications including user authentication, database integration, form handling, and deployment. I understand the strengths of each framework - Django's "batteries included" approach for rapid development and Flask's flexibility for custom solutions. I can implement ORMs, handle migrations, create admin interfaces, and deploy production-ready Python web applications.`,
+        tags: ['Flask', 'Django', 'SQLAlchemy', 'Jinja2', 'Python Web Dev']
+      },
+      {
+        category: 'ai-ml',
+        icon: 'fa-search',
+        question: 'I need someone to build a recommendation system',
+        answer: `I can design and implement <span class="highlight">sophisticated recommendation engines</span>. I understand collaborative filtering, content-based filtering, and hybrid approaches. I've worked with similarity measures, matrix factorization, and can leverage neural networks for recommendations. Whether it's product recommendations, content suggestions, or matching systems (like my AI Resume Navigator), I can build solutions that improve user experience and drive engagement.`,
+        tags: ['Recommendation Systems', 'Collaborative Filtering', 'ML', 'Similarity Metrics']
+      },
+      {
+        category: 'fullstack',
+        icon: 'fa-bolt',
+        question: 'I need someone to optimize application performance',
+        answer: `Performance optimization is crucial, and I have <span class="highlight">experience identifying and resolving bottlenecks</span>. I can optimize database queries, implement caching strategies, lazy loading, code splitting, and image optimization. I understand profiling tools, browser DevTools, and can analyze application performance metrics. Whether it's frontend optimization (reducing bundle sizes, optimizing renders) or backend efficiency (query optimization, indexing), I ensure applications run smoothly.`,
+        tags: ['Performance', 'Optimization', 'Caching', 'Profiling', 'Database Tuning']
+      },
+      {
+        category: 'data',
+        icon: 'fa-filter',
+        question: 'I need someone for Data Cleaning and Preprocessing',
+        answer: `Data quality is fundamental, and I excel at <span class="highlight">data cleaning and preprocessing pipelines</span>. I handle missing values, outliers, duplicates, and inconsistencies. I'm proficient with Pandas for data manipulation, can normalize and standardize data, perform feature engineering, and prepare datasets for analysis or machine learning. My work at JOS Group involves extensive data cleaning of museum and library datasets to ensure accurate analytics.`,
+        tags: ['Data Cleaning', 'Pandas', 'Feature Engineering', 'Data Quality', 'ETL']
+      },
+      {
+        category: 'fullstack',
+        icon: 'fa-lock',
+        question: 'I need someone who understands Security Best Practices',
+        answer: `Security is paramount in all my projects. I implement <span class="highlight">industry-standard security practices</span> including input validation, SQL injection prevention, XSS protection, CSRF tokens, secure authentication, password hashing (bcrypt), and HTTPS. I understand OWASP Top 10 vulnerabilities and how to mitigate them. Working on federal government contracts requires strict security compliance, which has given me experience with security audits and best practices.`,
+        tags: ['Security', 'Authentication', 'OWASP', 'Encryption', 'Compliance']
+      },
+      {
+        category: 'development',
+        icon: 'fa-tasks',
+        question: 'I need someone for Agile/Scrum Development',
+        answer: `I'm experienced working in <span class="highlight">Agile environments with Scrum methodology</span>. I participate in sprint planning, daily stand-ups, retrospectives, and deliver work in iterative cycles. I break down complex features into user stories, estimate effort, and adapt to changing requirements. I value collaboration, continuous improvement, and delivering working software frequently. My experience at JOS Group involves regular sprint cycles and team collaboration.`,
+        tags: ['Agile', 'Scrum', 'Sprint Planning', 'User Stories', 'Team Collaboration']
+      },
+      {
+        category: 'ai-ml',
+        icon: 'fa-eye',
+        question: 'I need someone with Computer Vision expertise',
+        answer: `I have experience in <span class="highlight">computer vision applications and image processing</span>. I've worked with OpenCV, built image classification models using CNNs, and understand techniques like object detection, image segmentation, and facial recognition. I've completed certifications in building computer vision applications with Python and can implement solutions for image analysis, automated quality control, or visual recognition systems.`,
+        tags: ['Computer Vision', 'OpenCV', 'CNNs', 'Image Processing', 'Object Detection']
+      }
+    ];
+
+    // Generate FAQ items
+    function generateFAQItems(items) {
+      const faqList = document.getElementById('faqList');
+      faqList.innerHTML = '';
+      
+      items.forEach((item, index) => {
+        const faqItem = document.createElement('div');
+        faqItem.className = 'faq-item';
+        faqItem.dataset.category = item.category;
+        
+        faqItem.innerHTML = `
+          <div class="faq-question">
+            <h3>
+              <i class="fas ${item.icon} icon"></i>
+              ${item.question}
+            </h3>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              <p>${item.answer}</p>
+              <div class="skill-tags">
+                ${item.tags.map(tag => `<span class="skill-tag">${tag}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        faqItem.querySelector('.faq-question').addEventListener('click', () => {
+          faqItem.classList.toggle('active');
+        });
+        
+        faqList.appendChild(faqItem);
+      });
+    }
+
+    // Initialize
+    generateFAQItems(faqData);
+
+    // Category filtering
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const category = btn.dataset.category;
+        const items = document.querySelectorAll('.faq-item');
+        
+        items.forEach(item => {
+          if (category === 'all' || item.dataset.category === category) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const noResults = document.getElementById('noResults');
+    
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const items = document.querySelectorAll('.faq-item');
+      let hasResults = false;
+      
+      items.forEach(item => {
+        const question = item.querySelector('.faq-question h3').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer-content p').textContent.toLowerCase();
+        const tags = Array.from(item.querySelectorAll('.skill-tag')).map(tag => tag.textContent.toLowerCase()).join(' ');
+        
+        if (question.includes(searchTerm) || answer.includes(searchTerm) || tags.includes(searchTerm)) {
+          item.style.display = 'block';
+          hasResults = true;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      
+      noResults.style.display = hasResults ? 'none' : 'block';
+    });
+  </script>
+
+  <!-- AI Chatbot -->
+  <script src="../js/ai-chatbot.js"></script>
+  <script>
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatbot = new PortfolioChatbot();
+        chatbot.init();
+      });
+    } else {
+      const chatbot = new PortfolioChatbot();
+      chatbot.init();
+    }
+  </script>
+</body>
+</html>

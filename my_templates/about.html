@@ -2,18 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>About Me</title>
-  <link rel="stylesheet" href="../css/style.css"> <!-- If you have global styles -->
+  <title>About Me | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== Base Body & Global Styles ===== */
+    /* Modern CSS Variables */
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+    }
+
+    /* Base Body & Global Styles */
     body {
       margin: 0;
       padding: 0;
-      background-color: #1a1a1a;
-      color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      animation: gradientShift 15s ease infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
     }
 
     h1, h2, h3, h4 {
@@ -22,149 +61,241 @@
     }
 
     a {
-      color: rgba(5, 171, 231, 0.97);
+      color: var(--primary-color);
       text-decoration: none;
       transition: color 0.2s ease;
     }
     a:hover {
-      color: #00d9ff;
+      color: var(--secondary-color);
     }
 
-    /* ===== Navigation (if not overridden in style.css) ===== */
-    header {}
+    header, nav, section {
+      position: relative;
+      z-index: 1;
+    }
 
+    /* Navigation */
     nav ul {
       list-style: none;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      max-width: 1100px;
+      margin: 20px auto;
     }
     nav li {
-      margin-right: 20px;
+      margin: 0;
     }
-    nav li:last-child {
-      margin-right: 0;
+    nav a {
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      white-space: nowrap;
     }
+    nav a:hover,
     nav a.active {
-      text-decoration: underline;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+      transform: translateY(-2px);
     }
 
-    /* ===== About Section ===== */
+    /* About Section */
     #about {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px;
+      max-width: 1000px;
+      margin: 60px auto;
       text-align: center;
+      padding: 40px 20px;
     }
+
     #about img {
       display: block;
-      margin: 0 auto 20px;
-      max-width: 300px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      transition: transform 0.3s;
+      margin: 0 auto 30px;
+      max-width: 320px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+      transition: transform 0.3s ease;
+      border: 3px solid rgba(0, 217, 255, 0.3);
     }
+
     #about img:hover {
-      transform: scale(1.03);
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: 0 15px 50px rgba(0, 217, 255, 0.5);
     }
 
     #about p {
-      line-height: 1.6;
-      margin: 0 auto 20px;
+      line-height: 1.8;
+      margin: 0 auto 25px;
       max-width: 800px;
       text-align: justify;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
     }
 
     #about button {
-      background-color: rgba(5, 171, 231, 0.97);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       border: none;
-      border-radius: 4px;
-      padding: 12px 20px;
-      font-size: 16px;
+      border-radius: 30px;
+      padding: 14px 32px;
+      font-size: 17px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      margin: 10px 0 20px;
-    }
-    #about button:hover {
-      background-color: #00b0ff;
-      transform: scale(1.05);
+      transition: all 0.3s ease;
+      margin: 20px 0;
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
     }
 
-    /* ===== Skills Section ===== */
+    #about button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 217, 255, 0.5);
+    }
+
+    /* Skills Section */
     .skills-heading {
       text-align: center;
-      margin: 40px auto 20px;
-      color: rgba(5, 171, 231, 0.97);
+      margin: 80px auto 40px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 2rem;
-      text-shadow: 0 0 4px rgba(5, 171, 231, 0.6);
+      letter-spacing: 2px;
+      font-weight: 800;
     }
 
     .skills {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin: 40px auto;
+      max-width: 1400px;
+      padding: 0 20px;
     }
 
     .skill-box {
-      width: 300px;
-      background-color: rgba(5, 171, 231, 0.97);
-      border-radius: 5px;
-      padding: 20px;
-      margin: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
-    .skill-box h3 {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-      color: #1a1a1a;
-      text-shadow: 0 0 2px rgba(255,255,255,0.2);
+
+    .skill-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
     }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .skill-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+      border-color: var(--primary-color);
+      background: rgba(0, 217, 255, 0.05);
+    }
+
+    .skill-box h3 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
     .skill-box ul {
       margin: 0;
       padding: 0;
       list-style-position: inside;
       text-align: left;
-      color: #1a1a1a;
+      color: var(--text-secondary);
     }
+
     .skill-box li {
-      margin: 5px 0;
+      margin: 10px 0;
       font-size: 15px;
-      line-height: 1.4;
+      line-height: 1.6;
+      padding-left: 10px;
     }
+
     .library-list {
-      margin-left: 20px;
+      margin-left: 30px;
       font-size: 14px;
+      color: var(--text-secondary);
+      opacity: 0.9;
     }
 
-    /* Hover effect */
-    .skill-box:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-      z-index: 1;
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .skills {
+        grid-template-columns: 1fr;
+      }
+
+      #about img {
+        max-width: 250px;
+      }
     }
 
-    /* ===== Timeline Styles ===== */
+    /* Timeline Styles - Enhanced with Glassmorphism */
     .timeline-container {
-      width: 80%;
-      max-width: 900px;
-      margin: 50px auto;
+      width: 85%;
+      max-width: 1000px;
+      margin: 60px auto;
       position: relative;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      border: 1px solid rgba(0, 217, 255, 0.1);
     }
     .timeline-container h2 {
       text-align: center;
-      margin-bottom: 40px;
-      color: rgba(5, 171, 231, 0.97);
+      margin-bottom: 60px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 2rem;
-      text-shadow: 0 0 4px rgba(5, 171, 231, 0.6);
+      letter-spacing: 2px;
+      font-size: 2.5rem;
+      font-weight: 900;
+      position: relative;
+    }
+    .timeline-container h2::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      border-radius: 2px;
     }
 
     .timeline {
@@ -175,14 +306,14 @@
 
     .line {
       position: absolute;
-      width: 6px;
+      width: 4px;
       height: calc(100% - 100px);
-      background-color: rgba(5, 171, 231, 0.97);
+      background: linear-gradient(180deg, var(--primary-color), var(--secondary-color), var(--accent-color));
       top: 100px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1;
-      box-shadow: 0 0 15px rgba(5, 171, 231, 0.8);
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.6);
       border-radius: 3px;
     }
 
@@ -199,11 +330,13 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 14px;
-      font-weight: bold;
-      background: #333;
-      padding: 4px 8px;
-      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
     }
     .year-label-top {
       top: 0;
@@ -228,48 +361,90 @@
     .point:nth-child(even) {
       justify-content: flex-end;
     }
+    
+    /* Animated dots on timeline */
+    .point::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: 3px solid var(--bg-dark);
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.8);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 217, 255, 0.8);
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(0, 217, 255, 1);
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
 
     .point .content {
-      width: 40%;
-      background: rgba(5, 171, 231, 0.97);
-      padding: 20px;
-      color: #1a1a1a;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      border-radius: 5px;
+      width: 42%;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      color: var(--text-primary);
+      box-shadow: 0 8px 32px rgba(0, 217, 255, 0.2);
+      border-radius: 15px;
       margin-bottom: 40px;
       transform: translateX(0);
-      transition: transform 0.3s ease;
+      transition: all 0.4s ease;
       position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .point .content h4 {
-      margin: 0 0 8px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #1a1a1a;
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
     }
     .point .content span {
       display: inline-block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 0.95rem;
       font-weight: 600;
-      color: #333;
+      color: var(--primary-color);
+      background: rgba(0, 217, 255, 0.1);
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+    .point .content p {
+      color: var(--text-secondary);
+      line-height: 1.6;
     }
     .point .content:hover {
-      transform: translateX(5px);
+      transform: translateX(10px) translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 217, 255, 0.4);
+      background: rgba(0, 217, 255, 0.08);
+    }
+    .point:nth-child(even) .content:hover {
+      transform: translateX(-10px) translateY(-5px);
     }
 
     /* Color-coded left borders for different content categories */
     .content.coding {
-      border-left: 4px solid #c900ff;
+      border-left: 5px solid var(--secondary-color);
     }
     .content.internship {
-      border-left: 4px solid #e74c3c;
+      border-left: 5px solid #e74c3c;
     }
     .content.job {
-      border-left: 4px solid #2ecc71;
+      border-left: 5px solid #2ecc71;
     }
     .content.promotion {
-      border-left: 4px solid #f39c12;
+      border-left: 5px solid var(--accent-color);
     }
 
     /* Timeline tooltip preview */
@@ -384,11 +559,13 @@
     <nav>
       <h1></h1>
       <ul>
-        <li><a href="index.html">Home</a></li>
+        <li><a href="../index.html">Home</a></li>
         <li><a href="about.html" class="active">About</a></li>
         <li><a href="projects.html">Projects</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
         <li><a href="blog.html">Blog</a></li>
       </ul>
     </nav>
@@ -554,7 +731,7 @@
       <div class="line"></div>
       <div class="timeline-line">
         <span class="year-label-top">2016</span>
-        <span class="year-label-bottom">Present</span>
+        <span class="year-label-bottom">2026</span>
       </div>
 
       <!-- 1. Started Coding -->
@@ -743,6 +920,23 @@
           </div>
         </div>
       </div>
+
+      <!-- 12. AI Resume Navigator Project (January 2025) -->
+      <div class="point" style="--position:2820px">
+        <div class="content promotion">
+          <h4>AI Resume Navigator Project</h4>
+          <span>January, 2025</span>
+          <div class="preview-container">
+            <p>Spearheading development of AI Resume Navigator - an advanced recruitment platform using comprehensive analysis techniques to match candidates with job requirements. Features include automated resume parsing, certificate validation, skill extraction, and intelligent candidate ranking based on job descriptions.</p>
+            <div class="preview-tooltip">
+              <a href="#resume-navigator-detail">
+                <img src="../img/ai_work_preview.jpg" alt="AI Resume Navigator Preview">
+                <span class="preview-text">Click to learn more</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -843,6 +1037,21 @@
     </p>
   </div>
 
+  <div id="resume-navigator-detail" class="timeline-detail">
+    <h3>AI Resume Navigator: Revolutionizing Recruitment</h3>
+    <p>
+      Starting in January 2025, I am spearheading the development of the AI Resume Navigator—
+      an intelligent recruitment platform that transforms how organizations identify ideal candidates.
+      This advanced system employs comprehensive analysis techniques including natural language processing,
+      certificate validation, skill extraction, and semantic matching to automatically parse resumes and
+      match candidates with job requirements. The platform enables recruiters to efficiently search through
+      resumes based on specific criteria such as certifications, technical skills, experience levels,
+      and job descriptions. By leveraging state-of-the-art machine learning algorithms, the AI Resume
+      Navigator provides intelligent candidate rankings, similarity scores, and detailed qualification
+      breakdowns, dramatically reducing time-to-hire while improving candidate-role fit accuracy.
+    </p>
+  </div>
+
   <footer>
     <div class="footer-content">
       <p>
@@ -898,5 +1107,19 @@
     });
   </script>
   <script src="script.js"></script> <!-- If you have additional JS -->
+
+  <!-- AI Chatbot -->
+  <script src="../js/ai-chatbot.js"></script>
+  <script>
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatbot = new PortfolioChatbot();
+        chatbot.init();
+      });
+    } else {
+      const chatbot = new PortfolioChatbot();
+      chatbot.init();
+    }
+  </script>
 </body>
 </html>

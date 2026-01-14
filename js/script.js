@@ -1,4 +1,8 @@
-// Keep the code for handling navigation link clicks
+// ========================================
+// MODERN PORTFOLIO JAVASCRIPT ENHANCEMENTS
+// ========================================
+
+// Navigation link handling
 const navLinks = document.querySelectorAll("nav ul li a");
 
 navLinks.forEach(link => {
@@ -7,6 +11,186 @@ navLinks.forEach(link => {
     link.classList.add("active");
   });
 });
+
+// Smooth scroll reveal animation
+document.addEventListener('DOMContentLoaded', () => {
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all fade-in elements
+  document.querySelectorAll('.fade-in').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Parallax effect for banner
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const banner = document.getElementById('banner');
+    if (banner) {
+      banner.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+  });
+
+  // Add hover effect to service bars
+  document.querySelectorAll('.service-bar').forEach(bar => {
+    bar.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-10px) scale(1.02)';
+    });
+    
+    bar.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+
+  // Animate skill bars on scroll
+  const skillBars = document.querySelectorAll('.service-bar-fill');
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fill = entry.target;
+        const width = fill.getAttribute('data-width');
+        setTimeout(() => {
+          fill.style.width = width;
+        }, 200);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  skillBars.forEach(bar => skillObserver.observe(bar));
+
+  // Add ripple effect to buttons
+  document.querySelectorAll('button, .resume-button').forEach(button => {
+    button.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+      this.appendChild(ripple);
+      
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = e.clientX - rect.left - size/2 + 'px';
+      ripple.style.top = e.clientY - rect.top - size/2 + 'px';
+      
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
+
+  // Typing effect enhancement for multiple elements
+  const typingElements = document.querySelectorAll('[data-typing]');
+  typingElements.forEach(element => {
+    const text = element.getAttribute('data-typing');
+    let index = 0;
+    element.textContent = '';
+    
+    const typeWriter = () => {
+      if (index < text.length) {
+        element.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeWriter, 100);
+      }
+    };
+    
+    typeWriter();
+  });
+
+  // Mouse cursor trail effect (optional - can be disabled)
+  if (window.innerWidth > 768) {
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // Create custom cursor trail
+    const createCursorTrail = () => {
+      cursorX += (mouseX - cursorX) * 0.1;
+      cursorY += (mouseY - cursorY) * 0.1;
+      
+      requestAnimationFrame(createCursorTrail);
+    };
+    
+    createCursorTrail();
+  }
+
+  // Card tilt effect on project/skill cards
+  document.querySelectorAll('.project-box, .skill-box').forEach(card => {
+    card.addEventListener('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = (y - centerY) / 10;
+      const rotateY = (centerX - x) / 10;
+      
+      this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+    });
+  });
+
+  // Add loading animation
+  window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+  });
+
+  // Dark mode toggle (optional feature)
+  const toggleDarkMode = () => {
+    document.body.classList.toggle('light-mode');
+    localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+  };
+
+  // Check for saved theme preference
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+  }
+});
+
+// Certificate count animation with intersection observer
+const animateValue = (element, start, end, duration) => {
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    element.textContent = Math.floor(progress * (end - start) + start);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+  window.requestAnimationFrame(step);
+};
+
+// Enhanced certificate counter
+const certificateCount = document.getElementById('certificateCount');
+if (certificateCount) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateValue(certificateCount, 0, 460, 3000);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  
+  observer.observe(certificateCount);
+}
 
 // Create a dictionary of certificates
 const certificates = {

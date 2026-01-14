@@ -2,55 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Portfolio</title>
+  <title>Nick Holmes | Portfolio Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWecC7o/muK72M6FazRvz8gXpCMLNV9H/1xIKz9vI4MqzV0n8JLpfaN9lFhJ" crossorigin="anonymous">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* 1) Dark Gray Body Background */
+    /* Modern CSS Variables */
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+    }
+
+    /* Dark Gray Body Background with Gradient */
     body {
       margin: 0;
       padding: 0;
-      background-color: #2c2c2c; /* Dark gray background for the whole page */
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      animation: gradientShift 15s ease infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+      }
+    }
+
+    header, section, footer {
+      position: relative;
+      z-index: 1;
     }
 
     #skillsPieChart {
       width: 400px;
       height: 400px;
-      background-color: #1c1b1b;
+      background-color: rgba(26, 26, 46, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
     }
 
     #skills-chart {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba(5, 171, 231, 0.97);
+      background: rgba(0, 217, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 60px 20px;
+      margin: 40px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(0, 217, 255, 0.2);
     }
 
-    /* LinkedIn button snippet (still inside #skills-chart style block) */
+    /* LinkedIn button - Modern glassmorphism */
     .linkedin-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 10px 15px;
-      background-color: #0077b5; /* LinkedIn brand color */
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #0077b5, #005a87);
       color: white;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 17px;
+      font-weight: 700;
       text-decoration: none;
-      border-radius: 4px;
-      transition: background-color 0.3s;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 119, 181, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .linkedin-btn i {
-      margin-right: 8px;
+      margin-right: 10px;
+      font-size: 20px;
     }
 
     .linkedin-btn:hover {
-      background-color: #005a87; /* Darker LinkedIn brand color on hover */
+      background: linear-gradient(135deg, #005a87, #004166);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 119, 181, 0.5);
     }
 
-    /* Banner (GIF background) */
+    /* Banner (GIF background) - Enhanced */
     #banner {
       display: flex;
       background-image: url('../img/coding.gif');
@@ -60,19 +126,88 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 60vh;
-      margin-top: 0px;
-      padding: 20px;
-      border-radius: 20px;
-      overflow: hidden; /* keeps corners rounded by cutting off overflow */
+      min-height: 70vh;
+      margin: 40px 20px;
+      padding: 60px 20px;
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+    }
+
+    #banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 1;
     }
 
     #banner h1,
     #banner p {
+      position: relative;
+      z-index: 2;
       border-radius: 20px;
-      background-color: rgba(255,255,255,0.95); /* White w/ slight transparency */
-      padding: 20px;
-      color: black;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 30px 40px;
+      color: var(--bg-dark);
+      margin: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #banner h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+    }
+
+    #banner p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: #4a5568;
+    }
+
+    /* Typing text effect */
+    #typing-text {
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientText 3s ease infinite;
+    }
+
+    @keyframes gradientText {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    #typing-text::after {
+      content: '|';
+      margin-left: 4px;
+      -webkit-text-fill-color: currentColor;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
     }
   </style>
 </head>
@@ -82,12 +217,14 @@
     <nav>
       <h1></h1>
       <ul>
-        <li><a href="#" class="active">Home</a></li>
+        <li><a href="../index.html" class="active">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="projects.html">Projects</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li><a href="certificates.html">Certificates</a></li>
-        <li><a href="blog.html">Blog</a></li> <!-- Added Blog to Nav -->
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
       </ul>
     </nav>
   </header>
@@ -100,7 +237,6 @@
   <script>
     const typingText = document.getElementById('typing-text');
     const words = ["Full Stack Developer", "Freelancer", "Youtuber", "Hybrid Database Engineer", "Software Developer"];
-    const colors = ["red", "blue", "green", "orange", "purple"];
     let wordIndex = 0;
     let charIndex = 0;
 
@@ -124,10 +260,6 @@
       } else {
         wordIndex++;
         if (wordIndex >= words.length) wordIndex = 0;
-        // Change color smoothly when starting to type a new word
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        typingText.style.transition = "color 0.4s ease-in-out";
-        typingText.style.color = randomColor;
         setTimeout(type, 200);
       }
     }
@@ -321,5 +453,18 @@
     });
   </script>
 
+  <!-- AI Chatbot -->
+  <script src="../js/ai-chatbot.js"></script>
+  <script>
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatbot = new PortfolioChatbot();
+        chatbot.init();
+      });
+    } else {
+      const chatbot = new PortfolioChatbot();
+      chatbot.init();
+    }
+  </script>
 </body>
 </html>
