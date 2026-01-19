@@ -4,208 +4,470 @@
   <meta charset="UTF-8">
   <title>My Portfolio</title>
   <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
   <script src="js/script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Vanilla Tilt for 3D Cards -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
 
   <style>
+    #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #7b60ee;
+      --accent-color: #ff00d4;
+      --bg-dark: #0a0a0a;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --text-color: #ffffff;
+      --text-secondary: #b0b0b0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #1c1b1b;
-      color: #ffffff;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* NAV styling might come from style.css. Just ensuring no collisions here. */
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-    }
-    nav li {
-      margin-right: 20px;
-    }
-    nav li:last-child {
-      margin-right: 0;
-    }
-    nav a.active {
-      text-decoration: underline;
-    }
-
-    /* CERTIFICATES HEADING + SUBTEXT */
-    .certificates-heading {
-      margin: 40px auto 0;
-      width: 100%;
+    /* Hero Section */
+    .hero {
       text-align: center;
+      padding: 80px 20px 60px;
       position: relative;
-      z-index: 2; /* above any background if needed */
+      z-index: 2;
     }
 
-    .certificates-heading-text {
-      font-size: 48px;
-      font-weight: bold;
-      color: rgba(5, 171, 231, 0.97);
-      font-family: 'Brush Script MT', cursive;
-      display: inline-block;
-      position: relative;
-      text-shadow: 0 0 6px rgba(5, 171, 231, 0.5);
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .certificates-heading-text:hover {
-      color: rgba(5, 200, 255, 0.97);
-      text-decoration: underline;
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      animation: fadeInDown 0.8s ease;
     }
 
-    .certificates-heading-line {
-      margin: 8px auto 0;
-      width: 220px;
-      height: 4px;
-      background-color: rgba(5, 171, 231, 0.97);
-      border-radius: 2px;
-    }
-
-    .certificates-subtext {
-      color: #808080;
-      font-size: 0.9em;
-      margin: 10px auto 20px;
-      text-align: center;
-      width: 80%;
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
       max-width: 800px;
-      line-height: 1.5;
+      margin: 0 auto 30px;
+      line-height: 1.8;
+      animation: fadeInUp 0.8s ease 0.2s both;
     }
 
-    /* SEARCH SECTION */
-    #search-container {
-      margin: 20px auto 40px;
-      text-align: center;
-      position: relative;
-      width: 80%;
+    .stats-badge {
+      display: inline-block;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(123, 96, 238, 0.1));
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary-color);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Search Container */
+    .search-container {
       max-width: 600px;
-    }
-
-    #search-form {
-      display: inline-flex;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
       align-items: center;
-      background-color: #2c2c2c;
-      padding: 10px;
-      border-radius: 5px;
-    }
-    #search-form label {
-      margin-right: 8px;
-      font-size: 16px;
-    }
-    #search-input {
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-      font-size: 16px;
-      width: 250px;
     }
 
-    /* RESULTS DROPDOWN */
+    .search-input {
+      width: 100%;
+      padding: 18px 50px 18px 20px;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      border-radius: 50px;
+      background: rgba(20, 20, 40, 0.6);
+      color: var(--text-color);
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 25px rgba(0, 217, 255, 0.4);
+      background: rgba(20, 20, 40, 0.9);
+    }
+
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 35px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
+      font-size: 1.3rem;
+      pointer-events: none;
+    }
+
     #search-results {
       display: none;
       position: absolute;
-      background-color: #f9f9f9;
-      min-width: 160px;
-      z-index: 9999;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       top: 70px;
       left: 50%;
       transform: translateX(-50%);
-      max-width: 400px;
-    }
-    #search-results div {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-    }
-    #search-results div:hover {
-      background-color: #f1f1f1;
-    }
-
-    /* CERTIFICATES SECTION + DROPDOWNS */
-    .certificates {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-      margin: 10px;
-    }
-    .dropbtn {
-      background-color: #333;
-      color: #fff;
-      padding: 12px 16px;
-      font-size: 14px;
-      border: none;
-      font-family: Arial, sans-serif;
-      cursor: pointer;
-      border-radius: 5px;
-      margin: 5px 0;
-      white-space: normal;
-      display: inline-block;
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      transition: background-color 0.3s, transform 0.3s;
-      box-shadow: 0 20px 500px 0 rgba(0, 0, 0, 0.5);
-    }
-    .dropbtn:hover {
-      transform: scale(1.2);
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      z-index: 1;
+      background: rgba(20, 20, 40, 0.98);
+      border: 2px solid var(--primary-color);
+      border-radius: 15px;
       padding: 20px;
-      background-color: #333;
-      border-radius: 16px;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-      transform: translateY(-10px);
-      transition: transform 0.3s;
-      top: 100%;
-      left: 0;
-      width: 400px;
+      min-width: 400px;
+      max-width: 600px;
       max-height: 500px;
       overflow-y: auto;
-      min-width: 200px;
+      box-shadow: 0 15px 50px rgba(0, 217, 255, 0.3);
+      z-index: 1000;
+      backdrop-filter: blur(10px);
     }
-    .dropdown-content a {
+
+    #search-results.active {
       display: block;
-      padding: 12px;
-      font-size: 14px;
-      line-height: 1.5;
-      white-space: normal;
-      text-align: left;
-      word-break: break-all;
-      margin-bottom: 12px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    #search-results div {
+      padding: 15px;
+      color: var(--text-color);
+      cursor: pointer;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    #search-results div:hover {
+      background: rgba(0, 217, 255, 0.1);
+      border-color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
+    /* Certificates Grid */
+    .certificates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    .cert-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border: 2px solid transparent;
+      border-radius: 20px;
+      padding: 30px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)),
+        linear-gradient(135deg, #00d9ff, #7b60ee, #ff00d4);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      animation: cardFadeIn 0.6s ease forwards;
+    }
+
+    .cert-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0, 217, 255, 0.4), 0 0 40px rgba(123, 96, 238, 0.3);
+    }
+
+    .cert-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #00d9ff, #7b60ee, #ff00d4);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    @keyframes cardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .cert-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .cert-icon {
+      font-size: 2.5rem;
+      filter: drop-shadow(0 5px 15px rgba(0, 217, 255, 0.5));
+    }
+
+    .cert-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cert-count {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      padding: 8px 15px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 20px;
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+    }
+
+    .cert-list {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 217, 255, 0.2);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .cert-list.expanded {
+      display: block;
+      animation: expandDown 0.4s ease;
+    }
+
+    @keyframes expandDown {
+      from {
+        opacity: 0;
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        max-height: 400px;
+      }
+    }
+
+    .cert-item {
+      display: block;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      color: var(--text-color);
       text-decoration: none;
-      background-color: black;
-      color: #ffffff;
-      transition: background-color 0.3s ease, transform 0.3s;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      line-height: 1.6;
     }
-    .dropdown-content a:hover {
-      background-color: #555;
-      transform: scale(1.05);
+
+    .cert-item:hover {
+      background: rgba(0, 217, 255, 0.1);
+      border-color: var(--primary-color);
+      transform: translateX(10px);
     }
-    .dropdown:hover .dropdown-content {
-      display: block;
-      transform: translateY(0);
+
+    /* Scroll styling for cert lists */
+    .cert-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .cert-list::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .cert-list::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 10px;
+    }
+
+    .cert-list::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-color);
+    }
+
+    /* Filter Tags */
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      max-width: 900px;
+      margin: 0 auto 40px;
+      padding: 0 20px;
+    }
+
+    .filter-tag {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .filter-tag:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      background: rgba(0, 217, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .filter-tag.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+    }
+
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 8px 25px rgba(0, 217, 255, 0.4);
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 12px 35px rgba(0, 217, 255, 0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .certificates-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #search-results {
+        min-width: 90%;
+        left: 5%;
+        transform: none;
+      }
     }
   </style>
 </head>
 
-<body>
+<body data-page="certificates">
+<div id="canvas-container"></div>
   <header>
     <nav>
       <h1></h1>
@@ -214,47 +476,64 @@
         <li><a href="about.html">About</a></li>
         <li><a href="projects.html">Projects</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <li><a href="my_templates/certificates.html" class="active">Certificates</a></li>
+        <li><a href="certificates.html" class="active">Certificates</a></li>
         <li><a href="services-faq.html">Services FAQ</a></li>
         <li><a href="interactive-showcase.html">Showcase</a></li>
         <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Heading & Subtext -->
-  <section class="certificates">
-    <h2 class="certificates-heading">
-      <a href="https://www.linkedin.com/in/nick-holmes-90264a217/details/certifications/"
-         class="certificates-heading-text">
-         Certificates
-      </a>
-    </h2>
-    <div class="certificates-heading-line"></div>
-    <p class="certificates-subtext">
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Professional Certifications</h1>
+    <p>
       Over 450 courses completed and 30 in-depth certifications from industry leaders like Google,
-      Amazon, and Microsoft. Some of the important certificates can be clicked to send you to the
-      URL for the certificate credentials. LinkedIn does not permit web scraping, so forgive me for
-      outdated certificates—I have to update this manually every few months.
+      Amazon, and Microsoft. Click any category to explore certificates. Some certificates link to LinkedIn credentials.
     </p>
+    <div class="stats-badge">
+      <i class="fas fa-certificate" style="margin-right: 10px;"></i>
+      450+ Courses | 30+ Certifications
+    </div>
   </section>
 
   <!-- Search Bar -->
-  <section id="search-container">
-    <form id="search-form">
-      <label for="search-input">Search</label>
-      <input type="text" id="search-input" placeholder="Search">
-    </form>
+  <div class="search-container">
+    <input 
+      type="text" 
+      id="search-input" 
+      class="search-input" 
+      placeholder="Search certificates... (e.g., 'Python', 'AWS', 'Machine Learning')"
+      autocomplete="off"
+    />
+    <i class="fas fa-search search-icon"></i>
     <div id="search-results"></div>
-  </section>
+  </div>
 
-  <!-- All Certificate Categories -->
-  <section class="certificates">
+  <!-- Filter Tags -->
+  <div class="filter-tags">
+    <span class="filter-tag active" data-category="all">All Categories</span>
+    <span class="filter-tag" data-category="python">🐍 Python</span>
+    <span class="filter-tag" data-category="ai">🤖 AI/ML</span>
+    <span class="filter-tag" data-category="web">🌐 Web Dev</span>
+    <span class="filter-tag" data-category="sql">� SQL/Database</span>
+    <span class="filter-tag" data-category="cloud">☁️ Cloud</span>
+    <span class="filter-tag" data-category="software">⚙️ Software</span>
+    <span class="filter-tag" data-category="analytics">� Analytics</span>
+  </div>
 
-    <!-- Python Certificates -->
-    <div class="dropdown">
-      <button class="dropbtn">Python Certificates</button>
-      <div class="dropdown-content">
+  <!-- Certificates Grid -->
+  <div class="certificates-grid">
+
+    <!-- Python Certificates Card -->
+    <div class="cert-card" data-category="python">
+      <div class="cert-header">
+        <div class="cert-icon">🐍</div>
+        <div class="cert-title">Python</div>
+      </div>
+      <span class="cert-count">50+</span>
+      <div class="cert-list">
         <a href="#">Advanced Python: Language Features</a>
         <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
         <a href="#">Building Computer Vision Applications with Python</a>
@@ -285,15 +564,19 @@
         <a href="#">Python vs. R for Data Science</a>
         <a href="#">Python For Data Science</a>
         <a href="#">Python For Finance</a>
-        <a href="#">Programming Fundamentals Certification Course</a>
-        <a href="#">Using Python for Automation</a>
+        <a href="#" class="cert-item">Programming Fundamentals Certification Course</a>
+        <a href="#" class="cert-item">Using Python for Automation</a>
       </div>
     </div>
 
-    <!-- AI Certificates -->
-    <div class="dropdown">
-      <button class="dropbtn">Artificial Intelligence Certificates</button>
-      <div class="dropdown-content">
+    <!-- AI Certificates Card -->
+    <div class="cert-card" data-category="ai">
+      <div class="cert-header">
+        <div class="cert-icon">🤖</div>
+        <div class="cert-title">Artificial Intelligence</div>
+      </div>
+      <span class="cert-count">90+</span>
+      <div class="cert-list">
         <a href="#">AI 2041: Five Visions for Our Future (Book Bite)</a>
         <a href="#">AI Challenges and Opportunities for Leadership</a>
         <a href="#">AI Engineering Essentials: Navigating the Tech Revolution</a>
@@ -396,79 +679,248 @@
       </div>
     </div>
 
-    <!-- HTML/CSS/JS Certificates -->
-    <div class="dropdown">
-      <button class="dropbtn">HTML/CSS/Javascript Certificates</button>
-      <div class="dropdown-content">
-        <a href="#">Cutting-Edge CSS</a>
-        <a href="#">HTML Essential Training</a>
-        <a href="#">CSS Essential Training (2019)</a>
-        <a href="#">JavaScript Essential Training</a>
+    <!-- HTML/CSS/JS Certificates Card -->
+    <div class="cert-card" data-category="web">
+      <div class="cert-header">
+        <div class="cert-icon">🌐</div>
+        <div class="cert-title">HTML/CSS/JavaScript</div>
+      </div>
+      <span class="cert-count">4</span>
+      <div class="cert-list">
+        <a href="#" class="cert-item">Cutting-Edge CSS</a>
+        <a href="#" class="cert-item">HTML Essential Training</a>
+        <a href="#" class="cert-item">CSS Essential Training (2019)</a>
+        <a href="#" class="cert-item">JavaScript Essential Training</a>
       </div>
     </div>
 
-    <!-- SQL Certificates -->
-    <div class="dropdown">
-      <button class="dropbtn">SQL Certificates</button>
-      <div class="dropdown-content">
-        <a href="#">SQL</a>
-        <a href="#">Introduction To SQL</a>
-        <a href="#">SQL Intermediate</a>
-        <a href="#">Choose the Right Tool for Your Data: Python, R, or SQL</a>
-        <a href="#">Programming Foundations: Databases</a>
-        <a href="#">Learning SQL Programming</a>
+    <!-- SQL Certificates Card -->
+    <div class="cert-card" data-category="sql">
+      <div class="cert-header">
+        <div class="cert-icon">🗄️</div>
+        <div class="cert-title">SQL & Databases</div>
+      </div>
+      <span class="cert-count">6</span>
+      <div class="cert-list">
+        <a href="#" class="cert-item">SQL</a>
+        <a href="#" class="cert-item">Introduction To SQL</a>
+        <a href="#" class="cert-item">SQL Intermediate</a>
+        <a href="#" class="cert-item">Choose the Right Tool for Your Data: Python, R, or SQL</a>
+        <a href="#" class="cert-item">Programming Foundations: Databases</a>
+        <a href="#" class="cert-item">Learning SQL Programming</a>
       </div>
     </div>
 
-    <!-- Cloud Certificates -->
-    <div class="dropdown">
-      <button class="dropbtn">Cloud Certificates</button>
-      <div class="dropdown-content">
-        <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
-        <a href="#">Google Cloud Foundations</a>
-        <a href="#">Choosing a Database: PostgreSQL, MySQL, Mongo, and Cloud</a>
-        <a href="#">Learning Cloud Computing: Core Concepts</a>
-        <a href="#">Cloud Architecture: Core Concepts</a>
-        <a href="#">Generative AI in Cloud Computing: Core Concepts</a>
-        <a href="#">Top 10 Skills for Machine Learning Cloud Architects</a>
+    <!-- Cloud Certificates Card -->
+    <div class="cert-card" data-category="cloud">
+      <div class="cert-header">
+        <div class="cert-icon">☁️</div>
+        <div class="cert-title">Cloud Computing</div>
+      </div>
+      <span class="cert-count">7</span>
+      <div class="cert-list">
+        <a href="#" class="cert-item">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
+        <a href="#" class="cert-item">Google Cloud Foundations</a>
+        <a href="#" class="cert-item">Choosing a Database: PostgreSQL, MySQL, Mongo, and Cloud</a>
+        <a href="#" class="cert-item">Learning Cloud Computing: Core Concepts</a>
+        <a href="#" class="cert-item">Cloud Architecture: Core Concepts</a>
+        <a href="#" class="cert-item">Generative AI in Cloud Computing: Core Concepts</a>
+        <a href="#" class="cert-item">Top 10 Skills for Machine Learning Cloud Architects</a>
       </div>
     </div>
 
-    <!-- Software Certificates -->
-    <div class="dropdown">
-      <button class="dropbtn">Software Certificates</button>
-      <div class="dropdown-content">
-        <a href="#">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
-        <a href="#">AI Show: Medical Imaging with Azure Machine Learning</a>
-        <a href="#">AI Show: Building NLP models with Azure ML AutoML</a>
-        <a href="#">Azure AI Studio First Look</a>
-        <a href="#">Azure AI Tips for Developers: Securing Your Data</a>
-        <a href="#">Everybody's Introduction to Snowflake</a>
-        <a href="#">Learning SnowflakeDB</a>
+    <!-- Software Certificates Card -->
+    <div class="cert-card" data-category="software">
+      <div class="cert-header">
+        <div class="cert-icon">💻</div>
+        <div class="cert-title">Software & Tools</div>
+      </div>
+      <span class="cert-count">7</span>
+      <div class="cert-list">
+        <a href="#" class="cert-item">AWS Academy Graduate - AWS Academy Cloud Foundations</a>
+        <a href="#" class="cert-item">AI Show: Medical Imaging with Azure Machine Learning</a>
+        <a href="#" class="cert-item">AI Show: Building NLP models with Azure ML AutoML</a>
+        <a href="#" class="cert-item">Azure AI Studio First Look</a>
+        <a href="#" class="cert-item">Azure AI Tips for Developers: Securing Your Data</a>
+        <a href="#" class="cert-item">Everybody's Introduction to Snowflake</a>
+        <a href="#" class="cert-item">Learning SnowflakeDB</a>
       </div>
     </div>
 
-    <!-- Advanced Certificates -->
-    <div class="dropdown">
-      <button class="dropbtn">Advanced Certificates</button>
-      <div class="dropdown-content">
-        <a href="https://www.credly.com/badges/0b160894-196e-4d8d-b358-03ac0f7f4881/linked_in_profile">
+    <!-- Data Analytics Certificates Card -->
+    <div class="cert-card" data-category="analytics">
+      <div class="cert-header">
+        <div class="cert-icon">📊</div>
+        <div class="cert-title">Data Analytics & Google</div>
+      </div>
+      <span class="cert-count">9</span>
+      <div class="cert-list">
+        <a href="https://www.credly.com/badges/0b160894-196e-4d8d-b358-03ac0f7f4881/linked_in_profile" class="cert-item">
           AWS Academy Graduate - AWS Academy Cloud Foundations
         </a>
-        <a href="#">Google Share Data Through the Art of Visualization Issuing Organization</a>
-        <a href="#">Google Foundations: Data, Data, Everywhere</a>
-        <a href="#">Google Data Analysis with R Programming</a>
-        <a href="#">Google Prepare Data for Exploration</a>
-        <a href="#">Google Process Data from Dirty to Clean</a>
-        <a href="#">Google Data Analytics Certificate</a>
-        <a href="#">Google Data Analytics Specialization</a>
-        <a href="#">Google Data Analytics Capstone: Complete a Case Study</a>
+        <a href="#" class="cert-item">Google Share Data Through the Art of Visualization Issuing Organization</a>
+        <a href="#" class="cert-item">Google Foundations: Data, Data, Everywhere</a>
+        <a href="#" class="cert-item">Google Data Analysis with R Programming</a>
+        <a href="#" class="cert-item">Google Prepare Data for Exploration</a>
+        <a href="#" class="cert-item">Google Process Data from Dirty to Clean</a>
+        <a href="#" class="cert-item">Google Data Analytics Certificate</a>
+        <a href="#" class="cert-item">Google Data Analytics Specialization</a>
+        <a href="#" class="cert-item">Google Data Analytics Capstone: Complete a Case Study</a>
       </div>
     </div>
 
-  </section>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 
   <script src="../js/script.js"></script>
+
+  <!-- Certificate Page Functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Convert all certificate links to cert-item class
+      document.querySelectorAll('.cert-list a').forEach(link => {
+        link.classList.add('cert-item');
+      });
+
+      // Toggle certificate lists on card click
+      document.querySelectorAll('.cert-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+          // Don't toggle if clicking on a link
+          if (e.target.tagName === 'A') return;
+          
+          const certList = this.querySelector('.cert-list');
+          certList.classList.toggle('expanded');
+          
+          // Close other open lists
+          document.querySelectorAll('.cert-list').forEach(list => {
+            if (list !== certList) {
+              list.classList.remove('expanded');
+            }
+          });
+        });
+      });
+
+    // Filter functionality
+    const filterTags = document.querySelectorAll('.filter-tag');
+    const certCards = document.querySelectorAll('.cert-card');
+    
+    filterTags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        // Remove active class from all tags
+        filterTags.forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked tag
+        tag.classList.add('active');
+        
+        // Get selected category
+        const category = tag.dataset.category;
+        
+        // Filter cert cards
+        certCards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = '';
+            card.style.animation = 'cardFadeIn 0.6s ease forwards';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    
+    searchInput.addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      
+      if (!searchTerm) {
+        searchResults.classList.remove('active');
+        searchResults.innerHTML = '';
+        return;
+      }
+      
+      const allCerts = [];
+      document.querySelectorAll('.cert-card').forEach(card => {
+        const category = card.querySelector('.cert-title').textContent;
+        const certLinks = card.querySelectorAll('.cert-item');
+        
+        certLinks.forEach(link => {
+          const certName = link.textContent.toLowerCase();
+          if (certName.includes(searchTerm)) {
+            allCerts.push({
+              name: link.textContent,
+              category: category,
+              element: link
+            });
+          }
+        });
+      });
+      
+      if (allCerts.length > 0) {
+        searchResults.innerHTML = allCerts.map(cert => 
+          `<div onclick="scrollToCert(this)" data-cert="${cert.name}">
+            <strong>${cert.category}:</strong> ${cert.name}
+          </div>`
+        ).join('');
+        searchResults.classList.add('active');
+      } else {
+        searchResults.innerHTML = `<div style="text-align: center; color: var(--text-secondary);">
+          No certificates found matching "${searchTerm}"
+        </div>`;
+        searchResults.classList.add('active');
+      }
+    });
+
+    // Scroll to certificate when clicked from search
+    window.scrollToCert = function(element) {
+      const certName = element.dataset.cert;
+      const certCard = Array.from(document.querySelectorAll('.cert-item')).find(
+        item => item.textContent === certName
+      )?.closest('.cert-card');
+      
+      if (certCard) {
+        // Expand the card
+        certCard.querySelector('.cert-list').classList.add('expanded');
+        
+        // Scroll to it
+        certCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Highlight briefly
+        certCard.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+          certCard.style.transform = '';
+        }, 500);
+        
+        // Close search results
+        searchResults.classList.remove('active');
+        searchInput.value = '';
+      }
+    };
+
+    // Close search results when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.remove('active');
+      }
+    });
+
+    // Back to top button visibility
+    const backToTopBtn = document.querySelector('.back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+
+    }); // End DOMContentLoaded
+  </script>
 
   <!-- AI Chatbot -->
   <script src="../js/ai-chatbot.js"></script>
@@ -483,5 +935,255 @@
       chatbot.init();
     }
   </script>
+
+  <!-- Three.js Floating Certificates Background -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('canvas-container');
+        if (!container) return;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Create Floating Planes
+        const geometry = new THREE.PlaneGeometry(1, 1.4);
+        const count = 50;
+        const meshes = [];
+
+        for(let i = 0; i < count; i++) {
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x00d9ff,
+                transparent: true,
+                opacity: Math.random() * 0.2, // Low opacity
+                side: THREE.DoubleSide,
+                wireframe: Math.random() > 0.5 // Mix of solid (transparent) and wireframe
+            });
+
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 10
+            );
+            mesh.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                0
+            );
+            mesh.userData = {
+                rotSpeedX: (Math.random() - 0.5) * 0.01,
+                rotSpeedY: (Math.random() - 0.5) * 0.01,
+                floatSpeed: (Math.random()) * 0.005
+            };
+            
+            scene.add(mesh);
+            meshes.push(mesh);
+        }
+
+        camera.position.z = 10;
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            meshes.forEach(mesh => {
+                mesh.rotation.x += mesh.userData.rotSpeedX;
+                mesh.rotation.y += mesh.userData.rotSpeedY;
+                mesh.position.y += mesh.userData.floatSpeed;
+
+                // Reset position if it goes too high
+                if(mesh.position.y > 10) {
+                    mesh.position.y = -10;
+                }
+            });
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    });
+  </script>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- About Column -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Nick Holmes</h3>
+          <p class="footer-desc">Full Stack Developer & AI Engineer passionate about creating innovative solutions that make a difference.</p>
+          <div class="footer-social">
+            <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/NickHolmes999" target="_blank" class="social-icon github" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <div class="footer-social-split">
+              <div class="social-icon email split-btn" onclick="toggleFooterSplit(this, 'email')" aria-label="Email">
+                <i class="fas fa-envelope main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="mailto:NickHolmes2003@gmail.com" class="footer-split-option send-btn">
+                  <i class="fas fa-paper-plane"></i>
+                  <span>Send</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('NickHolmes2003@gmail.com', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+            <div class="footer-social-split">
+              <div class="social-icon phone split-btn" onclick="toggleFooterSplit(this, 'phone')" aria-label="Phone">
+                <i class="fas fa-phone main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="tel:+13015005152" class="footer-split-option call-btn">
+                  <i class="fas fa-phone-alt"></i>
+                  <span>Call</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('(301) 500-5152', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
+            <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+            <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Services -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Services</h3>
+          <ul class="footer-links">
+            <li><a href="interactive-showcase.html"><i class="fas fa-flask"></i> Interactive Demos</a></li>
+            <li><a href="certificates.html"><i class="fas fa-certificate"></i> Certifications</a></li>
+            <li><a href="services-faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+            <li><a href="performance-metrics.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+          </ul>
+        </div>
+        
+        <!-- Newsletter -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Stay Updated</h3>
+          <p class="footer-desc">Subscribe to get updates on new projects and articles.</p>
+          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+            <div class="newsletter-input-group">
+              <input type="email" placeholder="Your email address" required>
+              <button type="submit">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+          <p class="newsletter-note">🔒 No spam, unsubscribe anytime</p>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2025 <span class="gradient-text">Nick Holmes</span> - All rights reserved
+        </p>
+        <p class="footer-tech">
+          <i class="fas fa-code"></i> Built with HTML, CSS, JavaScript & Python
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Newsletter handler
+    function handleNewsletter(event) {
+      event.preventDefault();
+      const email = event.target.querySelector('input[type="email"]').value;
+      
+      // Create success notification
+      const notification = document.createElement('div');
+      notification.className = 'newsletter-notification';
+      notification.innerHTML = '<i class="fas fa-check-circle"></i> Thanks for subscribing!';
+      notification.style.cssText = 'position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--success-color), var(--primary-color)); color: white; padding: 20px 30px; border-radius: 12px; font-weight: bold; z-index: 10000; animation: slideInRight 0.5s ease;';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.5s ease';
+        setTimeout(() => notification.remove(), 500);
+      }, 3000);
+      
+      event.target.reset();
+      console.log('Newsletter subscription:', email);
+    }
+
+    // Footer Split Button Functions
+    function toggleFooterSplit(button, type) {
+      document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+        if (btn !== button) btn.classList.remove('split-active');
+      });
+      button.classList.toggle('split-active');
+      if (button.classList.contains('split-active')) {
+        setTimeout(() => {
+          document.addEventListener('click', function closeOnOutside(e) {
+            if (!e.target.closest('.footer-social-split')) {
+              document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+              document.removeEventListener('click', closeOnOutside);
+            }
+          });
+        }, 100);
+      }
+    }
+
+    function copyFooterContact(text, event) {
+      event.stopPropagation();
+      navigator.clipboard.writeText(text).then(() => {
+        const notification = document.createElement('div');
+        notification.className = 'footer-copy-notification';
+        notification.innerHTML = `<i class="fas fa-check-circle"></i><span>Copied: ${text}</span>`;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.5s ease';
+          setTimeout(() => notification.remove(), 500);
+        }, 2500);
+        document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+      });
+    }
+  </script>
+
+  <script>
+    // Initialize Vanilla Tilt on certificate cards
+    VanillaTilt.init(document.querySelectorAll(".cert-card"), {
+        max: 10,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.3,
+        scale: 1.02
+    });
+  </script>
+  
+  <!-- Back to Top Button -->
+  <script src="../js/back-to-top.js"></script>
 </body>
 </html>

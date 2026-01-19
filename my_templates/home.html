@@ -11,8 +11,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Three.js for 3D Backgrounds -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
+    /* Three.js Background Container */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3; /* Subtle background */
+      pointer-events: none;
+    }
+
     /* Modern CSS Variables */
     :root {
       --primary-color: #00d9ff;
@@ -213,6 +228,7 @@
 </head>
 
 <body>
+<div id="canvas-container"></div>
   <header>
     <nav>
       <h1></h1>
@@ -225,6 +241,7 @@
         <li><a href="services-faq.html">Services FAQ</a></li>
         <li><a href="interactive-showcase.html">Showcase</a></li>
         <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
       </ul>
     </nav>
   </header>
@@ -465,6 +482,83 @@
       const chatbot = new PortfolioChatbot();
       chatbot.init();
     }
+  </script>
+
+  <script>
+    // Three.js Background Animation - Particle Sphere (Home theme)
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    // Create floating cubes (Rising Data)
+    const cubes = [];
+    const geometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0x00d9ff, // Primary theme color
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15
+    });
+
+    const highlightMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0xa855f7, // Secondary theme color
+        wireframe: true,
+        transparent: true,
+        opacity: 0.25
+    });
+
+    for(let i=0; i<80; i++) {
+        const isHighlight = Math.random() > 0.8;
+        const cube = new THREE.Mesh(geometry, isHighlight ? highlightMaterial : material);
+        
+        // Random spread
+        cube.position.x = (Math.random() - 0.5) * 30;
+        cube.position.y = (Math.random() - 0.5) * 20;
+        cube.position.z = (Math.random() - 0.5) * 15;
+        
+        // Store individual rotation and movement speeds
+        cube.userData = {
+            rotX: (Math.random() - 0.5) * 0.02,
+            rotY: (Math.random() - 0.5) * 0.02,
+            speedY: Math.random() * 0.01 + 0.005
+        };
+
+        scene.add(cube);
+        cubes.push(cube);
+    }
+
+    camera.position.z = 8;
+    
+    function animate() {
+        requestAnimationFrame(animate);
+
+        cubes.forEach(cube => {
+            cube.rotation.x += cube.userData.rotX;
+            cube.rotation.y += cube.userData.rotY;
+            
+            // Float upwards
+            cube.position.y += cube.userData.speedY;
+
+            // Loop from bottom if it goes off top
+            if(cube.position.y > 10) {
+                cube.position.y = -10;
+                cube.position.x = (Math.random() - 0.5) * 30;
+            }
+        });
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>

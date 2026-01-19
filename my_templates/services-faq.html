@@ -12,9 +12,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   
   <style>
+    #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
     :root {
       --primary-color: #00d9ff;
       --secondary-color: #a855f7;
@@ -300,6 +312,39 @@
       font-size: 1.2rem;
     }
 
+    .hiring-criteria-cta {
+      display: block;
+      text-decoration: none;
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.15), rgba(168, 85, 247, 0.15));
+      border: 2px solid var(--primary-color);
+      border-radius: 20px;
+      padding: 25px 35px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hiring-criteria-cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .hiring-criteria-cta:hover::before {
+      left: 100%;
+    }
+
+    .hiring-criteria-cta:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+      border-color: var(--secondary-color);
+    }
+
     @media (max-width: 768px) {
       .page-hero h1 {
         font-size: 2.5rem;
@@ -322,7 +367,8 @@
     }
   </style>
 </head>
-<body>
+<body data-page="analytics">
+<div id="canvas-container"></div>
   <header>
     <nav>
       <h1></h1>
@@ -335,6 +381,7 @@
         <li><a href="services-faq.html" class="active">Services FAQ</a></li>
         <li><a href="interactive-showcase.html">Showcase</a></li>
         <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
       </ul>
     </nav>
   </header>
@@ -342,6 +389,26 @@
   <section class="page-hero">
     <h1>How Can I Help You?</h1>
     <p>Looking for a specific role or service? Click on any question below to see how my experience and skills make me the perfect fit for your needs.</p>
+    
+    <!-- Hiring Criteria CTA -->
+    <div style="margin: 30px auto; max-width: 700px;">
+      <a href="hiring-criteria.html" class="hiring-criteria-cta">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+          <div style="flex: 1; text-align: left;">
+            <h3 style="color: var(--primary-color); margin: 0 0 8px 0; font-size: 1.4rem; display: flex; align-items: center; gap: 10px;">
+              <i class="fas fa-user-check" style="font-size: 1.8rem;"></i>
+              Is Your Role Right for Me?
+            </h3>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 1rem;">
+              Check my hiring criteria: location, salary expectations, clearance, and preferred roles
+            </p>
+          </div>
+          <div style="color: var(--primary-color); font-size: 2rem;">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+      </a>
+    </div>
     
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search for a role or skill...">
@@ -644,5 +711,239 @@
       chatbot.init();
     }
   </script>
+
+  <script>
+    // Three.js Background Animation - Geometric Shapes (Services theme)
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    // Create multiple geometric shapes
+    const shapes = [];
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0x00ffff, 
+        wireframe: true,
+        transparent: true,
+        opacity: 0.3
+    });
+
+    // Icosahedron
+    const geometry1 = new THREE.IcosahedronGeometry(1, 0);
+    const shape1 = new THREE.Mesh(geometry1, material);
+    shape1.position.set(-4, 2, -5);
+    scene.add(shape1);
+    shapes.push(shape1);
+
+    // Octahedron
+    const geometry2 = new THREE.OctahedronGeometry(1.5, 0);
+    const shape2 = new THREE.Mesh(geometry2, material);
+    shape2.position.set(4, -1, -6);
+    scene.add(shape2);
+    shapes.push(shape2);
+
+    // Tetrahedron
+    const geometry3 = new THREE.TetrahedronGeometry(1.2, 0);
+    const shape3 = new THREE.Mesh(geometry3, material);
+    shape3.position.set(0, 0, -8);
+    scene.add(shape3);
+    shapes.push(shape3);
+    
+    // Torus
+    const geometry4 = new THREE.TorusGeometry(2, 0.5, 8, 20);
+    const shape4 = new THREE.Mesh(geometry4, material);
+    shape4.position.set(-5, -3, -10);
+    scene.add(shape4);
+    shapes.push(shape4);
+
+
+    camera.position.z = 5;
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        shapes.forEach((shape, index) => {
+            // Rotate each shape differently
+            shape.rotation.x += 0.005 * (index + 1) * 0.5;
+            shape.rotation.y += 0.005 * (index + 1) * 0.5;
+            
+            // Gentle floating movement
+            shape.position.y += Math.sin(Date.now() * 0.001 + index) * 0.005;
+        });
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- About Column -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Nick Holmes</h3>
+          <p class="footer-desc">Full Stack Developer & AI Engineer passionate about creating innovative solutions that make a difference.</p>
+          <div class="footer-social">
+            <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/NickHolmes999" target="_blank" class="social-icon github" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <div class="footer-social-split">
+              <div class="social-icon email split-btn" onclick="toggleFooterSplit(this, 'email')" aria-label="Email">
+                <i class="fas fa-envelope main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="mailto:NickHolmes2003@gmail.com" class="footer-split-option send-btn">
+                  <i class="fas fa-paper-plane"></i>
+                  <span>Send</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('NickHolmes2003@gmail.com', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+            <div class="footer-social-split">
+              <div class="social-icon phone split-btn" onclick="toggleFooterSplit(this, 'phone')" aria-label="Phone">
+                <i class="fas fa-phone main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="tel:+13015005152" class="footer-split-option call-btn">
+                  <i class="fas fa-phone-alt"></i>
+                  <span>Call</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('(301) 500-5152', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
+            <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+            <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Services -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Services</h3>
+          <ul class="footer-links">
+            <li><a href="interactive-showcase.html"><i class="fas fa-flask"></i> Interactive Demos</a></li>
+            <li><a href="certificates.html"><i class="fas fa-certificate"></i> Certifications</a></li>
+            <li><a href="services-faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+            <li><a href="performance-metrics.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+          </ul>
+        </div>
+        
+        <!-- Newsletter -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Stay Updated</h3>
+          <p class="footer-desc">Subscribe to get updates on new projects and articles.</p>
+          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+            <div class="newsletter-input-group">
+              <input type="email" placeholder="Your email address" required>
+              <button type="submit">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+          <p class="newsletter-note">🔒 No spam, unsubscribe anytime</p>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2025 <span class="gradient-text">Nick Holmes</span> - All rights reserved
+        </p>
+        <p class="footer-tech">
+          <i class="fas fa-code"></i> Built with HTML, CSS, JavaScript & Python
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Newsletter handler
+    function handleNewsletter(event) {
+      event.preventDefault();
+      const email = event.target.querySelector('input[type="email"]').value;
+      
+      // Create success notification
+      const notification = document.createElement('div');
+      notification.className = 'newsletter-notification';
+      notification.innerHTML = '<i class="fas fa-check-circle"></i> Thanks for subscribing!';
+      notification.style.cssText = 'position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--success-color), var(--primary-color)); color: white; padding: 20px 30px; border-radius: 12px; font-weight: bold; z-index: 10000; animation: slideInRight 0.5s ease;';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.5s ease';
+        setTimeout(() => notification.remove(), 500);
+      }, 3000);
+      
+      event.target.reset();
+      console.log('Newsletter subscription:', email);
+    }
+
+    function toggleFooterSplit(button, type) {
+      document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+        if (btn !== button) btn.classList.remove('split-active');
+      });
+      button.classList.toggle('split-active');
+      if (button.classList.contains('split-active')) {
+        setTimeout(() => {
+          document.addEventListener('click', function closeOnOutside(e) {
+            if (!e.target.closest('.footer-social-split')) {
+              document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+              document.removeEventListener('click', closeOnOutside);
+            }
+          });
+        }, 100);
+      }
+    }
+
+    function copyFooterContact(text, event) {
+      event.stopPropagation();
+      navigator.clipboard.writeText(text).then(() => {
+        const notification = document.createElement('div');
+        notification.className = 'footer-copy-notification';
+        notification.innerHTML = `<i class="fas fa-check-circle"></i><span>Copied: ${text}</span>`;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.5s ease';
+          setTimeout(() => notification.remove(), 500);
+        }, 2500);
+        document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+      });
+    }
+  </script>
+  
+  <!-- Back to Top Button -->
+  <script src="../js/back-to-top.js"></script>
 </body>
 </html>

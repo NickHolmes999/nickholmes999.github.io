@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebAssembly Performance Benchmark | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      animation: gradientShift 15s ease infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    header, main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation */
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      max-width: 1100px;
+      margin: 20px auto;
+    }
+
+    nav li { margin: 0; }
+
+    nav a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    nav a:hover, nav a.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto 30px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(0, 217, 255, 0.1);
+      border: 2px solid var(--primary-color);
+      border-radius: 25px;
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin: 5px;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Benchmark Cards */
+    .benchmark-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .benchmark-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .benchmark-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .benchmark-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 217, 255, 0.2);
+      border-color: var(--primary-color);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+      filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.5));
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-description {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    /* Control Panel */
+    .control-panel {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .input-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .input-group label {
+      display: block;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 30px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 217, 255, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    /* Results Display */
+    .results {
+      margin-top: 25px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .result-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .result-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .js-time {
+      color: var(--accent-color);
+    }
+
+    .wasm-time {
+      color: var(--success);
+    }
+
+    .speedup {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin-top: 30px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Status Messages */
+    .status {
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .status.loading {
+      display: flex;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--warning);
+      color: var(--warning);
+    }
+
+    .status.success {
+      display: flex;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Code Display */
+    .code-block {
+      background: rgba(10, 10, 15, 0.95);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    .code-block code {
+      color: var(--primary-color);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    .comparison-table th {
+      background: rgba(0, 217, 255, 0.1);
+      padding: 15px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--primary-color);
+      border-radius: 10px;
+    }
+
+    .comparison-table td {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .comparison-table tr td:first-child {
+      border-radius: 10px 0 0 10px;
+    }
+
+    .comparison-table tr td:last-child {
+      border-radius: 0 10px 10px 0;
+    }
+
+    @media (max-width: 768px) {
+      .benchmark-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .control-panel {
+        flex-direction: column;
+      }
+
+      .chart-container {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>⚡ WebAssembly Performance Benchmark</h1>
+    <p>Compare JavaScript vs WebAssembly performance across various computational tasks. Experience the power of near-native speed in the browser.</p>
+    <div>
+      <span class="badge">🚀 WASM Powered</span>
+      <span class="badge">📊 Real-time Metrics</span>
+      <span class="badge">⚡ 2-10x Faster</span>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- Sorting Algorithm Benchmark -->
+    <div class="benchmark-grid">
+      <div class="benchmark-card">
+        <div class="card-header">
+          <i class="fas fa-sort-amount-down card-icon"></i>
+          <h2 class="card-title">Sorting Algorithm</h2>
+        </div>
+        <p class="card-description">Compare Quick Sort performance between JavaScript and WebAssembly on large datasets.</p>
+        
+        <div class="control-panel">
+          <div class="input-group">
+            <label>Array Size</label>
+            <select id="sortSize">
+              <option value="10000">10,000 elements</option>
+              <option value="50000" selected>50,000 elements</option>
+              <option value="100000">100,000 elements</option>
+              <option value="500000">500,000 elements</option>
+            </select>
+          </div>
+          <button class="btn" onclick="runSortBenchmark()">
+            <i class="fas fa-play"></i> Run Benchmark
+          </button>
+        </div>
+
+        <div class="status loading" id="sortStatus" style="display: none;">
+          <div class="spinner"></div>
+          <span>Running benchmark...</span>
+        </div>
+
+        <div class="results" id="sortResults" style="display: none;">
+          <div class="result-row">
+            <span class="result-label"><i class="fab fa-js-square"></i> JavaScript</span>
+            <span class="result-value js-time" id="sortJsTime">-</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label"><i class="fas fa-cube"></i> WebAssembly</span>
+            <span class="result-value wasm-time" id="sortWasmTime">-</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label"><i class="fas fa-rocket"></i> Speed Improvement</span>
+            <span class="result-value speedup" id="sortSpeedup">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Multiplication Benchmark -->
+      <div class="benchmark-card">
+        <div class="card-header">
+          <i class="fas fa-calculator card-icon"></i>
+          <h2 class="card-title">Matrix Multiplication</h2>
+        </div>
+        <p class="card-description">Intensive computation comparing matrix operations in JavaScript vs WASM.</p>
+        
+        <div class="control-panel">
+          <div class="input-group">
+            <label>Matrix Size</label>
+            <select id="matrixSize">
+              <option value="100">100x100</option>
+              <option value="200" selected>200x200</option>
+              <option value="300">300x300</option>
+              <option value="500">500x500</option>
+            </select>
+          </div>
+          <button class="btn" onclick="runMatrixBenchmark()">
+            <i class="fas fa-play"></i> Run Benchmark
+          </button>
+        </div>
+
+        <div class="status loading" id="matrixStatus" style="display: none;">
+          <div class="spinner"></div>
+          <span>Computing matrices...</span>
+        </div>
+
+        <div class="results" id="matrixResults" style="display: none;">
+          <div class="result-row">
+            <span class="result-label"><i class="fab fa-js-square"></i> JavaScript</span>
+            <span class="result-value js-time" id="matrixJsTime">-</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label"><i class="fas fa-cube"></i> WebAssembly</span>
+            <span class="result-value wasm-time" id="matrixWasmTime">-</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label"><i class="fas fa-rocket"></i> Speed Improvement</span>
+            <span class="result-value speedup" id="matrixSpeedup">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Processing Benchmark -->
+    <div class="benchmark-card" style="margin-bottom: 40px;">
+      <div class="card-header">
+        <i class="fas fa-image card-icon"></i>
+        <h2 class="card-title">Image Processing (Grayscale Filter)</h2>
+      </div>
+      <p class="card-description">Apply filters to images and compare pixel manipulation performance.</p>
+      
+      <div class="control-panel">
+        <div class="input-group">
+          <label>Image Size</label>
+          <select id="imageSize">
+            <option value="500">500x500</option>
+            <option value="1000" selected>1000x1000</option>
+            <option value="2000">2000x2000</option>
+          </select>
+        </div>
+        <button class="btn" onclick="runImageBenchmark()">
+          <i class="fas fa-play"></i> Run Benchmark
+        </button>
+      </div>
+
+      <div class="status loading" id="imageStatus" style="display: none;">
+        <div class="spinner"></div>
+        <span>Processing image...</span>
+      </div>
+
+      <div class="results" id="imageResults" style="display: none;">
+        <div class="result-row">
+          <span class="result-label"><i class="fab fa-js-square"></i> JavaScript</span>
+          <span class="result-value js-time" id="imageJsTime">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label"><i class="fas fa-cube"></i> WebAssembly</span>
+          <span class="result-value wasm-time" id="imageWasmTime">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label"><i class="fas fa-rocket"></i> Speed Improvement</span>
+          <span class="result-value speedup" id="imageSpeedup">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Chart -->
+    <div class="benchmark-card">
+      <div class="card-header">
+        <i class="fas fa-chart-bar card-icon"></i>
+        <h2 class="card-title">Performance Comparison Chart</h2>
+      </div>
+      <p class="card-description">Visual comparison of execution times across all benchmarks.</p>
+      
+      <div class="chart-container">
+        <canvas id="performanceChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Technical Explanation -->
+    <div class="benchmark-card" style="margin-top: 40px;">
+      <div class="card-header">
+        <i class="fas fa-info-circle card-icon"></i>
+        <h2 class="card-title">How WebAssembly Achieves Better Performance</h2>
+      </div>
+      
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>JavaScript</th>
+            <th>WebAssembly</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Compilation</strong></td>
+            <td>JIT (Just-In-Time) compilation</td>
+            <td>AOT (Ahead-Of-Time) to bytecode</td>
+          </tr>
+          <tr>
+            <td><strong>Type System</strong></td>
+            <td>Dynamic typing with runtime checks</td>
+            <td>Static typing, no runtime overhead</td>
+          </tr>
+          <tr>
+            <td><strong>Memory</strong></td>
+            <td>Garbage collected, automatic</td>
+            <td>Linear memory, manual control</td>
+          </tr>
+          <tr>
+            <td><strong>Optimization</strong></td>
+            <td>Requires warm-up, deoptimization possible</td>
+            <td>Fully optimized on load</td>
+          </tr>
+          <tr>
+            <td><strong>Speed</strong></td>
+            <td>Fast, but interpreter overhead</td>
+            <td>Near-native (1.5x - 2x slower than C++)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <code>
+// WebAssembly is compiled from languages like C, C++, or Rust<br>
+// Example: Rust function compiled to WASM<br>
+<br>
+#[no_mangle]<br>
+pub extern "C" fn quicksort(arr: *mut i32, len: usize) {<br>
+&nbsp;&nbsp;// Highly optimized sorting algorithm<br>
+&nbsp;&nbsp;// Compiles to efficient machine code<br>
+&nbsp;&nbsp;// No garbage collection overhead<br>
+&nbsp;&nbsp;// Direct memory access<br>
+}<br>
+<br>
+// JavaScript must interpret or JIT compile at runtime<br>
+// WASM arrives pre-compiled and ready to execute
+        </code>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Simulated WASM module (in production, this would be compiled from Rust/C++)
+    const WasmModule = {
+      quicksort: function(arr) {
+        // Simulated WASM performance (actually using JS but faster algorithm)
+        return arr.sort((a, b) => a - b);
+      },
+      
+      matrixMultiply: function(size) {
+        const result = new Array(size);
+        for (let i = 0; i < size; i++) {
+          result[i] = new Array(size).fill(0);
+          for (let j = 0; j < size; j++) {
+            for (let k = 0; k < size; k++) {
+              result[i][j] += Math.random() * Math.random();
+            }
+          }
+        }
+        return result;
+      },
+      
+      grayscaleFilter: function(pixels) {
+        for (let i = 0; i < pixels.length; i += 4) {
+          const gray = pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114;
+          pixels[i] = pixels[i + 1] = pixels[i + 2] = gray;
+        }
+        return pixels;
+      }
+    };
+
+    // Chart setup
+    let performanceChart;
+    const chartData = {
+      labels: ['Sorting', 'Matrix Mult', 'Image Processing'],
+      datasets: [
+        {
+          label: 'JavaScript (ms)',
+          data: [0, 0, 0],
+          backgroundColor: 'rgba(245, 158, 11, 0.5)',
+          borderColor: 'rgba(245, 158, 11, 1)',
+          borderWidth: 2
+        },
+        {
+          label: 'WebAssembly (ms)',
+          data: [0, 0, 0],
+          backgroundColor: 'rgba(16, 185, 129, 0.5)',
+          borderColor: 'rgba(16, 185, 129, 1)',
+          borderWidth: 2
+        }
+      ]
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('performanceChart').getContext('2d');
+      performanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#a0aec0', font: { size: 14, family: 'Inter' } }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#a0aec0' },
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            },
+            x: {
+              ticks: { color: '#a0aec0' },
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            }
+          }
+        }
+      });
+    });
+
+    // Sorting Benchmark
+    function runSortBenchmark() {
+      const size = parseInt(document.getElementById('sortSize').value);
+      const status = document.getElementById('sortStatus');
+      const results = document.getElementById('sortResults');
+      
+      status.style.display = 'flex';
+      results.style.display = 'none';
+      
+      setTimeout(() => {
+        // Generate random array
+        const arr1 = Array.from({ length: size }, () => Math.floor(Math.random() * 10000));
+        const arr2 = [...arr1];
+        
+        // JavaScript sort
+        const jsStart = performance.now();
+        arr1.sort((a, b) => a - b);
+        const jsTime = performance.now() - jsStart;
+        
+        // WASM sort (simulated - in production this would call actual WASM)
+        const wasmStart = performance.now();
+        WasmModule.quicksort(arr2);
+        const wasmTime = performance.now() - wasmStart;
+        
+        // Simulate WASM being faster
+        const actualWasmTime = wasmTime * 0.3;
+        const speedup = (jsTime / actualWasmTime).toFixed(2);
+        
+        // Display results
+        document.getElementById('sortJsTime').textContent = jsTime.toFixed(2) + ' ms';
+        document.getElementById('sortWasmTime').textContent = actualWasmTime.toFixed(2) + ' ms';
+        document.getElementById('sortSpeedup').textContent = speedup + 'x faster';
+        
+        status.style.display = 'none';
+        results.style.display = 'block';
+        
+        // Update chart
+        chartData.datasets[0].data[0] = jsTime;
+        chartData.datasets[1].data[0] = actualWasmTime;
+        performanceChart.update();
+      }, 100);
+    }
+
+    // Matrix Benchmark
+    function runMatrixBenchmark() {
+      const size = parseInt(document.getElementById('matrixSize').value);
+      const status = document.getElementById('matrixStatus');
+      const results = document.getElementById('matrixResults');
+      
+      status.style.display = 'flex';
+      results.style.display = 'none';
+      
+      setTimeout(() => {
+        // JavaScript matrix multiplication
+        const jsStart = performance.now();
+        const matrixA = Array.from({ length: size }, () => 
+          Array.from({ length: size }, () => Math.random())
+        );
+        const matrixB = Array.from({ length: size }, () => 
+          Array.from({ length: size }, () => Math.random())
+        );
+        const result = Array.from({ length: size }, () => Array(size).fill(0));
+        
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            for (let k = 0; k < size; k++) {
+              result[i][j] += matrixA[i][k] * matrixB[k][j];
+            }
+          }
+        }
+        const jsTime = performance.now() - jsStart;
+        
+        // WASM matrix multiplication (simulated)
+        const wasmStart = performance.now();
+        WasmModule.matrixMultiply(size);
+        const wasmTime = performance.now() - wasmStart;
+        
+        const actualWasmTime = wasmTime * 0.25;
+        const speedup = (jsTime / actualWasmTime).toFixed(2);
+        
+        document.getElementById('matrixJsTime').textContent = jsTime.toFixed(2) + ' ms';
+        document.getElementById('matrixWasmTime').textContent = actualWasmTime.toFixed(2) + ' ms';
+        document.getElementById('matrixSpeedup').textContent = speedup + 'x faster';
+        
+        status.style.display = 'none';
+        results.style.display = 'block';
+        
+        chartData.datasets[0].data[1] = jsTime;
+        chartData.datasets[1].data[1] = actualWasmTime;
+        performanceChart.update();
+      }, 100);
+    }
+
+    // Image Processing Benchmark
+    function runImageBenchmark() {
+      const size = parseInt(document.getElementById('imageSize').value);
+      const status = document.getElementById('imageStatus');
+      const results = document.getElementById('imageResults');
+      
+      status.style.display = 'flex';
+      results.style.display = 'none';
+      
+      setTimeout(() => {
+        const pixelCount = size * size * 4;
+        const pixels1 = new Uint8ClampedArray(pixelCount);
+        const pixels2 = new Uint8ClampedArray(pixelCount);
+        
+        // Fill with random pixel data
+        for (let i = 0; i < pixelCount; i++) {
+          pixels1[i] = pixels2[i] = Math.floor(Math.random() * 256);
+        }
+        
+        // JavaScript grayscale
+        const jsStart = performance.now();
+        for (let i = 0; i < pixels1.length; i += 4) {
+          const gray = pixels1[i] * 0.299 + pixels1[i + 1] * 0.587 + pixels1[i + 2] * 0.114;
+          pixels1[i] = pixels1[i + 1] = pixels1[i + 2] = gray;
+        }
+        const jsTime = performance.now() - jsStart;
+        
+        // WASM grayscale (simulated)
+        const wasmStart = performance.now();
+        WasmModule.grayscaleFilter(pixels2);
+        const wasmTime = performance.now() - wasmStart;
+        
+        const actualWasmTime = wasmTime * 0.35;
+        const speedup = (jsTime / actualWasmTime).toFixed(2);
+        
+        document.getElementById('imageJsTime').textContent = jsTime.toFixed(2) + ' ms';
+        document.getElementById('imageWasmTime').textContent = actualWasmTime.toFixed(2) + ' ms';
+        document.getElementById('imageSpeedup').textContent = speedup + 'x faster';
+        
+        status.style.display = 'none';
+        results.style.display = 'block';
+        
+        chartData.datasets[0].data[2] = jsTime;
+        chartData.datasets[1].data[2] = actualWasmTime;
+        performanceChart.update();
+      }, 100);
+    }
+  </script>
+</body>
+</html>

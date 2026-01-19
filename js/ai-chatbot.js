@@ -55,6 +55,7 @@ class PortfolioChatbot {
               <div class="message-avatar">AI</div>
               <div class="message-content">
                 <p>👋 Hi! I'm Nick's AI assistant. I can help you navigate this portfolio and answer questions about Nick's experience, projects, and skills.</p>
+                <p><strong>🔒 Privacy Note:</strong> This bot does NOT learn from your chats. It's only trained on Nick's website content and professional experience. Your conversations are private and not stored.</p>
                 <p>Try asking me things like:</p>
                 <ul>
                   <li>"What projects has Nick worked on?"</li>

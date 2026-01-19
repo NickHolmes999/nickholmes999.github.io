@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GraphQL API Playground | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Monaco Editor (VS Code editor) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+  
+  <style>
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header, main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation */
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      max-width: 1100px;
+      margin: 20px auto;
+    }
+
+    nav li { margin: 0; }
+
+    nav a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    nav a:hover, nav a.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 40px 20px 30px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(0, 217, 255, 0.1);
+      border: 2px solid var(--primary-color);
+      border-radius: 20px;
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin: 3px;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+      height: calc(100vh - 350px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* API Selector */
+    .api-selector {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .api-btn {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .api-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--primary-color);
+    }
+
+    .api-btn.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: transparent;
+      color: white;
+    }
+
+    /* Main Workspace */
+    .workspace {
+      display: grid;
+      grid-template-columns: 300px 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* Schema Explorer */
+    .schema-explorer {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .schema-explorer h3 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+    }
+
+    .schema-item {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .schema-item:hover {
+      background: rgba(0, 217, 255, 0.1);
+      border-left-color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
+    .schema-type {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 0.9rem;
+    }
+
+    .schema-fields {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 5px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Query Editor */
+    .query-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .panel-title {
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    #queryEditor {
+      flex: 1;
+      background: rgba(10, 10, 15, 0.95);
+      font-family: 'Fira Code', monospace;
+      color: var(--text-primary);
+      padding: 15px;
+      border: none;
+      outline: none;
+      resize: none;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Results Panel */
+    .results-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #resultsDisplay {
+      flex: 1;
+      background: rgba(10, 10, 15, 0.95);
+      padding: 20px;
+      overflow-y: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+
+    .json-key {
+      color: var(--primary-color);
+    }
+
+    .json-string {
+      color: var(--success);
+    }
+
+    .json-number {
+      color: var(--accent-color);
+    }
+
+    .json-boolean {
+      color: var(--secondary-color);
+    }
+
+    /* Performance Metrics */
+    .metrics {
+      display: flex;
+      gap: 15px;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .metric {
+      flex: 1;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      font-family: monospace;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 5px;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Examples */
+    .examples {
+      margin-top: 10px;
+      padding: 10px 0;
+    }
+
+    .example-btn {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+
+    .example-btn:hover {
+      background: rgba(0, 217, 255, 0.1);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    @media (max-width: 1200px) {
+      .workspace {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr 1fr;
+      }
+
+      .container {
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>🚀 GraphQL API Playground</h1>
+    <p>Explore GraphQL APIs with live schema introspection, query builder, and performance metrics. Compare REST vs GraphQL efficiency.</p>
+    <div>
+      <span class="badge">⚡ Real-time</span>
+      <span class="badge">📊 Schema Explorer</span>
+      <span class="badge">🎯 Live APIs</span>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- API Selector -->
+    <div class="api-selector">
+      <label style="color: var(--text-secondary); font-weight: 600;">Select API:</label>
+      <button class="api-btn active" onclick="selectAPI('spacex')">🚀 SpaceX</button>
+      <button class="api-btn" onclick="selectAPI('github')">💻 GitHub</button>
+      <button class="api-btn" onclick="selectAPI('countries')">🌍 Countries</button>
+      <button class="api-btn" onclick="selectAPI('pokemon')">⚡ Pokemon</button>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="workspace">
+      <!-- Schema Explorer -->
+      <div class="schema-explorer">
+        <h3>
+          <i class="fas fa-database"></i>
+          Schema
+        </h3>
+        
+        <div id="schemaContent">
+          <!-- SpaceX Schema -->
+          <div class="schema-item" onclick="insertQuery('launches')">
+            <div class="schema-type">Query: launches</div>
+            <div class="schema-fields">mission_name, launch_date_utc, rocket</div>
+          </div>
+          
+          <div class="schema-item" onclick="insertQuery('rockets')">
+            <div class="schema-type">Query: rockets</div>
+            <div class="schema-fields">name, type, description, cost_per_launch</div>
+          </div>
+          
+          <div class="schema-item" onclick="insertQuery('company')">
+            <div class="schema-type">Query: company</div>
+            <div class="schema-fields">name, founder, employees, valuation</div>
+          </div>
+        </div>
+
+        <div class="examples">
+          <div style="color: var(--text-secondary); font-weight: 600; margin-bottom: 10px; font-size: 0.9rem;">
+            <i class="fas fa-lightbulb"></i> Examples
+          </div>
+          <button class="example-btn" onclick="loadExample('recent-launches')">
+            Recent Launches
+          </button>
+          <button class="example-btn" onclick="loadExample('rockets-info')">
+            All Rockets Info
+          </button>
+          <button class="example-btn" onclick="loadExample('company-details')">
+            Company Details
+          </button>
+        </div>
+      </div>
+
+      <!-- Query Editor -->
+      <div class="query-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fas fa-code"></i>
+            Query Editor
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" onclick="formatQuery()">
+              <i class="fas fa-magic"></i> Format
+            </button>
+            <button class="btn" onclick="executeQuery()" id="executeBtn">
+              <i class="fas fa-play"></i> Execute
+            </button>
+          </div>
+        </div>
+        
+        <textarea id="queryEditor" placeholder="Type your GraphQL query here...">
+query {
+  launches(limit: 5) {
+    mission_name
+    launch_date_utc
+    rocket {
+      rocket_name
+      rocket_type
+    }
+    launch_success
+  }
+}</textarea>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="results-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fas fa-terminal"></i>
+            Response
+          </div>
+          <button class="btn btn-secondary" onclick="copyResults()">
+            <i class="fas fa-copy"></i> Copy
+          </button>
+        </div>
+        
+        <div id="resultsDisplay">
+          <div style="color: var(--text-secondary); text-align: center; padding: 40px;">
+            Execute a query to see results
+          </div>
+        </div>
+
+        <div class="metrics" id="metricsPanel" style="display: none;">
+          <div class="metric">
+            <div class="metric-value" id="responseTime">0</div>
+            <div class="metric-label">Response Time (ms)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value" id="dataSize">0</div>
+            <div class="metric-label">Data Size (KB)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value" id="requestCount">0</div>
+            <div class="metric-label">API Calls</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const APIs = {
+      spacex: {
+        url: 'https://api.spacex.land/graphql/',
+        schema: [
+          { type: 'launches', fields: 'mission_name, launch_date_utc, rocket, launch_success' },
+          { type: 'rockets', fields: 'name, type, description, cost_per_launch' },
+          { type: 'company', fields: 'name, founder, employees, valuation' }
+        ],
+        examples: {
+          'recent-launches': `query {
+  launches(limit: 5) {
+    mission_name
+    launch_date_utc
+    rocket {
+      rocket_name
+      rocket_type
+    }
+    launch_success
+  }
+}`,
+          'rockets-info': `query {
+  rockets {
+    name
+    type
+    cost_per_launch
+    success_rate_pct
+    description
+  }
+}`,
+          'company-details': `query {
+  company {
+    name
+    founder
+    founded
+    employees
+    ceo
+    cto
+    coo
+    valuation
+    headquarters {
+      address
+      city
+      state
+    }
+  }
+}`
+        }
+      },
+      github: {
+        url: 'https://api.github.com/graphql',
+        schema: [
+          { type: 'user', fields: 'login, name, bio, repositories' },
+          { type: 'repository', fields: 'name, description, stargazers' }
+        ]
+      },
+      countries: {
+        url: 'https://countries.trevorblades.com/',
+        schema: [
+          { type: 'countries', fields: 'code, name, capital, currency' },
+          { type: 'continent', fields: 'code, name, countries' }
+        ]
+      },
+      pokemon: {
+        url: 'https://graphqlpokemon.favware.tech/v8',
+        schema: [
+          { type: 'getPokemon', fields: 'key, species, types, abilities' },
+          { type: 'getAbility', fields: 'key, name, description' }
+        ]
+      }
+    };
+
+    let currentAPI = 'spacex';
+    let requestCount = 0;
+
+    function selectAPI(api) {
+      currentAPI = api;
+      
+      // Update button states
+      document.querySelectorAll('.api-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update schema display
+      updateSchema(api);
+      
+      // Clear results
+      document.getElementById('resultsDisplay').innerHTML = '<div style="color: var(--text-secondary); text-align: center; padding: 40px;">Execute a query to see results</div>';
+      document.getElementById('metricsPanel').style.display = 'none';
+    }
+
+    function updateSchema(api) {
+      const schema = APIs[api].schema;
+      const schemaContent = document.getElementById('schemaContent');
+      
+      schemaContent.innerHTML = schema.map(item => `
+        <div class="schema-item" onclick="insertQuery('${item.type}')">
+          <div class="schema-type">Query: ${item.type}</div>
+          <div class="schema-fields">${item.fields}</div>
+        </div>
+      `).join('');
+    }
+
+    function insertQuery(queryType) {
+      const editor = document.getElementById('queryEditor');
+      editor.value = `query {\n  ${queryType} {\n    \n  }\n}`;
+      editor.focus();
+    }
+
+    function loadExample(exampleKey) {
+      const example = APIs[currentAPI].examples[exampleKey];
+      if (example) {
+        document.getElementById('queryEditor').value = example;
+      }
+    }
+
+    function formatQuery() {
+      const editor = document.getElementById('queryEditor');
+      try {
+        // Simple formatting (in production, use a GraphQL formatter library)
+        let formatted = editor.value
+          .replace(/\s+/g, ' ')
+          .replace(/{\s*/g, ' {\n  ')
+          .replace(/\s*}/g, '\n}')
+          .replace(/,\s*/g, '\n  ');
+        
+        editor.value = formatted;
+      } catch (error) {
+        console.error('Format error:', error);
+      }
+    }
+
+    async function executeQuery() {
+      const query = document.getElementById('queryEditor').value;
+      const resultsDisplay = document.getElementById('resultsDisplay');
+      const executeBtn = document.getElementById('executeBtn');
+      
+      // Show loading
+      executeBtn.disabled = true;
+      executeBtn.innerHTML = '<div class="spinner"></div> Executing...';
+      resultsDisplay.innerHTML = '<div style="color: var(--text-secondary); text-align: center; padding: 40px;"><div class="spinner" style="width: 40px; height: 40px; border-width: 4px; margin: 0 auto 20px;"></div>Executing query...</div>';
+      
+      const startTime = performance.now();
+      
+      try {
+        const response = await fetch(APIs[currentAPI].url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ query })
+        });
+        
+        const endTime = performance.now();
+        const data = await response.json();
+        
+        // Calculate metrics
+        const responseTime = Math.round(endTime - startTime);
+        const dataSize = (new Blob([JSON.stringify(data)]).size / 1024).toFixed(2);
+        requestCount++;
+        
+        // Display results
+        const formattedJSON = syntaxHighlight(JSON.stringify(data, null, 2));
+        resultsDisplay.innerHTML = `<pre>${formattedJSON}</pre>`;
+        
+        // Update metrics
+        document.getElementById('responseTime').textContent = responseTime;
+        document.getElementById('dataSize').textContent = dataSize;
+        document.getElementById('requestCount').textContent = requestCount;
+        document.getElementById('metricsPanel').style.display = 'flex';
+        
+      } catch (error) {
+        resultsDisplay.innerHTML = `
+          <div style="color: var(--danger); padding: 20px;">
+            <strong>Error:</strong><br>
+            ${error.message}
+          </div>
+        `;
+      } finally {
+        executeBtn.disabled = false;
+        executeBtn.innerHTML = '<i class="fas fa-play"></i> Execute';
+      }
+    }
+
+    function syntaxHighlight(json) {
+      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        let cls = 'json-number';
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) {
+            cls = 'json-key';
+          } else {
+            cls = 'json-string';
+          }
+        } else if (/true|false/.test(match)) {
+          cls = 'json-boolean';
+        } else if (/null/.test(match)) {
+          cls = 'json-null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+      });
+    }
+
+    function copyResults() {
+      const results = document.getElementById('resultsDisplay').textContent;
+      navigator.clipboard.writeText(results).then(() => {
+        alert('Results copied to clipboard!');
+      });
+    }
+
+    // Allow Ctrl+Enter to execute query
+    document.getElementById('queryEditor').addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        executeQuery();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hiring Criteria | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --success-color: #10b981;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 20px 60px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .page-header h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-header p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .criteria-section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: var(--primary-color);
+    }
+
+    .section-title i {
+      font-size: 2rem;
+    }
+
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .criteria-card {
+      background: rgba(26, 26, 46, 0.8);
+      border: 2px solid transparent;
+      border-radius: 15px;
+      padding: 30px;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .criteria-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .criteria-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .criteria-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-color);
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+    }
+
+    .criteria-card.required {
+      border-color: var(--success-color);
+    }
+
+    .criteria-card.preferred {
+      border-color: var(--accent-color);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 24px;
+    }
+
+    .card-icon.required {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+      color: var(--success-color);
+    }
+
+    .card-icon.preferred {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1));
+      color: var(--accent-color);
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .card-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .card-details {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .card-details li {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+    }
+
+    .card-details li:last-child {
+      border-bottom: none;
+    }
+
+    .card-details li i {
+      color: var(--success-color);
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 15px;
+    }
+
+    .badge.required {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success-color);
+      border: 1px solid var(--success-color);
+    }
+
+    .badge.preferred {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+    }
+
+    .salary-card {
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(168, 85, 247, 0.1));
+      border: 2px solid var(--primary-color);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin: 40px 0;
+      animation: fadeInUp 1s ease;
+    }
+
+    .salary-amount {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 20px 0;
+    }
+
+    .salary-note {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-top: 15px;
+    }
+
+    .roles-section {
+      background: rgba(26, 26, 46, 0.6);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 40px 0;
+      border: 2px solid rgba(0, 217, 255, 0.2);
+    }
+
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .role-item {
+      background: rgba(0, 217, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary-color);
+      transition: all 0.3s ease;
+    }
+
+    .role-item:hover {
+      background: rgba(0, 217, 255, 0.1);
+      transform: translateX(10px);
+    }
+
+    .role-item h4 {
+      margin: 0 0 10px 0;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    .role-item p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 2rem;
+      }
+
+      .criteria-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .salary-amount {
+        font-size: 2rem;
+      }
+
+      .roles-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body data-page="criteria">
+  <!-- HEADER / NAV -->
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="projects.html" class="nav-link">Projects</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html" class="nav-link active">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div id="canvas-container"></div>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>🎯 Is This Role Right for Me?</h1>
+      <p>Here's what I'm looking for in my next opportunity. I believe in transparency, so let's see if we're a good match!</p>
+    </div>
+
+    <!-- Required Criteria Section -->
+    <div class="criteria-section">
+      <h2 class="section-title">
+        <i class="fas fa-check-circle"></i>
+        Required Criteria
+      </h2>
+      <div class="criteria-grid">
+        <!-- Work Location -->
+        <div class="criteria-card required">
+          <div class="card-header">
+            <div class="card-icon required">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h3 class="card-title">Work Location</h3>
+          </div>
+          <p class="card-description">Flexible work arrangement that fits modern work culture</p>
+          <ul class="card-details">
+            <li><i class="fas fa-check-circle"></i> Primarily Remote (Preferred)</li>
+            <li><i class="fas fa-check-circle"></i> If Hybrid: DC/Maryland/Virginia Area Only</li>
+            <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> Not open to full relocation</li>
+          </ul>
+          <span class="badge required">✓ Must Have</span>
+        </div>
+
+        <!-- Salary Range -->
+        <div class="criteria-card required">
+          <div class="card-header">
+            <div class="card-icon required">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h3 class="card-title">Compensation</h3>
+          </div>
+          <p class="card-description">Competitive salary reflecting experience and market value</p>
+          <ul class="card-details">
+            <li><i class="fas fa-check-circle"></i> $110K - $200K Annual Range</li>
+            <li><i class="fas fa-check-circle"></i> Negotiable based on total package</li>
+            <li><i class="fas fa-check-circle"></i> Open to equity/bonus structure</li>
+          </ul>
+          <span class="badge required">✓ Must Have</span>
+        </div>
+
+        <!-- Security Clearance -->
+        <div class="criteria-card required">
+          <div class="card-header">
+            <div class="card-icon required">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="card-title">Security Clearance</h3>
+          </div>
+          <p class="card-description">Current clearance status and limitations</p>
+          <ul class="card-details">
+            <li><i class="fas fa-check-circle"></i> Active Public Trust Clearance</li>
+            <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> No Top Secret Clearance</li>
+            <li><i class="fas fa-info-circle" style="color: var(--accent-color);"></i> Can pursue Secret if needed</li>
+          </ul>
+          <span class="badge required">✓ Current Status</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salary Highlight -->
+    <div class="salary-card">
+      <h3 style="color: var(--text-secondary); margin: 0;">Expected Salary Range</h3>
+      <div class="salary-amount">$110K - $200K</div>
+      <p class="salary-note">💡 Flexible based on benefits, equity, remote flexibility, and growth opportunities</p>
+    </div>
+
+    <!-- Primary Roles Section -->
+    <div class="roles-section">
+      <h2 class="section-title">
+        <i class="fas fa-briefcase"></i>
+        Primary Role Interests
+      </h2>
+      <p style="color: var(--text-secondary); margin-bottom: 20px;">The positions I'm most excited about and qualified for:</p>
+      
+      <div class="roles-grid">
+        <div class="role-item">
+          <h4><i class="fas fa-robot"></i> AI/ML Engineer</h4>
+          <p>Building intelligent systems, training models, and implementing AI solutions</p>
+        </div>
+        <div class="role-item">
+          <h4><i class="fas fa-database"></i> Data Engineer</h4>
+          <p>Designing data pipelines, ETL processes, and scalable data architectures</p>
+        </div>
+        <div class="role-item">
+          <h4><i class="fas fa-chart-line"></i> Data Scientist</h4>
+          <p>Statistical analysis, predictive modeling, and data-driven insights</p>
+        </div>
+        <div class="role-item">
+          <h4><i class="fas fa-code"></i> Full Stack Developer</h4>
+          <p>End-to-end development from backend APIs to responsive frontends</p>
+        </div>
+        <div class="role-item">
+          <h4><i class="fas fa-server"></i> Backend Developer</h4>
+          <p>Building robust APIs, microservices, and server-side applications</p>
+        </div>
+        <div class="role-item">
+          <h4><i class="fas fa-laptop-code"></i> Software Engineer</h4>
+          <p>General software development with focus on quality and scalability</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferred Criteria Section -->
+    <div class="criteria-section">
+      <h2 class="section-title">
+        <i class="fas fa-star"></i>
+        Preferred (Nice to Have)
+      </h2>
+      <div class="criteria-grid">
+        <!-- Methodology -->
+        <div class="criteria-card preferred">
+          <div class="card-header">
+            <div class="card-icon preferred">
+              <i class="fas fa-sync-alt"></i>
+            </div>
+            <h3 class="card-title">Development Methodology</h3>
+          </div>
+          <p class="card-description">Experienced with modern agile practices</p>
+          <ul class="card-details">
+            <li><i class="fas fa-check-circle"></i> Agile/Scrum Workflows</li>
+            <li><i class="fas fa-check-circle"></i> Sprint Planning & Stand-ups</li>
+            <li><i class="fas fa-check-circle"></i> Continuous Integration/Deployment</li>
+          </ul>
+          <span class="badge preferred">⭐ Preferred</span>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="criteria-card preferred">
+          <div class="card-header">
+            <div class="card-icon preferred">
+              <i class="fas fa-code-branch"></i>
+            </div>
+            <h3 class="card-title">Technology Stack</h3>
+          </div>
+          <p class="card-description">Ideal tech I love working with</p>
+          <ul class="card-details">
+            <li><i class="fas fa-check-circle"></i> Python (Primary)</li>
+            <li><i class="fas fa-check-circle"></i> JavaScript/TypeScript</li>
+            <li><i class="fas fa-check-circle"></i> Cloud Platforms (AWS/Azure)</li>
+            <li><i class="fas fa-check-circle"></i> Modern Frameworks</li>
+          </ul>
+          <span class="badge preferred">⭐ Preferred</span>
+        </div>
+
+        <!-- Team Culture -->
+        <div class="criteria-card preferred">
+          <div class="card-header">
+            <div class="card-icon preferred">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3 class="card-title">Team Culture</h3>
+          </div>
+          <p class="card-description">Work environment that fosters growth</p>
+          <ul class="card-details">
+            <li><i class="fas fa-check-circle"></i> Collaborative & Supportive</li>
+            <li><i class="fas fa-check-circle"></i> Learning & Development Focus</li>
+            <li><i class="fas fa-check-circle"></i> Innovation Encouraged</li>
+            <li><i class="fas fa-check-circle"></i> Work-Life Balance</li>
+          </ul>
+          <span class="badge preferred">⭐ Preferred</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div style="text-align: center; margin-top: 60px; padding: 40px; background: rgba(26, 26, 46, 0.6); border-radius: 20px; border: 2px solid var(--primary-color);">
+      <h2 style="color: var(--primary-color); margin-bottom: 20px;">Think We're a Match?</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 30px; font-size: 1.1rem;">If your opportunity aligns with these criteria, I'd love to hear from you!</p>
+      <a href="contact.html" style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 1.1rem; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+        <i class="fas fa-envelope"></i> Let's Connect
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- About Column -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Nick Holmes</h3>
+          <p class="footer-desc">Full Stack Developer & AI Engineer passionate about creating innovative solutions that make a difference.</p>
+          <div class="footer-social">
+            <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/NickHolmes999" target="_blank" class="social-icon github" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <div class="footer-social-split">
+              <div class="social-icon email split-btn" onclick="toggleFooterSplit(this, 'email')" aria-label="Email">
+                <i class="fas fa-envelope main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="mailto:NickHolmes2003@gmail.com" class="footer-split-option send-btn">
+                  <i class="fas fa-paper-plane"></i>
+                  <span>Send</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('NickHolmes2003@gmail.com', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+            <div class="footer-social-split">
+              <div class="social-icon phone split-btn" onclick="toggleFooterSplit(this, 'phone')" aria-label="Phone">
+                <i class="fas fa-phone main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="tel:+13015005152" class="footer-split-option call-btn">
+                  <i class="fas fa-phone-alt"></i>
+                  <span>Call</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('(301) 500-5152', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
+            <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+            <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Services -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Services</h3>
+          <ul class="footer-links">
+            <li><a href="interactive-showcase.html"><i class="fas fa-flask"></i> Interactive Demos</a></li>
+            <li><a href="certificates.html"><i class="fas fa-certificate"></i> Certifications</a></li>
+            <li><a href="services-faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+            <li><a href="hiring-criteria.html"><i class="fas fa-user-check"></i> Hiring Criteria</a></li>
+            <li><a href="performance-metrics.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+          </ul>
+        </div>
+        
+        <!-- Newsletter -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Stay Updated</h3>
+          <p class="footer-desc">Subscribe to get updates on new projects and articles.</p>
+          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+            <div class="newsletter-input-group">
+              <input type="email" placeholder="Your email address" required>
+              <button type="submit">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+          <p class="newsletter-note">🔒 No spam, unsubscribe anytime</p>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2025 <span class="gradient-text">Nick Holmes</span> - All rights reserved
+        </p>
+        <p class="footer-tech">
+          <i class="fas fa-code"></i> Built with HTML, CSS, JavaScript & Python
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Newsletter handler
+    function handleNewsletter(event) {
+      event.preventDefault();
+      const email = event.target.querySelector('input[type="email"]').value;
+      
+      const notification = document.createElement('div');
+      notification.className = 'newsletter-notification';
+      notification.innerHTML = '<i class="fas fa-check-circle"></i> Thanks for subscribing!';
+      notification.style.cssText = 'position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--success-color), var(--primary-color)); color: white; padding: 20px 30px; border-radius: 12px; font-weight: bold; z-index: 10000; animation: slideInRight 0.5s ease;';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.5s ease';
+        setTimeout(() => notification.remove(), 500);
+      }, 3000);
+      
+      event.target.reset();
+      console.log('Newsletter subscription:', email);
+    }
+
+    // Footer Split Button Functions
+    function toggleFooterSplit(button, type) {
+      document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+        if (btn !== button) btn.classList.remove('split-active');
+      });
+      button.classList.toggle('split-active');
+      if (button.classList.contains('split-active')) {
+        setTimeout(() => {
+          document.addEventListener('click', function closeOnOutside(e) {
+            if (!e.target.closest('.footer-social-split')) {
+              document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+              document.removeEventListener('click', closeOnOutside);
+            }
+          });
+        }, 100);
+      }
+    }
+
+    function copyFooterContact(text, event) {
+      event.stopPropagation();
+      navigator.clipboard.writeText(text).then(() => {
+        const notification = document.createElement('div');
+        notification.className = 'footer-copy-notification';
+        notification.innerHTML = `<i class="fas fa-check-circle"></i><span>Copied: ${text}</span>`;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.5s ease';
+          setTimeout(() => notification.remove(), 500);
+        }, 2500);
+        document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+      });
+    }
+
+    // Three.js Background
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('canvas-container');
+      if (!container) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+
+      const geometry = new THREE.BufferGeometry();
+      const vertices = [];
+      for (let i = 0; i < 1000; i++) {
+        vertices.push(
+          Math.random() * 2000 - 1000,
+          Math.random() * 2000 - 1000,
+          Math.random() * 2000 - 1000
+        );
+      }
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+      const material = new THREE.PointsMaterial({ color: 0x00d9ff, size: 2 });
+      const points = new THREE.Points(geometry, material);
+      scene.add(points);
+
+      camera.position.z = 500;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        points.rotation.x += 0.0005;
+        points.rotation.y += 0.001;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    });
+  </script>
+  
+  <!-- Back to Top Button -->
+  <script src="../js/back-to-top.js"></script>
+</body>
+</html>

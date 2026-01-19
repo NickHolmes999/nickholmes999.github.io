@@ -6,12 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <style>
+    #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.25;
+        pointer-events: none;
+    }
+
         :root {
             --primary-color: #00d9ff;
             --secondary-color: #a855f7;
@@ -65,12 +80,18 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
             transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .blog-post:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 50px rgba(0, 217, 255, 0.3);
             border-color: var(--primary-color);
+        }
+
+        .blog-post.expanded {
+            cursor: default;
         }
 
         .blog-post h2 {
@@ -90,11 +111,81 @@
             margin-bottom: 20px;
         }
 
-        .blog-post p {
+        .blog-excerpt {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .blog-full-content {
+            display: none;
             line-height: 1.8;
             color: var(--text-secondary);
             font-size: 1.05rem;
             text-align: justify;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        .blog-full-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .blog-full-content::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .blog-full-content::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        .blog-post.expanded .blog-excerpt {
+            display: none;
+        }
+
+        .blog-post.expanded .blog-full-content {
+            display: block;
+        }
+
+        .read-more-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .read-more-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,217,255,0.4);
+        }
+
+        .blog-post.expanded .read-more-btn {
+            background: linear-gradient(135deg, var(--accent-color), #ef4444);
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .blog-tag {
+            padding: 6px 15px;
+            background: rgba(0,217,255,0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary-color);
         }
 
         .blog-posts-container {
@@ -111,7 +202,7 @@
 
         .blog-header h1 {
             font-size: clamp(2.5rem, 5vw, 4rem);
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -127,7 +218,8 @@
         }
     </style>
 </head>
-<body>
+<body data-page="blog">
+<div id="canvas-container"></div>
     <header>
         <nav>
             <h1></h1>
@@ -140,6 +232,7 @@
                 <li><a href="services-faq.html">Services FAQ</a></li>
                 <li><a href="interactive-showcase.html">Showcase</a></li>
                 <li><a href="#" class="active">Blog</a></li>
+                <li><a href="performance-metrics.html">Performance</a></li>
             </ul>
         </nav>
     </header>
@@ -150,10 +243,24 @@
     </div>
 
     <main class="blog-posts-container">
-        <article class="blog-post">
+        <article class="blog-post" onclick="toggleBlogPost(this)">
             <h2>Ethics in the Age of AI: Navigating the benefits and pitfalls of ChatGPT</h2>
             <time datetime="2023-11-03T15:00">November 3rd, 2023 at 3:00 PM</time>
-            <p>With the pace of tech moving at breakneck speed, OpenAI's ChatGPT highlights how AI is shaking things up. ChatGPT is similar to having a human library as our best friend - knowledgeable, eager to help, and always ready to learn more. However, it is about more than what this technology can do for us individually. It is about looking at the future of ChatGPT and its ability to revolutionize education as we know it or to transform professional landscapes! All these advancements do not excuse the ethical questions that need addressing. We will explore the benefits and pitfalls of ChatGPT's power on society.
+            
+            <div class="blog-meta">
+                <span class="blog-tag">🤖 AI Ethics</span>
+                <span class="blog-tag">💭 Philosophy</span>
+                <span class="blog-tag">📚 Research</span>
+                <span class="blog-tag">⏱️ 15 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>With the pace of tech moving at breakneck speed, OpenAI's ChatGPT highlights how AI is shaking things up. This comprehensive academic paper explores ethical frameworks including utilitarianism, deontology, and virtue ethics as applied to AI technology...</p>
+                <p><strong>Topics covered:</strong> Data privacy, algorithmic bias, accountability, human connection, creative licensing, AI detection methods, and policy recommendations.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>With the pace of tech moving at breakneck speed, OpenAI's ChatGPT highlights how AI is shaking things up. ChatGPT is similar to having a human library as our best friend - knowledgeable, eager to help, and always ready to learn more. However, it is about more than what this technology can do for us individually. It is about looking at the future of ChatGPT and its ability to revolutionize education as we know it or to transform professional landscapes! All these advancements do not excuse the ethical questions that need addressing. We will explore the benefits and pitfalls of ChatGPT's power on society.
 Further, we will address concerns ranging from data privacy and algorithmic bias to accountability and digital accessibility, along with the roles of various agents, such as students, teachers, and freelancers. With a solid understanding of normative ethical theories, including utilitarianism, duty-based deontology, and character development virtue ethics, we will explore what to expect from those developing and using this technology. We will suggest checks to ensure we use this revolutionary tech ethically. It is vital to highlight the truth about ChatGPT's potentially capricious future.
 As we examine the ethical dimensions of ChatGPT, we will first use the lens of utilitarianism. Utilitarianism is a normative ethical theory whose basis is maximizing societal benefits (Dehghani et al.). ChatGPT has the potential to provide many societal benefits, such as enhancing education and improving professional services. This innovation can offer personalized learning experiences in education and make knowledge more accessible to a larger demographic. Various professionals utilize AI to automate tasks and boost productivity, holding great promise in advancing professions.
 However, the ethical terrain becomes intricate when considering the societal drawbacks accompanying ChatGPT's proliferation. Algorithmic bias, for instance, can perpetuate discrimination and exacerbate social inequalities. As technology evolves, concerns regarding job automation and unemployment rise, raising ethical questions about the consequences for individuals who may find their livelihoods threatened (Dehghani et al.). Moreover, ChatGPT's potential to generate misinformation poses risks to honest communication and informed decision-making. Thus, applying utilitarianism to ChatGPT's impact necessitates a nuanced evaluation that balances its substantial benefits against the potential societal costs, acknowledging that pursuing the greater good should temper with safeguards against harm.
@@ -179,17 +286,600 @@ Works Cited
 Chukwube, Micheal. “The Ethics of CHATGPT: Ensuring AI Responsibly Serves Humanity.” ReadWrite, 11 July 2023, readwrite.com/the-ethics-of-chatgpt-ensuring-ai-responsibly-serves-humanity/.
 Dehghani, M, et al. “Ethics of Artificial Intelligence.” Internet Encyclopedia of Philosophy, iep.utm.edu/ethics-of-artificial-intelligence/#SSH2aii. Accessed 19 Oct. 2023.
 Rasmi, Mahmoud. “Artificial Intelligence, Virtue Ethics, and the Importance of Asking the Relevant Questions.” Medium, Medium, 1 Jan. 2021, mahmoud-rasmi.medium.com/artificial-intelligence-virtue-ethics-and-the-importance-of-asking-the-relevant-questions-5e53313e7ac7.
-Wang, Changyu, et al. “Ethical Considerations of Using CHATGPT in Health Care.” Journal of Medical Internet Research, JMIR Publications Inc., Toronto, Canada, www.jmir.org/2023/1/e48009. Accessed 19 Oct. 2023.</p>
+Wang, Changyu, et al. "Ethical Considerations of Using CHATGPT in Health Care." Journal of Medical Internet Research, JMIR Publications Inc., Toronto, Canada, www.jmir.org/2023/1/e48009. Accessed 19 Oct. 2023.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>The Evolution of Machine Learning: From Perceptrons to Transformers</h2>
+            <time datetime="2024-03-15T10:30">March 15th, 2024 at 10:30 AM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">🧠 Machine Learning</span>
+                <span class="blog-tag">📊 Deep Learning</span>
+                <span class="blog-tag">🔬 Technical</span>
+                <span class="blog-tag">⏱️ 12 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>Machine learning has undergone a remarkable transformation over the past seven decades. From Frank Rosenblatt's Perceptron in 1958 to today's state-of-the-art Transformer architectures, this journey represents one of computing's most fascinating stories...</p>
+                <p><strong>Key topics:</strong> Neural network history, backpropagation, CNNs, RNNs, attention mechanisms, GPT architecture, and future directions in ML research.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>Machine learning has undergone a remarkable transformation over the past seven decades. From Frank Rosenblatt's Perceptron in 1958 to today's state-of-the-art Transformer architectures, this journey represents one of computing's most fascinating evolutionary stories. Understanding this progression is crucial for anyone working in AI, as it reveals not just technical innovations but fundamental shifts in how we conceptualize intelligence itself.</p>
+                
+                <p>The story begins with the Perceptron, a simple algorithm inspired by biological neurons. Rosenblatt's invention could classify inputs by learning weights through training, marking humanity's first attempt at creating artificial neural networks. However, the 1969 publication of "Perceptrons" by Marvin Minsky and Seymour Papert highlighted critical limitations—single-layer perceptrons couldn't solve non-linearly separable problems like XOR. This revelation triggered the first "AI Winter," a period of reduced funding and interest that lasted nearly a decade.</p>
+                
+                <p>The renaissance came in the 1980s with backpropagation, independently rediscovered by multiple researchers including Rumelhart, Hinton, and Williams. This algorithm enabled training of multi-layer networks by efficiently computing gradients through the chain rule. Suddenly, neural networks could learn complex, hierarchical representations. The addition of non-linear activation functions like sigmoid and tanh allowed networks to approximate any continuous function, a property formalized in the Universal Approximation Theorem.</p>
+                
+                <p>The 1990s and early 2000s saw the emergence of specialized architectures. Yann LeCun's Convolutional Neural Networks (CNNs) revolutionized computer vision by introducing local connectivity and parameter sharing—concepts inspired by the visual cortex. LeNet-5, developed for digit recognition, demonstrated that deep networks could learn spatial hierarchies automatically. Meanwhile, Recurrent Neural Networks (RNNs) and their sophisticated variant, Long Short-Term Memory (LSTM) networks developed by Hochreiter and Schmidhuber, tackled sequential data by maintaining hidden states across time steps.</p>
+                
+                <p>Despite these advances, deep learning remained computationally expensive and data-hungry. The 2012 ImageNet breakthrough changed everything. Alex Krizhevsky's AlexNet, trained on GPUs, achieved unprecedented accuracy in image classification. This moment catalyzed the deep learning revolution. Suddenly, computational resources and massive datasets became available through cloud computing and the internet. Frameworks like TensorFlow and PyTorch democratized deep learning, allowing researchers worldwide to experiment with increasingly complex architectures.</p>
+                
+                <p>The next major paradigm shift came with attention mechanisms, introduced in the context of neural machine translation. The 2017 paper "Attention Is All You Need" by Vaswani et al. proposed the Transformer architecture, which eliminated recurrence entirely in favor of self-attention mechanisms. This architecture could process sequences in parallel and capture long-range dependencies more effectively than RNNs. The implications were profound: Transformers scaled better, trained faster, and achieved superior performance across numerous tasks.</p>
+                
+                <p>Transformers spawned a new generation of models. BERT (Bidirectional Encoder Representations from Transformers) introduced masked language modeling for better contextual understanding. GPT (Generative Pre-trained Transformer) demonstrated that massive unsupervised pre-training followed by fine-tuning could produce remarkably capable language models. GPT-3, with its 175 billion parameters, exhibited few-shot learning abilities that approached human-level performance on many tasks without task-specific training.</p>
+                
+                <p>Today, we're witnessing the emergence of multimodal models like CLIP and GPT-4, which understand relationships between text, images, and other modalities. The field is exploring sparse models, efficient architectures, and techniques like Low-Rank Adaptation (LoRA) to make these powerful systems more accessible. We're also seeing increased focus on interpretability, fairness, and robustness—addressing concerns that powerful models can perpetuate biases or fail in unexpected ways.</p>
+                
+                <p>Looking forward, several exciting directions are emerging. Neuromorphic computing promises hardware specifically designed for neural computation, potentially offering massive efficiency gains. Quantum machine learning explores how quantum effects might accelerate certain ML algorithms. Meta-learning and few-shot learning aim to create systems that learn to learn, adapting quickly to new tasks with minimal data—much like humans do.</p>
+                
+                <p>The trajectory from Perceptrons to Transformers teaches us valuable lessons. Progress in machine learning hasn't been linear—it's been punctuated by winters and springs, driven by both algorithmic breakthroughs and hardware advances. The field has evolved from attempting to manually engineer intelligent behavior to creating systems that discover representations and strategies through learning. As we stand on the cusp of artificial general intelligence, understanding this history helps us appreciate both how far we've come and the profound challenges that remain. The next chapter in this story is being written now, and it promises to be the most exciting yet.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>Data Engineering in the Cloud Era: AWS, Azure, and GCP Compared</h2>
+            <time datetime="2024-06-22T14:00">June 22nd, 2024 at 2:00 PM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">☁️ Cloud Computing</span>
+                <span class="blog-tag">📊 Data Engineering</span>
+                <span class="blog-tag">🛠️ Infrastructure</span>
+                <span class="blog-tag">⏱️ 10 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>Cloud platforms have fundamentally transformed data engineering. This comprehensive comparison examines AWS, Azure, and Google Cloud Platform's data services, helping you choose the right platform for your organization's needs...</p>
+                <p><strong>Comparison includes:</strong> Data warehousing, ETL pipelines, streaming analytics, ML integration, cost analysis, and real-world use cases.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>Cloud platforms have fundamentally transformed data engineering, offering unprecedented scalability, flexibility, and managed services that would have required massive infrastructure investments just a decade ago. Today, the three dominant players—Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP)—each offer comprehensive suites of data tools. However, their philosophies, strengths, and ideal use cases differ significantly. Understanding these distinctions is crucial for making informed architectural decisions.</p>
+                
+                <p>Let's begin with data warehousing, the cornerstone of most data platforms. AWS offers Redshift, a columnar database optimized for complex analytical queries across petabyte-scale datasets. Redshift's architecture separates compute and storage, allowing independent scaling. Azure provides Synapse Analytics (formerly SQL Data Warehouse), which integrates deeply with Microsoft's ecosystem including Power BI and Azure Machine Learning. Google's BigQuery takes a different approach entirely—it's a serverless, fully managed warehouse that requires no infrastructure provisioning and scales automatically based on query complexity.</p>
+                
+                <p>BigQuery's serverless model is particularly compelling for organizations that value simplicity and want to avoid infrastructure management. You simply upload data and query—BigQuery handles everything else. This approach excels for unpredictable workloads and rapid prototyping. Redshift, conversely, gives you more control over performance tuning and cost optimization through careful resource provisioning. Azure Synapse sits somewhere between, offering both serverless and provisioned options to accommodate different use cases.</p>
+                
+                <p>For ETL (Extract, Transform, Load) operations, each platform provides both code-based and visual tools. AWS Glue offers serverless Apache Spark jobs with automatic scaling, plus a visual ETL designer. Azure Data Factory provides comprehensive data orchestration with 90+ native connectors and integration with Azure Databricks for complex transformations. Google Cloud Dataflow, based on Apache Beam, provides unified batch and streaming processing with automatic resource optimization.</p>
+                
+                <p>Streaming data presents unique challenges, and each platform approaches it differently. AWS Kinesis handles real-time data ingestion and processing, integrating seamlessly with Lambda for serverless stream processing. Azure Event Hubs and Stream Analytics provide similar capabilities with tight integration to Azure services. GCP's Pub/Sub offers a globally distributed messaging service, while Dataflow processes streams using the same Beam pipelines that handle batch data—a unified programming model that significantly reduces complexity.</p>
+                
+                <p>Machine learning integration represents another critical differentiator. AWS SageMaker provides end-to-end ML workflows from data labeling through model deployment, with support for popular frameworks and AutoML capabilities. Azure Machine Learning offers similar functionality with particularly strong enterprise features like MLOps pipelines and responsible AI tools. GCP's Vertex AI unifies AutoML and custom training, leveraging Google's AI research leadership and tight BigQuery integration for seamless feature engineering.</p>
+                
+                <p>Cost considerations often determine platform choice. AWS pricing tends to be complex but granular, allowing sophisticated cost optimization for those willing to invest time. Azure typically offers better rates for organizations with existing Microsoft licenses through hybrid benefit programs. GCP generally provides the most transparent pricing and includes features like sustained use discounts that automatically reduce costs for long-running workloads.</p>
+                
+                <p>Real-world use case patterns have emerged. Financial services often prefer Azure for compliance tooling and Microsoft Office integration. Media and advertising companies frequently choose GCP for its superior data analytics and ML capabilities inherited from Google's internal tools. E-commerce and general enterprise workloads often land on AWS due to its maturity, extensive service catalog, and dominant market share.</p>
+                
+                <p>The ecosystem surrounding each platform matters too. AWS has the largest community and third-party integrations. Azure benefits from enterprise relationships and hybrid cloud capabilities for organizations with on-premises infrastructure. GCP leverages Kubernetes leadership through Google Kubernetes Engine (GKE) and offers cutting-edge AI/ML services derived from Google's research.</p>
+                
+                <p>My recommendation? For startups prioritizing rapid development and modern architectures, GCP's simplicity and serverless offerings are compelling. Enterprises with Microsoft investments should strongly consider Azure's ecosystem benefits. Organizations requiring the broadest service catalog and proven at-scale solutions might prefer AWS despite its complexity. Increasingly, multi-cloud strategies are emerging—use BigQuery for analytics, AWS Lambda for event processing, and Azure AD for identity management. Modern tooling like Terraform and containerization make this approach feasible.</p>
+                
+                <p>The future points toward further convergence. All three platforms are investing in serverless computing, Kubernetes, and open standards. However, differentiation will likely persist in user experience, pricing models, and specialized services. For data engineers, the best advice is to deeply learn one platform while maintaining awareness of alternatives. The cloud native principles—scalability, resilience, automation—transcend specific platforms. Master those principles, stay curious about new services, and remain flexible in your technical choices. The cloud platforms will continue evolving rapidly, but solid data engineering fundamentals remain constant.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>Building Resilient Microservices: Lessons from Production Failures</h2>
+            <time datetime="2024-09-10T09:15">September 10th, 2024 at 9:15 AM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">🏗️ Architecture</span>
+                <span class="blog-tag">🔧 DevOps</span>
+                <span class="blog-tag">📈 Scalability</span>
+                <span class="blog-tag">⏱️ 13 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>Every production outage teaches valuable lessons. After years of building distributed systems, I've compiled hard-won insights about designing microservices that gracefully handle failures...</p>
+                <p><strong>Covers:</strong> Circuit breakers, graceful degradation, chaos engineering, observability best practices, rate limiting, and real incident post-mortems.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>Every production outage teaches valuable lessons—usually expensive ones. After years building distributed systems and responding to 3 AM incidents, I've accumulated hard-won insights about designing microservices that gracefully handle failures. The patterns I'll share come from real production environments serving millions of users, where failures aren't hypothetical but inevitable daily realities.</p>
+                
+                <p>The first lesson is counterintuitive: embracing failure as normal. Traditional monolithic systems often followed a "prevent all failures" philosophy. Microservices require accepting that with hundreds of services making thousands of network calls per second, failures will constantly occur. The goal shifts from preventing failures to ensuring they don't cascade. This mindset change is fundamental—it transforms how we design, deploy, and operate systems.</p>
+                
+                <p>Circuit breakers are your first line of defense against cascading failures. Imagine Service A calls Service B, which suddenly becomes slow due to database contention. Without circuit breakers, Service A's threads exhaust waiting for responses, making Service A unavailable. This propagates upstream, creating system-wide outages. A circuit breaker monitors failure rates and response times. After crossing a threshold, it "opens," immediately returning failures without calling the downstream service. After a timeout, it enters a "half-open" state, allowing test requests. If they succeed, it closes; if not, it reopens. This simple pattern prevented countless outages in our systems.</p>
+                
+                <p>Implementing circuit breakers correctly requires nuance. You must consider what constitutes failure—timeouts definitely, but what about 500 errors versus 429 rate limits? How long should the timeout be? Too short and you'll trip on normal latency spikes; too long and damage spreads. We learned to make these parameters configurable per dependency, starting conservative and tuning based on observed behavior. Libraries like Resilience4j and Hystrix provide battle-tested implementations, but understanding the underlying principles is crucial for proper configuration.</p>
+                
+                <p>Graceful degradation extends the circuit breaker concept. When a service is unavailable, can you serve stale data from cache? Provide reduced functionality? Show a helpful message? Consider an e-commerce site's recommendations service. If it fails, should the entire page break? No—show popular items instead, or simply hide the recommendations section. Users can still browse and purchase. We implemented a "degradation ladder" for each feature, defining what happens at each failure level. This turned potential catastrophes into minor inconveniences.</p>
+                
+                <p>Timeouts seem simple but cause surprising problems. Every outbound call must have an explicit timeout—never rely on defaults. We learned this when a third-party API started silently dropping packets during a network issue. Our requests hung indefinitely, exhausting connection pools. More subtly, timeout values must be carefully orchestrated across call chains. If Service A calls Service B with a 5-second timeout, and Service B calls Service C with a 5-second timeout, Service A waits 5 seconds regardless of whether Service B spent that entire time waiting for Service C. We adopted a pattern of decreasing timeouts through call chains: A→B is 5 seconds, B→C is 3 seconds, C→D is 1 second.</p>
+                
+                <p>Rate limiting prevents both abuse and self-inflicted damage. External rate limiting protects against malicious actors or misbehaving clients. Internal rate limiting is equally important—it prevents one service from overwhelming another during traffic spikes or retry storms. We implemented token bucket rate limiters at multiple levels: per-client, per-service, and system-wide. During a marketing campaign that generated 10x normal traffic, these limits prevented database overload by gracefully rejecting excess requests rather than crashing entirely.</p>
+                
+                <p>Retry logic requires sophisticated thinking. Retrying failed requests improves reliability—until it doesn't. Naive implementations create retry amplification: one failure causes three retries, which if they fail, cause nine more retries. Suddenly a brief blip becomes sustained overload. We adopted exponential backoff with jitter: wait 2^attempt seconds plus random jitter before retrying. The jitter prevents thundering herd problems where multiple clients retry simultaneously. We also distinguish retryable errors (timeouts, 503s) from non-retryable ones (400s, 404s). And critically, we implement retry budgets: services track their retry rate and throttle retries if it exceeds a threshold.</p>
+                
+                <p>Observability makes resilience achievable. You can't improve what you can't measure. We instrument every service with metrics (request rates, latencies, error rates), distributed tracing (following requests through service meshes), and structured logging. Dashboards visualize system health in real-time. Alerts notify us of anomalies before users complain. Post-incident reviews examine traces to understand exact failure sequences. Tools like Prometheus, Grafana, Jaeger, and ELK stack are invaluable, but the real skill is knowing what to measure and how to interpret it.</p>
+                
+                <p>Chaos engineering proactively validates resilience. Inspired by Netflix's Chaos Monkey, we regularly inject failures into production: terminate instances, introduce latency, corrupt responses. This sounds terrifying but reveals weaknesses before they cause real incidents. One chaos experiment discovered our payment service had a hidden dependency on a logging service—a non-critical component could break critical functionality! We fixed it before it affected customers. Start small—kill individual instances in staging—and gradually increase blast radius as confidence grows.</p>
+                
+                <p>Let me share a specific incident that taught multiple lessons. During Black Friday, our product catalog service began failing sporadically. Circuit breakers protected upstream services, but the user experience degraded significantly. Investigating, we found the database connection pool exhausted. Why? A recent deployment increased connection pool size from 50 to 500—seemingly improving capacity. Instead, during traffic spikes, the service opened 500 connections simultaneously, overwhelming the database which had a 1000-connection limit. Other services suffered starvation. The fix involved right-sizing pools, implementing connection acquisition timeouts, and adding database connection metrics to our dashboards.</p>
+                
+                <p>This incident illustrates several principles: more isn't always better; resources have limits that must be coordinated across services; observability gaps hide problems; load testing must reflect production traffic patterns. We now conduct game-day exercises simulating peak loads before major events, specifically to surface such issues.</p>
+                
+                <p>Building resilient microservices is an ongoing discipline, not a one-time effort. It requires changing your perspective from preventing failures to handling them gracefully, implementing multiple defensive layers, investing in observability, and continuously testing resilience through chaos engineering. The patterns I've described—circuit breakers, graceful degradation, thoughtful timeouts, rate limiting, sophisticated retries—work together as a resilience portfolio. No single pattern solves everything, but together they create systems that bend without breaking. Your future self, woken at 3 AM by an alert, will thank you for this investment. More importantly, your users will experience reliable service even when individual components fail—which, in distributed systems, they inevitably will.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>The State of Large Language Models: GPT-4, Claude, and Beyond</h2>
+            <time datetime="2024-11-05T16:45">November 5th, 2024 at 4:45 PM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">🤖 LLMs</span>
+                <span class="blog-tag">🔬 AI Research</span>
+                <span class="blog-tag">💡 Innovation</span>
+                <span class="blog-tag">⏱️ 14 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>Large Language Models have evolved dramatically in recent months. This deep dive examines the current landscape, comparing capabilities, architecture innovations, and practical applications of leading models...</p>
+                <p><strong>Analysis includes:</strong> Multimodal capabilities, reasoning improvements, context windows, hallucination mitigation, fine-tuning strategies, and emerging competitors.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>Large Language Models have evolved dramatically in recent months, advancing from impressive novelties to genuinely useful tools reshaping how we work with information. The landscape has become increasingly complex, with major players like OpenAI's GPT-4, Anthropic's Claude, Google's Gemini, and open-source alternatives like Llama and Mistral each offering distinct capabilities and tradeoffs. Understanding these differences matters enormously for developers, researchers, and organizations deploying LLMs in production.</p>
+                
+                <p>Let's start with GPT-4, which set a new benchmark when released. Its multimodal nature—accepting both text and images—enables novel applications from analyzing medical scans to understanding memes. GPT-4's extended context window of 128k tokens (in some variants) allows processing entire codebases or lengthy documents in a single request. Its reasoning capabilities represent a substantial leap over GPT-3.5, particularly in mathematical problem-solving, code generation, and nuanced analysis. The model demonstrates stronger "chain of thought" reasoning, often showing its work when tackling complex problems.</p>
+                
+                <p>However, GPT-4 isn't perfect. It still hallucinates—confidently stating false information. Its training data cutoff means it lacks knowledge of recent events. Cost is non-trivial at $0.03 per 1k input tokens and $0.06 per 1k output tokens, making large-scale applications expensive. Response times, while improved, can still lag for complex queries. And critically, the model remains a black box—OpenAI hasn't disclosed architecture details, training data, or even parameter count, raising concerns about reproducibility and transparency.</p>
+                
+                <p>Anthropic's Claude represents a different philosophy emphasizing safety and helpfulness. Claude excels at following nuanced instructions and declining inappropriate requests without being overly restrictive. Its "constitutional AI" approach attempts to embed values and reduce harmful outputs during training. Claude's context window has grown to 100k tokens, enabling analysis of entire books. Anecdotally, many users find Claude's writing style more natural and its reasoning more transparent—it more readily explains its limitations and uncertainties.</p>
+                
+                <p>The practical differences between GPT-4 and Claude become apparent in specific use cases. For creative writing, Claude often produces more human-sounding prose with better stylistic consistency. For code generation, GPT-4 tends to handle more complex requirements and produce more concise implementations. For analysis requiring strong ethical reasoning or nuanced judgment, Claude's constitutional AI training shows through. For tasks requiring multimodal inputs, GPT-4 is currently essential as Claude remains text-only (though this may change).</p>
+                
+                <p>Google's Gemini represents the tech giant's serious play in the LLM space after early Bard disappointments. Gemini Ultra demonstrates comparable performance to GPT-4 on many benchmarks, with particular strength in scientific reasoning and multilingual capabilities. Google's integration advantages—seamless access to search, Gmail, Docs, and other services—create compelling enterprise use cases. However, Gemini's developer ecosystem lags OpenAI's mature platform, and reliability has been inconsistent in early releases.</p>
+                
+                <p>Open-source models deserve significant attention. Meta's Llama 2, released with permissive licensing, enables on-premises deployment for organizations with data privacy requirements or cost constraints. While smaller models (7B, 13B parameters) can't match GPT-4's raw capabilities, they're surprisingly competent for specific tasks and can be fine-tuned extensively. Mistral's mixtral-8x7B demonstrates that sophisticated "mixture of experts" architectures can achieve strong performance with lower computational costs. These models democratize LLM access and enable research and experimentation impossible with closed APIs.</p>
+                
+                <p>Context window expansion represents a crucial trend. Early GPT-3 supported 4k tokens; we're now seeing 100k+ token windows. This shift enables qualitatively new applications: analyzing entire repositories, processing complete legal documents, maintaining context throughout lengthy conversations. However, longer contexts introduce challenges. Attention mechanisms scale quadratically with context length, making inference expensive. Models often struggle to effectively use information deep in long contexts—the "lost in the middle" problem where relevant details buried in lengthy prompts are overlooked.</p>
+                
+                <p>Hallucination mitigation has seen meaningful progress. Techniques include retrieval-augmented generation (RAG), where models query external knowledge bases and cite sources; confidence scoring, where models indicate certainty levels; and constrained generation, forcing outputs to match specific formats or verified facts. OpenAI's GPT-4 with browsing capability exemplifies this—the model can search current information and cite sources, dramatically reducing hallucinations about recent events. However, hallucinations haven't been eliminated and remain a fundamental challenge requiring architectural innovations.</p>
+                
+                <p>Fine-tuning strategies have evolved beyond simple supervised learning. Low-Rank Adaptation (LoRA) enables efficient fine-tuning by updating only small rank decomposition matrices rather than full model weights, reducing memory requirements by orders of magnitude. Prompt-tuning learns optimal prompts rather than updating weights, enabling multi-task models. Instruction tuning on diverse task demonstrations improves zero-shot capability. These techniques make customization accessible to organizations without massive compute budgets.</p>
+                
+                <p>Reasoning capabilities represent the next frontier. Current LLMs excel at pattern matching and text generation but struggle with multi-step logical reasoning, mathematical proof, and planning. Emerging techniques show promise: tree-of-thoughts explicitly explores multiple reasoning paths; tool use allows models to invoke calculators, search engines, or code interpreters for tasks beyond pure language; self-consistency samples multiple solutions and selects the most common answer. These approaches move beyond single forward passes toward more deliberative processing.</p>
+                
+                <p>The economic landscape is shifting rapidly. OpenAI's pricing dropped significantly with GPT-3.5-turbo and continues decreasing. Anthropic, Google, and others compete aggressively on price. Open-source models eliminate per-token costs entirely, though infrastructure expenses remain. This commoditization suggests that model quality alone won't sustain competitive advantages—differentiation will come from fine-tuning, integration quality, and application-layer innovations.</p>
+                
+                <p>Looking forward, several trends seem clear. Models will continue growing in capability, with reasoning and multimodality improving substantially. Context windows will expand, potentially reaching millions of tokens. Specialized models for specific domains (medicine, law, science) will emerge alongside general-purpose ones. Open-source models will narrow the capability gap with frontier models. Most importantly, the focus will shift from raw model capabilities to effective application development—better prompting strategies, sophisticated RAG implementations, and thoughtful human-AI workflows.</p>
+                
+                <p>For practitioners, my advice is pragmatic: use the tool that best fits your use case rather than defaulting to "the best" model. GPT-4 excels at complex reasoning but costs more; GPT-3.5-turbo handles many tasks at 1/10th the price. Claude might better suit applications requiring nuanced judgment. Open-source models enable privacy and cost control. Build abstractions that allow model swapping—today's best model will be dethroned tomorrow. Invest in evaluation frameworks to rigorously compare outputs. And remember: LLMs are tools, not magic. The most successful applications combine them thoughtfully with traditional software engineering, human oversight, and domain expertise. We're still in the early innings of the LLM revolution, but these principles will remain relevant as the technology matures.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>Cybersecurity in 2025: Emerging Threats and Defense Strategies</h2>
+            <time datetime="2025-01-08T11:20">January 8th, 2025 at 11:20 AM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">🔒 Security</span>
+                <span class="blog-tag">🛡️ Defense</span>
+                <span class="blog-tag">⚠️ Threats</span>
+                <span class="blog-tag">⏱️ 11 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>The cybersecurity landscape of 2025 is more complex than ever. AI-powered attacks, supply chain vulnerabilities, and quantum computing threats demand new defensive approaches...</p>
+                <p><strong>Topics covered:</strong> AI-driven phishing, ransomware-as-a-service, zero-trust architecture, supply chain security, quantum-safe cryptography, and incident response.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>The cybersecurity landscape of 2025 is more complex and dangerous than ever before. While defenders have made significant advances in detection and prevention, attackers have evolved even faster, leveraging artificial intelligence, exploiting supply chains, and developing sophisticated social engineering campaigns. The asymmetry remains stark: defenders must protect every potential entry point, while attackers need only find one vulnerability. Understanding emerging threats and implementing robust defense strategies isn't optional—it's existential for modern organizations.</p>
+                
+                <p>AI-powered attacks represent perhaps the most concerning development. Large language models have become tools for malicious actors, generating highly convincing phishing emails that adapt to targets' writing styles and interests. These AI-crafted messages bypass traditional email filters designed to catch grammatical errors and awkward phrasing. We're seeing phishing success rates double as attackers deploy personalized campaigns at scale. Even more troubling, AI can analyze social media and corporate communications to craft spear-phishing emails so targeted that even security-conscious users fall victim.</p>
+                
+                <p>Deepfakes have evolved from impressive demonstrations to serious security threats. Voice cloning technology can replicate a CEO's voice from a few seconds of audio, enabling phone scams where attackers impersonate executives requesting urgent wire transfers. Video deepfakes add visual credibility to these deceptions. Organizations must implement new verification procedures—agreed-upon code words, multi-channel confirmation, or callback protocols—because trusting audio-visual communication alone has become dangerously naive.</p>
+                
+                <p>Ransomware-as-a-service (RaaS) has industrialized cyber extortion. Criminal groups now operate like legitimate businesses, offering user-friendly interfaces, customer support, and affiliate programs. Technical skill barriers have collapsed—any motivated individual can launch sophisticated ransomware campaigns by paying a subscription fee. The economics favor attackers: development costs are amortized across many affiliates, while each victim faces unique pressure to pay. We're seeing attacks on critical infrastructure, healthcare, and education increase precisely because these sectors often lack security resources and face urgent operational pressures.</p>
+                
+                <p>Double and triple extortion tactics have emerged alongside traditional file encryption. Attackers now exfiltrate data before encrypting it, threatening public release if ransoms aren't paid. Some contact customers or business partners of victim organizations, creating additional pressure. Others launch DDoS attacks alongside ransomware, maximizing disruption. These multi-pronged approaches make incident response dramatically more complex and expensive.</p>
+                
+                <p>Supply chain attacks exploit the reality that modern systems comprise countless dependencies. The SolarWinds breach demonstrated how compromising a single widely-used component provides access to thousands of organizations. We're now seeing attacks on open-source packages, where attackers contribute malicious code to popular libraries, infrastructure tools, and development frameworks. Every dependency represents potential vulnerability—a sobering realization when typical applications include hundreds of third-party components.</p>
+                
+                <p>Zero-trust architecture has evolved from buzzword to necessity. The traditional perimeter-based security model—trusted inside, untrusted outside—collapses when employees work remotely, applications live in cloud environments, and sophisticated attackers inevitably breach perimeters. Zero-trust assumes breach: every user, device, and application must continuously authenticate and authorize regardless of network location. This shift requires substantial infrastructure changes: identity and access management systems, microsegmentation, continuous monitoring, and policy enforcement points throughout the network.</p>
+                
+                <p>Implementing zero-trust involves multiple layers. Identity verification must use multi-factor authentication (MFA) universally—passwords alone are insufficient. Device health checks ensure only managed, up-to-date devices access resources. Least-privilege access grants only the minimum permissions required for specific tasks. Continuous monitoring detects anomalous behavior patterns. These controls create friction, and balancing security with usability remains challenging. However, the alternative—perimeter-based security in a cloud-first, remote-work world—simply doesn't work.</p>
+                
+                <p>Quantum computing looms as a future but very real threat. While practical quantum computers capable of breaking current encryption don't yet exist, "harvest now, decrypt later" attacks are already occurring. Adversaries capture encrypted traffic today, storing it for future decryption once quantum computers become available. For data requiring decades of confidentiality—government secrets, healthcare records, financial information—this represents existential risk.</p>
+                
+                <p>Post-quantum cryptography addresses this threat through algorithms resistant to quantum attacks. NIST recently standardized several quantum-safe algorithms, and migration must begin now. However, cryptographic agility—the ability to swap algorithms quickly—matters more than any specific choice. History shows cryptographic systems eventually break; organizations must architect systems that can adopt new algorithms without massive rewrites. This requires abstracting cryptographic operations, maintaining key management infrastructure, and planning migration paths years in advance.</p>
+                
+                <p>Cloud security presents unique challenges. Misconfigurations account for the majority of cloud breaches—publicly accessible S3 buckets, overly permissive IAM roles, disabled logging. Cloud environments' dynamic nature and complexity make continuous monitoring essential. Tools like Cloud Security Posture Management (CSPM) automatically detect misconfigurations, but they require careful tuning to reduce false positives. The shared responsibility model complicates accountability: cloud providers secure the infrastructure, but customers must secure their data, applications, and configurations.</p>
+                
+                <p>Incident response capabilities determine breach impact. The median time to detect breaches remains around 200 days—an eternity during which attackers extract data, establish persistence, and spread laterally. Organizations must invest in detection engineering, threat hunting, and incident response playbooks. Tabletop exercises simulate breaches, revealing gaps in procedures and communication. Retainer agreements with forensic firms ensure expert help is available when needed. Backups must be immutable and offline, protected from ransomware that specifically targets backup systems.</p>
+                
+                <p>Security awareness training requires continuous reinforcement. Annual training sessions don't work—people forget, and threats evolve. Modern programs use gamification, simulated phishing campaigns, and just-in-time training when risky behaviors are detected. Cultural change matters more than any specific tool: security must become everyone's responsibility, not just IT's problem. Leadership must model good security hygiene and allocate resources appropriately.</p>
+                
+                <p>Looking forward, several trends seem clear. AI will increasingly power both attacks and defenses, creating an arms race where advantage shifts rapidly. Regulatory pressure will intensify—privacy laws, breach disclosure requirements, and security standards will mandate stronger controls. Cyber insurance will become more expensive and restrictive as insurers face mounting claims. Organizations that treat security as afterthought will face existential risks, while those investing appropriately will achieve competitive advantages through customer trust and operational resilience.</p>
+                
+                <p>My recommendations: implement zero-trust principles progressively, starting with high-value assets. Deploy MFA universally, no exceptions. Segment networks to contain breaches. Automate security monitoring and response where possible—humans can't scale to modern threat volumes. Invest in security team training and tools. Plan for quantum transition now. Most importantly, accept that perfect security is impossible. The goal is resilience: detecting breaches quickly, containing them effectively, and recovering rapidly. In 2025's threat landscape, these capabilities separate organizations that survive from those that don't.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>The Developer Experience Revolution: Tools Shaping Modern Software Development</h2>
+            <time datetime="2024-12-20T13:30">December 20th, 2024 at 1:30 PM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">🛠️ DevTools</span>
+                <span class="blog-tag">⚡ Productivity</span>
+                <span class="blog-tag">💻 Development</span>
+                <span class="blog-tag">⏱️ 9 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>Developer tooling has evolved dramatically, fundamentally changing how we write, test, and deploy code. This exploration examines the tools revolutionizing modern software development...</p>
+                <p><strong>Highlights:</strong> AI coding assistants, modern IDEs, containerization, infrastructure as code, CI/CD evolution, and emerging tools worth watching.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>Developer tooling has evolved dramatically over the past decade, fundamentally changing how we write, test, and deploy code. The shift from basic text editors to AI-powered development environments, from manual deployments to sophisticated CI/CD pipelines, represents more than incremental improvement—it's a revolution in developer experience. These tools don't just make us faster; they enable new ways of working and democratize capabilities once restricted to expert developers.</p>
+                
+                <p>AI coding assistants like GitHub Copilot, TabNine, and Amazon CodeWhisperer have moved from experimental curiosities to daily tools for millions of developers. Copilot, powered by OpenAI's Codex model, suggests entire functions based on comments or partial implementations. The experience feels almost magical: describe what you want in natural language, and working code appears. I've found Copilot particularly valuable for boilerplate code, learning unfamiliar APIs, and generating test cases. It dramatically accelerates certain tasks, turning a 20-minute implementation into a 2-minute review and refinement.</p>
+                
+                <p>However, AI assistants require thoughtful use. They occasionally generate subtly incorrect code that passes cursory inspection but harbors bugs. They may suggest outdated patterns or security vulnerabilities. They work best as copilots, not autopilots—augmenting rather than replacing human judgment. The skill becomes rapidly evaluating AI-generated code, understanding its logic, and knowing when to reject suggestions. Used well, these tools boost productivity 20-40% according to GitHub's studies. Used poorly, they introduce technical debt and bugs.</p>
+                
+                <p>Modern IDEs have transcended simple code editing to become integrated development platforms. Visual Studio Code dominates with its extensibility, performance, and vast plugin ecosystem. JetBrains IDEs offer deep language-specific features and intelligent refactoring. Cloud-based IDEs like GitHub Codespaces and GitPod enable consistent development environments accessible from any device. These platforms integrate with version control, debuggers, testing frameworks, and deployment pipelines, creating seamless workflows from coding to production.</p>
+                
+                <p>The rise of IntelliSense, code lenses, and semantic understanding has made IDEs surprisingly intelligent even without AI. Real-time error detection, context-aware autocomplete, and automated refactoring catch mistakes immediately and accelerate development. Integrated debugging with breakpoints, watch expressions, and call stack inspection makes troubleshooting dramatically easier than print-statement debugging. These features are now table stakes—developers expect them, and working without them feels like handicapping yourself.</p>
+                
+                <p>Containerization through Docker revolutionized development environments. The "works on my machine" problem—where code runs locally but fails in production due to environment differences—largely disappeared. Docker containers package applications with all dependencies, ensuring consistency across development, testing, and production. Developers can spin up complex multi-service applications with a single docker-compose up command. This shift reduced onboarding time from days to hours and eliminated entire classes of environment-related bugs.</p>
+                
+                <p>Kubernetes extended containerization to orchestration, providing declarative infrastructure for running containers at scale. While Kubernetes complexity has spawned countless memes, managed services like EKS, GKE, and AKS abstract much of that complexity. The result is infrastructure that auto-scales, self-heals, and rolls out updates with zero downtime. Combined with service meshes like Istio, Kubernetes enables sophisticated traffic management, observability, and security. The learning curve is steep, but the capabilities justify the investment for any substantial application.</p>
+                
+                <p>Infrastructure as Code (IaC) tools like Terraform, Pulumi, and CloudFormation treat infrastructure as version-controlled code. This shift brings software engineering practices—code review, testing, version control—to infrastructure management. Changes are declarative, reviewable, and automatically applied. Terraform's ability to manage resources across multiple cloud providers through a unified language is particularly powerful. Pulumi takes this further, allowing infrastructure definition in general-purpose programming languages rather than DSLs, enabling sophisticated abstractions and reusability.</p>
+                
+                <p>CI/CD pipelines have evolved from simple build-and-deploy scripts to sophisticated workflows handling testing, security scanning, and multi-environment deployments. GitHub Actions, GitLab CI, and Jenkins enable defining pipelines as code, triggering automatically on commits or pull requests. Modern pipelines run thousands of tests in parallel, deploy to staging environments for integration testing, and progressively roll out to production with automated rollback on errors. This automation transforms deployment from risky monthly events to routine daily operations.</p>
+                
+                <p>Observability tools provide unprecedented visibility into production systems. Distributed tracing through tools like Jaeger and Datadog shows request flows across microservices, identifying bottlenecks and failures. Metrics collected by Prometheus and visualized in Grafana reveal performance trends. Structured logging aggregated by ELK stack or Splunk enables searching across millions of log entries. These tools shift debugging from guesswork to data-driven investigation. When production issues arise, we can trace exact code paths, measure timing, and identify root causes in minutes rather than hours.</p>
+                
+                <p>Feature flags and progressive delivery tools like LaunchDarkly and Split decouple deployment from release. Code can be deployed to production but disabled, then gradually enabled for increasing user percentages. This enables A/B testing, canary releases, and instant rollback by simply toggling flags—no redeployment required. The safety this provides encourages more frequent deployments and experimentation.</p>
+                
+                <p>Package managers and dependency tools have matured significantly. npm, pip, Maven, and others manage millions of packages with sophisticated version resolution. Tools like Dependabot and Renovate automatically create pull requests updating dependencies, catching security vulnerabilities. Lock files ensure reproducible builds. While dependency management complexity remains challenging—npm's node_modules folders are infamous—the alternative of manual dependency tracking would be completely unworkable.</p>
+                
+                <p>Looking forward, several trends excite me. AI assistants will become more sophisticated, potentially pair-programming at human levels. Cloud-based development environments will become standard, enabling instant onboarding and consistent tooling. Low-code/no-code tools will expand developers' leverage, allowing quick prototyping and empowering domain experts. WebAssembly will enable near-native performance in browsers and new cross-platform possibilities.</p>
+                
+                <p>However, tool proliferation creates challenges. The JavaScript ecosystem's rapid churn—"JavaScript fatigue"—exemplifies how overwhelming constant change can become. New frameworks, build tools, and best practices emerge constantly. Learning to selectively adopt tools rather than chasing every trend is crucial. Evaluate whether a tool solves real problems you face, not just whether it's popular.</p>
+                
+                <p>The developer experience matters enormously. Developer productivity directly impacts business outcomes. Frustrated developers produce lower-quality code and leave for better opportunities. Organizations that invest in excellent tooling, clear documentation, and frictionless workflows attract and retain top talent. The best developers are force multipliers, and tooling amplifies that force. In an industry where talent is the primary constraint, optimizing developer experience isn't a luxury—it's strategic necessity. We're living in the golden age of developer tools, and it's only getting better.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>Blockchain Beyond Cryptocurrency: Real-World Applications in 2025</h2>
+            <time datetime="2025-01-12T10:00">January 12th, 2025 at 10:00 AM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">⛓️ Blockchain</span>
+                <span class="blog-tag">💼 Enterprise</span>
+                <span class="blog-tag">🔐 Trust</span>
+                <span class="blog-tag">⏱️ 11 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>While cryptocurrency speculation dominates headlines, blockchain technology is quietly solving real business problems. This article explores practical blockchain applications beyond digital currencies...</p>
+                <p><strong>Use cases covered:</strong> Supply chain transparency, digital identity, smart contracts, healthcare records, voting systems, and enterprise adoption.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>While cryptocurrency speculation dominates headlines and captures public attention, blockchain technology is quietly solving real business problems across industries. The hype cycle has matured—we've moved past the "blockchain for everything" phase to focusing on use cases where distributed ledgers genuinely add value. In 2025, enterprise blockchain adoption is accelerating not because it's trendy, but because it solves specific problems around trust, transparency, and coordination across organizational boundaries.</p>
+                
+                <p>Supply chain management represents blockchain's most compelling enterprise use case. Modern supply chains involve dozens of entities—manufacturers, suppliers, logistics providers, customs agencies, retailers—each maintaining separate records. Discrepancies, delays, and disputes arise constantly. Blockchain provides a shared, immutable ledger that all participants can trust without trusting each other. When a container ships, all parties see the same data in real-time. Smart contracts automatically release payments when goods are delivered and verified.</p>
+                
+                <p>Walmart's food safety initiative exemplifies this. Using blockchain, they reduced the time to trace a mango's origin from seven days to 2.2 seconds. When contamination occurs, they instantly identify affected products, minimizing recalls and protecting public health. Maersk and IBM's TradeLens platform digitizes shipping documentation on blockchain, reducing paperwork and customs processing times. These aren't theoretical benefits—they're measurable improvements in efficiency and transparency.</p>
+                
+                <p>Digital identity solutions address one of the internet's fundamental problems: proving who you are without exposing excessive personal information. Traditional systems require centralized authorities issuing credentials—passports, driver's licenses, degrees. These create single points of failure and privacy concerns. Blockchain-based self-sovereign identity puts users in control. You hold cryptographic credentials issued by trusted authorities but stored on your devices. When verification is needed, you present zero-knowledge proofs demonstrating specific claims (you're over 21, you have a degree) without revealing underlying data (exact birthdate, grades).</p>
+                
+                <p>Estonia's e-Residency program pioneered government use of blockchain for identity. Citizens access government services, sign documents digitally, and run businesses entirely online using blockchain-verified credentials. Other nations are following—Canada, Singapore, and Switzerland are piloting similar systems. The COVID-19 pandemic accelerated interest as digital health certificates became necessary for travel. Blockchain-based vaccine passports allow individuals to prove vaccination status without centralized tracking of movements.</p>
+                
+                <p>Smart contracts on platforms like Ethereum enable programmable agreements that execute automatically when conditions are met. Insurance claims provide a clear use case: parametric insurance policies automatically pay out when verifiable events occur. If your flight delays more than two hours (verified by oracle data from flight tracking), your policy pays automatically—no claim forms, no waiting. Decentralized finance (DeFi) applications use smart contracts for lending, trading, and derivatives without traditional financial intermediaries.</p>
+                
+                <p>However, smart contracts come with significant caveats. Code bugs can have catastrophic consequences—the DAO hack in 2016 resulted in $50 million in stolen funds. Smart contracts can't directly access external data, requiring "oracles" that introduce trust assumptions and potential points of failure. Legal status remains unclear in many jurisdictions. And blockchain's immutability means contract bugs can't simply be patched. Despite these challenges, smart contracts enable novel coordination mechanisms worth the careful engineering required.</p>
+                
+                <p>Healthcare records face a fundamental tension: they must be accessible to providers for effective care but protected for privacy. Blockchain offers a solution through access control mechanisms. Medical records remain encrypted off-chain, but blockchain stores access permissions and audit logs. Patients grant temporary access to specific providers through their blockchain-based identity. All access attempts are permanently logged, providing accountability. This addresses health data silos—patients' complete medical history becomes portable across providers while maintaining privacy and security.</p>
+                
+                <p>Estonia's health system again leads here, with 99% of health data on blockchain-secured systems. Patients see exactly who accessed their records and when. MedRec, a research prototype from MIT, demonstrates similar capabilities. While HIPAA compliance and integration with legacy systems pose challenges in the US, pilot programs are expanding. The value proposition—improved care coordination, reduced duplicate tests, patient empowerment—justifies the implementation complexity.</p>
+                
+                <p>Voting systems could benefit enormously from blockchain's transparency and verifiability. Current electronic voting systems require trusting vendors and officials, with limited auditability. Blockchain enables end-to-end verifiable voting: voters can confirm their ballot was recorded correctly, anyone can verify the final tally, yet votes remain anonymous. Cryptographic techniques like homomorphic encryption and zero-knowledge proofs make this possible. Utah's Republican caucuses and West Virginia's overseas voting pilots demonstrated feasibility.</p>
+                
+                <p>However, voting security experts remain divided. Blockchain doesn't solve fundamental challenges like securing voter devices, preventing coercion, or ensuring voter verifiability without compromising ballot secrecy. Physical paper ballots offer properties—human-verifiable, no digital attack surface—that digital systems struggle to match. Blockchain voting likely works best for low-stakes decisions (shareholder votes, internal elections) rather than national elections where security requirements are maximal.</p>
+                
+                <p>Intellectual property and digital rights management found new approaches through blockchain. NFTs (non-fungible tokens) represent ownership of digital assets—art, music, videos, virtual goods. While NFT speculation grabbed headlines, the underlying technology enables creators to be compensated fairly. Smart contracts can automatically pay royalties on secondary sales, solving the "used market" problem where creators don't benefit from resales. Decentralized platforms for music, writing, and art reduce dependence on gatekeepers who take large cuts.</p>
+                
+                <p>Carbon credit markets leverage blockchain for transparency and fraud prevention. Carbon credits represent emission reductions, but traditional markets face double-counting and verification problems. Blockchain-based registries create transparent, auditable records of credit issuance, retirement, and trading. This supports climate initiatives by increasing confidence in carbon markets. Companies like Toucan Protocol are tokenizing carbon credits, creating liquid markets and enabling programmable climate finance applications.</p>
+                
+                <p>Enterprise blockchain platforms have matured significantly. Hyperledger Fabric provides permissioned blockchains for consortiums, offering privacy and performance impossible on public blockchains. Azure Blockchain and AWS Managed Blockchain provide hosted solutions with enterprise support. These platforms lack public blockchain's extreme decentralization but offer reasonable Byzantine fault tolerance, audit trails, and coordination across organizations with complex trust requirements.</p>
+                
+                <p>Challenges remain substantial. Scalability continues limiting throughput—Ethereum handles ~15-30 transactions per second compared to Visa's thousands. Layer-2 solutions and alternative consensus mechanisms help but add complexity. Regulation is still emerging, creating uncertainty for businesses. Integration with legacy systems requires significant engineering. And honestly, many "blockchain" projects would work fine with traditional databases plus good process design. Blockchain's value comes specifically from coordinating across trust boundaries—if all participants trust a central authority, simpler solutions suffice.</p>
+                
+                <p>Looking forward, I expect continued growth in permissioned enterprise blockchains for supply chain and identity use cases. Public blockchain infrastructure will mature, enabling more sophisticated DeFi and Web3 applications. Central bank digital currencies (CBDCs) will launch in major economies, bringing blockchain infrastructure mainstream. Interoperability between blockchains will improve, reducing fragmentation. Most importantly, blockchain will fade into infrastructure—users will benefit from its properties without knowing or caring about the underlying technology, just as they don't think about TCP/IP when browsing the web.</p>
+                
+                <p>The key lesson: blockchain is neither panacea nor scam. It's a tool particularly suited for scenarios requiring coordination across organizational boundaries without centralized trust. Evaluate blockchain projects skeptically—does this actually need decentralization, immutability, and Byzantine fault tolerance? Or would a regular database with good access controls suffice? When blockchain's properties genuinely solve problems, it delivers substantial value. When it's used for hype or buzzword compliance, it adds cost and complexity with minimal benefit. In 2025, we're finally wise enough to tell the difference.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
+        </article>
+
+        <article class="blog-post" onclick="toggleBlogPost(this)">
+            <h2>The Future of Work: Remote, Hybrid, and the Office Reimagined</h2>
+            <time datetime="2024-10-18T15:00">October 18th, 2024 at 3:00 PM</time>
+            
+            <div class="blog-meta">
+                <span class="blog-tag">💼 Future of Work</span>
+                <span class="blog-tag">🏢 Workplace</span>
+                <span class="blog-tag">🌍 Remote Work</span>
+                <span class="blog-tag">⏱️ 10 min read</span>
+            </div>
+            
+            <div class="blog-excerpt">
+                <p>The pandemic permanently transformed how we work. As we move beyond emergency remote work to intentional work models, organizations are reimagining offices, collaboration, and company culture...</p>
+                <p><strong>Explores:</strong> Remote vs. hybrid tradeoffs, async collaboration tools, maintaining culture, productivity insights, office design evolution, and talent implications.</p>
+            </div>
+            
+            <div class="blog-full-content">
+                <p>The pandemic permanently transformed how we work, accelerating a decade of workplace evolution into a few months. As we move beyond emergency remote work to intentional work models, organizations face fundamental questions: What is an office for? How do we maintain culture remotely? Can hybrid models deliver the best of both worlds? After years of experimentation, patterns are emerging about what works, what doesn't, and how the future of work is taking shape.</p>
+                
+                <p>Let's address the central debate: remote versus office work. Productivity data doesn't support simplistic narratives. Microsoft, GitHub, and numerous universities studied remote work outcomes. Knowledge workers maintained or improved productivity during lockdowns, with some variation by role. Engineers, writers, and analysts—whose work involves deep, focused thinking—often thrived remotely, eliminating commutes and office distractions. However, activities requiring spontaneous collaboration, onboarding, and creative brainstorming proved harder remotely. The nuanced reality: it depends on the work, the workers, and how thoughtfully the transition was managed.</p>
+                
+                <p>Remote work's benefits are substantial. Eliminating commutes saves workers 2-3 hours daily and reduces carbon emissions. Geographic constraints vanish—companies hire talent globally while workers live where they choose rather than near offices. Real estate costs drop dramatically. Work-life integration improves as people reclaim commute time for family, exercise, or hobbies. For parents, especially mothers, flexibility reduces impossible tradeoffs between career and caregiving. These advantages explain why surveys consistently show employees prefer remote or hybrid arrangements, with many willing to accept pay cuts for flexibility.</p>
+                
+                <p>However, remote work presents real challenges. Spontaneous interactions—watercooler conversations, hallway brainstorming, overhearing useful context—largely disappear. Building relationships and trust happens more slowly. Junior employees miss osmotic learning from observing experienced colleagues. Company culture becomes harder to maintain and transmit. Work-life boundaries blur when home is office. Isolation affects mental health. And let's be honest: Zoom fatigue is real—back-to-back video calls are cognitively exhausting in ways in-person meetings aren't.</p>
+                
+                <p>Hybrid models attempt combining remote work's flexibility with office benefits. Common patterns include fixed days (e.g., Tuesday-Thursday in office), team-determined schedules, or offices available as-needed without mandates. Hybrid can work beautifully: remote for focused work, office for collaboration and social connection. However, it requires intentionality. If meetings include both in-person and remote participants, the hybrid nature creates a two-tier experience where remote attendees feel like second-class participants. Companies must invest in technology (high-quality cameras, audio, digital whiteboards) and processes (documenting decisions, recording meetings) to ensure equity.</p>
+                
+                <p>Asynchronous collaboration has emerged as key to successful distributed work. Rather than requiring simultaneous participation, async approaches use written communication, recorded videos, and shared documents for coordination. Benefits include respecting different schedules and time zones, creating written records that serve as documentation, and allowing thoughtful responses rather than pressure to contribute immediately. Tools like Loom for async video, Notion for collaborative docs, and async-first Slack usage enable this. However, async collaboration requires cultural change—expectations that responses take hours or days rather than minutes, writing skills for clear communication, and trusting teammates to do work without constant visibility.</p>
+                
+                <p>Office design is evolving radically. The pre-pandemic office assumed people were there 40+ hours weekly for all activities. Post-pandemic offices will be optimized differently. Hot-desking and reservation systems replace assigned seats since people aren't there daily. Open workspaces shrink while collaboration spaces expand—if you're in the office, it should be for activities that benefit from in-person presence. Conference rooms become sophisticated video-conferencing facilities rather than just tables with projectors. Quiet spaces for focused work increase. The office becomes a tool you use intentionally for specific activities rather than a default place to be.</p>
+                
+                <p>Maintaining company culture remotely requires deliberate effort. Culture happens through repeated interactions, shared experiences, and behavioral norms. In offices, culture emerges organically. Remotely, it requires intentionality. Successful remote-first companies invest heavily in virtual social events, all-hands meetings, written values and documentation, and periodic in-person gatherings. They make culture explicit—documenting how decisions are made, how feedback is given, what behaviors are valued. They create channels for non-work interaction. They measure belonging and engagement continuously. Culture can absolutely exist remotely, but it won't happen by accident.</p>
+                
+                <p>Onboarding presents unique challenges remotely. New hires can't observe colleagues, ask spontaneous questions, or absorb context osmotically. Successful remote onboarding provides structured programs—scheduled 1-on-1s with team members, shadowing opportunities, buddy systems, comprehensive documentation. Some companies bring new hires to offices initially for intensive onboarding before transitioning to remote work. The investment required is substantial, but the alternative—new hires floundering with inadequate context—is worse.</p>
+                
+                <p>Talent implications are profound. Remote work expands talent pools dramatically but also intensifies competition. Companies can hire globally, but they also compete with employers worldwide. Geographic arbitrage—hiring talented people in lower cost-of-living areas at salaries below Silicon Valley rates but above local rates—creates mutual benefits. However, this raises questions about pay equity. Should someone doing identical work earn less because they choose to live in Kansas rather than San Francisco? Companies are still figuring out consistent philosophies here.</p>
+                
+                <p>Management requires different skills in remote environments. Proximity bias—assuming people in the office are working harder—must be actively counteracted. Output-based evaluation matters more than activity monitoring. Trust becomes essential because constant visibility is impossible. Good managers focus on outcomes, provide clear expectations, maintain regular communication, and respect boundaries between work and personal life. Bad managers install surveillance software, measure activity metrics, and create cultures of distrust that drive talent away.</p>
+                
+                <p>Looking forward, I predict increasing polarization. Some companies will commit fully to remote-first, accepting tradeoffs around spontaneous collaboration to access global talent and eliminate real estate costs. Others will require in-person presence, believing culture and innovation require face-to-face interaction. Most will land somewhere between—hybrid arrangements offering flexibility while maintaining office spaces for coordination. The key is being intentional rather than reactive, choosing an approach that fits the organization's work and values, then executing it well.</p>
+                
+                <p>Technology will continue enabling better remote work experiences. Virtual reality might eventually provide immersive collaboration spaces that feel genuinely present. AI assistants could handle meeting transcription, action item tracking, and information synthesis. Asynchronous tools will improve, making time-shifted collaboration smoother. But technology alone doesn't determine outcomes—organizational design, leadership commitment, and cultural evolution matter more.</p>
+                
+                <p>The future of work isn't about remote versus office—it's about flexibility, intentionality, and matching work models to both organizational needs and individual preferences. The pandemic forced a global experiment, and we learned remote work is viable for knowledge work. We also learned purely remote work has limitations. The organizations that thrive will be those that thoughtfully design work environments—whether physical, virtual, or hybrid—that enable their specific missions and respect their people's humanity. Work is already fundamentally different than 2019. How different it becomes depends on choices we make today.</p>
+            </div>
+            
+            <button class="read-more-btn">
+                <span class="read-more-text">Read Full Article</span>
+                <span class="read-less-text" style="display:none;">Collapse Article</span>
+            </button>
         </article>
         <!-- Repeat for each blog post -->
     </main>
 
+    <!-- FOOTER -->
     <footer>
-        <!-- Your footer here -->
+      <div class="footer-container">
+        <div class="footer-grid">
+          <!-- About Column -->
+          <div class="footer-column">
+            <h3 class="footer-heading">Nick Holmes</h3>
+            <p class="footer-desc">Full Stack Developer & AI Engineer passionate about creating innovative solutions that make a difference.</p>
+            <div class="footer-social">
+              <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="https://github.com/NickHolmes999" target="_blank" class="social-icon github" aria-label="GitHub">
+                <i class="fab fa-github"></i>
+              </a>
+              <div class="footer-social-split">
+                <div class="social-icon email split-btn" onclick="toggleFooterSplit(this, 'email')" aria-label="Email">
+                  <i class="fas fa-envelope main-icon"></i>
+                </div>
+                <div class="footer-split-options">
+                  <a href="mailto:NickHolmes2003@gmail.com" class="footer-split-option send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Send</span>
+                  </a>
+                  <div class="footer-split-option copy-btn" onclick="copyFooterContact('NickHolmes2003@gmail.com', event)">
+                    <i class="fas fa-copy"></i>
+                    <span>Copy</span>
+                  </div>
+                </div>
+              </div>
+              <div class="footer-social-split">
+                <div class="social-icon phone split-btn" onclick="toggleFooterSplit(this, 'phone')" aria-label="Phone">
+                  <i class="fas fa-phone main-icon"></i>
+                </div>
+                <div class="footer-split-options">
+                  <a href="tel:+13015005152" class="footer-split-option call-btn">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Call</span>
+                  </a>
+                  <div class="footer-split-option copy-btn" onclick="copyFooterContact('(301) 500-5152', event)">
+                    <i class="fas fa-copy"></i>
+                    <span>Copy</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Quick Links -->
+          <div class="footer-column">
+            <h3 class="footer-heading">Quick Links</h3>
+            <ul class="footer-links">
+              <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+              <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
+              <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+              <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+              <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+          </div>
+          
+          <!-- Services -->
+          <div class="footer-column">
+            <h3 class="footer-heading">Services</h3>
+            <ul class="footer-links">
+              <li><a href="interactive-showcase.html"><i class="fas fa-flask"></i> Interactive Demos</a></li>
+              <li><a href="certificates.html"><i class="fas fa-certificate"></i> Certifications</a></li>
+              <li><a href="services-faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+              <li><a href="performance-metrics.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+            </ul>
+          </div>
+          
+          <!-- Newsletter -->
+          <div class="footer-column">
+            <h3 class="footer-heading">Stay Updated</h3>
+            <p class="footer-desc">Subscribe to get updates on new projects and articles.</p>
+            <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+              <div class="newsletter-input-group">
+                <input type="email" placeholder="Your email address" required>
+                <button type="submit">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </form>
+            <p class="newsletter-note">🔒 No spam, unsubscribe anytime</p>
+          </div>
+        </div>
+        
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <p class="footer-copyright">
+            © 2025 <span class="gradient-text">Nick Holmes</span> - All rights reserved
+          </p>
+          <p class="footer-tech">
+            <i class="fas fa-code"></i> Built with HTML, CSS, JavaScript & Python
+          </p>
+        </div>
+      </div>
     </footer>
 
     <script>
-        // If you want to dynamically load posts or sort them, you'll need some JavaScript here.
+        // Newsletter handler
+        function handleNewsletter(event) {
+          event.preventDefault();
+          const email = event.target.querySelector('input[type="email"]').value;
+          
+          // Create success notification
+          const notification = document.createElement('div');
+          notification.className = 'newsletter-notification';
+          notification.innerHTML = '<i class="fas fa-check-circle"></i> Thanks for subscribing!';
+          notification.style.cssText = 'position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--success-color), var(--primary-color)); color: white; padding: 20px 30px; border-radius: 12px; font-weight: bold; z-index: 10000; animation: slideInRight 0.5s ease;';
+          
+          document.body.appendChild(notification);
+          
+          setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.5s ease';
+            setTimeout(() => notification.remove(), 500);
+          }, 3000);
+          
+          event.target.reset();
+          console.log('Newsletter subscription:', email);
+        }
+
+        // Footer Split Button Functions
+        function toggleFooterSplit(button, type) {
+          document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+            if (btn !== button) btn.classList.remove('split-active');
+          });
+          button.classList.toggle('split-active');
+          if (button.classList.contains('split-active')) {
+            setTimeout(() => {
+              document.addEventListener('click', function closeOnOutside(e) {
+                if (!e.target.closest('.footer-social-split')) {
+                  document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+                  document.removeEventListener('click', closeOnOutside);
+                }
+              });
+            }, 100);
+          }
+        }
+
+        function copyFooterContact(text, event) {
+          event.stopPropagation();
+          navigator.clipboard.writeText(text).then(() => {
+            const notification = document.createElement('div');
+            notification.className = 'footer-copy-notification';
+            notification.innerHTML = `<i class="fas fa-check-circle"></i><span>Copied: ${text}</span>`;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+              notification.style.animation = 'slideOutRight 0.5s ease';
+              setTimeout(() => notification.remove(), 500);
+            }, 2500);
+            document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+          }).catch(err => {
+            console.error('Failed to copy:', err);
+            alert('Failed to copy to clipboard');
+          });
+        }
+
+        // Toggle blog post expand/collapse
+        function toggleBlogPost(element) {
+            element.classList.toggle('expanded');
+            const readMoreText = element.querySelector('.read-more-text');
+            const readLessText = element.querySelector('.read-less-text');
+            
+            if (element.classList.contains('expanded')) {
+                readMoreText.style.display = 'none';
+                readLessText.style.display = 'inline';
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                readMoreText.style.display = 'inline';
+                readLessText.style.display = 'none';
+            }
+        }
     </script>
 
     <!-- AI Chatbot -->
@@ -205,5 +895,74 @@ Wang, Changyu, et al. “Ethical Considerations of Using CHATGPT in Health Care.
         chatbot.init();
       }
     </script>
+
+    <!-- Three.js Matrix Rain Effect -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('canvas-container');
+        if (!container) return;
+
+        const scene = new THREE.Scene();
+        // Orthographic camera for 2D feel
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 50;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Create Lines (Streams)
+        const count = 100;
+        const group = new THREE.Group();
+
+        for(let i = 0; i < count; i++) {
+            const height = Math.random() * 10 + 5;
+            const geometry = new THREE.BoxGeometry(0.2, height, 0.2);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x00d9ff,
+                transparent: true,
+                opacity: 0.3
+            });
+            const cube = new THREE.Mesh(geometry, material);
+            
+            cube.position.x = (Math.random() - 0.5) * 100;
+            cube.position.y = (Math.random() - 0.5) * 60;
+            cube.position.z = (Math.random() - 0.5) * 20;
+            
+            cube.userData = {
+                speed: Math.random() * 0.5 + 0.1
+            };
+
+            group.add(cube);
+        }
+        
+        scene.add(group);
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            group.children.forEach(cube => {
+                cube.position.y -= cube.userData.speed;
+                if(cube.position.y < -30) {
+                    cube.position.y = 30;
+                    cube.position.x = (Math.random() - 0.5) * 100;
+                }
+            });
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    });
+</script>
+
+<!-- Back to Top Button -->
+<script src="../js/back-to-top.js"></script>
 </body>
 </html>

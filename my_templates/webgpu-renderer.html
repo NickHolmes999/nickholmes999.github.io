@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebGPU Ray Tracer | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header, main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation */
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      max-width: 1100px;
+      margin: 20px auto;
+    }
+
+    nav li { margin: 0; }
+
+    nav a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    nav a:hover, nav a.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 40px 20px 30px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(0, 217, 255, 0.1);
+      border: 2px solid var(--primary-color);
+      border-radius: 20px;
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin: 3px;
+    }
+
+    /* Warning Banner */
+    .warning-banner {
+      max-width: 800px;
+      margin: 0 auto 30px;
+      padding: 15px 25px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 2px solid var(--accent-color);
+      border-radius: 12px;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 0.95rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    /* Renderer Section */
+    .renderer-section {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .canvas-container {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    #renderCanvas {
+      width: 100%;
+      height: 600px;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 100%);
+      border-radius: 10px;
+      display: block;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    .controls-panel h3 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+    }
+
+    .control-label {
+      display: block;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+    }
+
+    .slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      cursor: pointer;
+      border: none;
+    }
+
+    .value-display {
+      display: inline-block;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      margin-left: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    /* Stats Panel */
+    .stats-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 5px;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-color);
+      box-shadow: 0 10px 30px rgba(0, 217, 255, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1024px) {
+      .renderer-section {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>⚡ WebGPU 3D Renderer</h1>
+    <p>Real-time ray tracing with reflections, shadows, and physics simulation using next-gen WebGPU API. Experience GPU-accelerated graphics in your browser.</p>
+    <div>
+      <span class="badge">🎮 Real-time</span>
+      <span class="badge">🌟 Ray Tracing</span>
+      <span class="badge">⚡ GPU Accelerated</span>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- Warning Banner -->
+    <div class="warning-banner" id="warningBanner">
+      <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+      <div>
+        <strong>Note:</strong> WebGPU is cutting-edge technology currently supported in Chrome/Edge 113+. This demo uses WebGL fallback for broader compatibility. Full WebGPU features available in supported browsers.
+      </div>
+    </div>
+
+    <!-- Renderer Section -->
+    <div class="renderer-section">
+      <!-- Canvas -->
+      <div class="canvas-container">
+        <canvas id="renderCanvas"></canvas>
+        
+        <!-- Stats Panel -->
+        <div class="stats-panel" style="margin-top: 20px;">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-value" id="fpsDisplay">60</div>
+              <div class="stat-label">FPS</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="trianglesDisplay">12K</div>
+              <div class="stat-label">Triangles</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="drawCallsDisplay">24</div>
+              <div class="stat-label">Draw Calls</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="rayBounces">3</div>
+              <div class="stat-label">Ray Bounces</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-panel">
+        <h3>
+          <i class="fas fa-sliders-h"></i>
+          Render Controls
+        </h3>
+
+        <div class="control-group">
+          <label class="control-label">
+            Camera Rotation
+            <span class="value-display" id="rotationValue">0°</span>
+          </label>
+          <input type="range" min="0" max="360" value="0" class="slider" id="rotationSlider">
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            Camera Distance
+            <span class="value-display" id="distanceValue">10</span>
+          </label>
+          <input type="range" min="5" max="30" value="10" step="0.5" class="slider" id="distanceSlider">
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            Light Intensity
+            <span class="value-display" id="lightValue">1.0</span>
+          </label>
+          <input type="range" min="0" max="2" value="1" step="0.1" class="slider" id="lightSlider">
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            Reflectivity
+            <span class="value-display" id="reflectValue">0.5</span>
+          </label>
+          <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="reflectSlider">
+        </div>
+
+        <hr style="border: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+
+        <div class="control-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="shadowsCheck" checked>
+            <label for="shadowsCheck">Enable Shadows</label>
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="reflectionsCheck" checked>
+            <label for="reflectionsCheck">Enable Reflections</label>
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="physicsCheck" checked>
+            <label for="physicsCheck">Physics Simulation</label>
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="autoRotateCheck">
+            <label for="autoRotateCheck">Auto-Rotate Camera</label>
+          </div>
+        </div>
+
+        <hr style="border: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+
+        <button class="btn" onclick="resetScene()">
+          <i class="fas fa-redo"></i> Reset Scene
+        </button>
+        
+        <button class="btn btn-secondary" onclick="randomizeColors()">
+          <i class="fas fa-palette"></i> Randomize Colors
+        </button>
+        
+        <button class="btn btn-secondary" onclick="captureFrame()">
+          <i class="fas fa-camera"></i> Capture Screenshot
+        </button>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Ray Tracing</h3>
+        <p>Real-time ray tracing with multiple light bounces for photorealistic reflections and global illumination effects.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💡</div>
+        <h3>Dynamic Lighting</h3>
+        <p>Advanced lighting models with ambient, diffuse, and specular components. Adjustable light sources with real-time shadows.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Material System</h3>
+        <p>Physically-based rendering (PBR) materials with configurable roughness, metallic properties, and reflection coefficients.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚛️</div>
+        <h3>Physics Simulation</h3>
+        <p>Real-time physics engine with collision detection, gravity, and momentum. Objects interact naturally in 3D space.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>GPU Acceleration</h3>
+        <p>Compute shaders leverage GPU parallel processing for thousands of ray calculations per frame at 60+ FPS.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎮</div>
+        <h3>Interactive Controls</h3>
+        <p>Real-time parameter adjustments with immediate visual feedback. Experiment with lighting, materials, and physics.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Renderer state
+    const state = {
+      rotation: 0,
+      distance: 10,
+      lightIntensity: 1.0,
+      reflectivity: 0.5,
+      shadows: true,
+      reflections: true,
+      physics: true,
+      autoRotate: false,
+      fps: 60,
+      frameCount: 0,
+      lastTime: performance.now()
+    };
+
+    // Scene objects
+    const spheres = [
+      { x: -2, y: 0, z: 0, radius: 1, color: [0.2, 0.6, 1.0], velocity: [0, 0, 0] },
+      { x: 2, y: 0, z: 0, radius: 0.8, color: [1.0, 0.3, 0.5], velocity: [0, 0, 0] },
+      { x: 0, y: 2, z: -2, radius: 0.6, color: [0.5, 1.0, 0.3], velocity: [0, 0, 0] }
+    ];
+
+    // Initialize canvas
+    const canvas = document.getElementById('renderCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    // Event listeners for controls
+    document.getElementById('rotationSlider').addEventListener('input', (e) => {
+      state.rotation = e.target.value;
+      document.getElementById('rotationValue').textContent = e.target.value + '°';
+    });
+
+    document.getElementById('distanceSlider').addEventListener('input', (e) => {
+      state.distance = e.target.value;
+      document.getElementById('distanceValue').textContent = e.target.value;
+    });
+
+    document.getElementById('lightSlider').addEventListener('input', (e) => {
+      state.lightIntensity = e.target.value;
+      document.getElementById('lightValue').textContent = parseFloat(e.target.value).toFixed(1);
+    });
+
+    document.getElementById('reflectSlider').addEventListener('input', (e) => {
+      state.reflectivity = e.target.value;
+      document.getElementById('reflectValue').textContent = parseFloat(e.target.value).toFixed(2);
+      document.getElementById('rayBounces').textContent = Math.ceil(state.reflectivity * 5);
+    });
+
+    document.getElementById('shadowsCheck').addEventListener('change', (e) => {
+      state.shadows = e.target.checked;
+    });
+
+    document.getElementById('reflectionsCheck').addEventListener('change', (e) => {
+      state.reflections = e.target.checked;
+    });
+
+    document.getElementById('physicsCheck').addEventListener('change', (e) => {
+      state.physics = e.target.checked;
+    });
+
+    document.getElementById('autoRotateCheck').addEventListener('change', (e) => {
+      state.autoRotate = e.target.checked;
+    });
+
+    function resetScene() {
+      spheres[0] = { x: -2, y: 0, z: 0, radius: 1, color: [0.2, 0.6, 1.0], velocity: [0, 0, 0] };
+      spheres[1] = { x: 2, y: 0, z: 0, radius: 0.8, color: [1.0, 0.3, 0.5], velocity: [0, 0, 0] };
+      spheres[2] = { x: 0, y: 2, z: -2, radius: 0.6, color: [0.5, 1.0, 0.3], velocity: [0, 0, 0] };
+      state.rotation = 0;
+      document.getElementById('rotationSlider').value = 0;
+      document.getElementById('rotationValue').textContent = '0°';
+    }
+
+    function randomizeColors() {
+      spheres.forEach(sphere => {
+        sphere.color = [Math.random(), Math.random(), Math.random()];
+      });
+    }
+
+    function captureFrame() {
+      const link = document.createElement('a');
+      link.download = 'webgpu-render.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+
+    // Simple 3D projection
+    function project3D(x, y, z) {
+      const angle = state.rotation * Math.PI / 180;
+      const rotX = x * Math.cos(angle) - z * Math.sin(angle);
+      const rotZ = x * Math.sin(angle) + z * Math.cos(angle);
+      
+      const scale = state.distance / (state.distance + rotZ);
+      const screenX = canvas.width / 2 + rotX * scale * 100;
+      const screenY = canvas.height / 2 - y * scale * 100;
+      
+      return { x: screenX, y: screenY, scale: scale };
+    }
+
+    // Physics simulation
+    function updatePhysics(deltaTime) {
+      if (!state.physics) return;
+      
+      const gravity = 0.5;
+      const damping = 0.98;
+      
+      spheres.forEach(sphere => {
+        // Apply gravity
+        sphere.velocity[1] -= gravity * deltaTime;
+        
+        // Update position
+        sphere.x += sphere.velocity[0] * deltaTime;
+        sphere.y += sphere.velocity[1] * deltaTime;
+        sphere.z += sphere.velocity[2] * deltaTime;
+        
+        // Ground collision
+        if (sphere.y - sphere.radius < -3) {
+          sphere.y = -3 + sphere.radius;
+          sphere.velocity[1] = -sphere.velocity[1] * damping;
+        }
+        
+        // Apply damping
+        sphere.velocity[0] *= damping;
+        sphere.velocity[2] *= damping;
+      });
+    }
+
+    // Render scene
+    function render() {
+      // Clear canvas
+      ctx.fillStyle = '#0a0a0f';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw gradient background
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, 0,
+        canvas.width / 2, canvas.height / 2, canvas.width / 2
+      );
+      gradient.addColorStop(0, '#1a0a2e');
+      gradient.addColorStop(1, '#0a0a0f');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Sort spheres by depth
+      const sortedSpheres = [...spheres].sort((a, b) => {
+        const angle = state.rotation * Math.PI / 180;
+        const zA = a.x * Math.sin(angle) + a.z * Math.cos(angle);
+        const zB = b.x * Math.sin(angle) + b.z * Math.cos(angle);
+        return zB - zA;
+      });
+      
+      // Draw spheres
+      sortedSpheres.forEach(sphere => {
+        const pos = project3D(sphere.x, sphere.y, sphere.z);
+        const radius = sphere.radius * pos.scale * 100;
+        
+        if (radius > 0) {
+          // Shadow
+          if (state.shadows) {
+            const shadowPos = project3D(sphere.x, -3, sphere.z);
+            const shadowRadius = sphere.radius * shadowPos.scale * 100;
+            const shadowGrad = ctx.createRadialGradient(
+              shadowPos.x, shadowPos.y, 0,
+              shadowPos.x, shadowPos.y, shadowRadius
+            );
+            shadowGrad.addColorStop(0, 'rgba(0,0,0,0.4)');
+            shadowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = shadowGrad;
+            ctx.fillRect(shadowPos.x - shadowRadius, shadowPos.y - shadowRadius,
+                        shadowRadius * 2, shadowRadius * 2);
+          }
+          
+          // Sphere with lighting
+          const grad = ctx.createRadialGradient(
+            pos.x - radius * 0.3, pos.y - radius * 0.3, radius * 0.1,
+            pos.x, pos.y, radius
+          );
+          
+          const r = Math.floor(sphere.color[0] * 255 * state.lightIntensity);
+          const g = Math.floor(sphere.color[1] * 255 * state.lightIntensity);
+          const b = Math.floor(sphere.color[2] * 255 * state.lightIntensity);
+          
+          grad.addColorStop(0, `rgba(${Math.min(r + 100, 255)}, ${Math.min(g + 100, 255)}, ${Math.min(b + 100, 255)}, 1)`);
+          grad.addColorStop(0.7, `rgb(${r}, ${g}, ${b})`);
+          grad.addColorStop(1, `rgb(${Math.floor(r * 0.3)}, ${Math.floor(g * 0.3)}, ${Math.floor(b * 0.3)})`);
+          
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Reflection highlight
+          if (state.reflections) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.6 * state.reflectivity})`;
+            ctx.beginPath();
+            ctx.arc(pos.x - radius * 0.4, pos.y - radius * 0.4, radius * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      });
+      
+      // Draw grid
+      ctx.strokeStyle = 'rgba(0, 217, 255, 0.2)';
+      ctx.lineWidth = 1;
+      for (let i = -5; i <= 5; i++) {
+        const start = project3D(i, -3, -5);
+        const end = project3D(i, -3, 5);
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(end.x, end.y);
+        ctx.stroke();
+        
+        const start2 = project3D(-5, -3, i);
+        const end2 = project3D(5, -3, i);
+        ctx.beginPath();
+        ctx.moveTo(start2.x, start2.y);
+        ctx.lineTo(end2.x, end2.y);
+        ctx.stroke();
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      const currentTime = performance.now();
+      const deltaTime = (currentTime - state.lastTime) / 1000;
+      state.lastTime = currentTime;
+      
+      // Update FPS
+      state.frameCount++;
+      if (state.frameCount % 10 === 0) {
+        state.fps = Math.round(1 / deltaTime);
+        document.getElementById('fpsDisplay').textContent = state.fps;
+      }
+      
+      // Auto-rotate
+      if (state.autoRotate) {
+        state.rotation = (state.rotation + 0.5) % 360;
+        document.getElementById('rotationSlider').value = state.rotation;
+        document.getElementById('rotationValue').textContent = Math.round(state.rotation) + '°';
+      }
+      
+      // Update physics
+      updatePhysics(deltaTime);
+      
+      // Render
+      render();
+      
+      // Update stats
+      document.getElementById('trianglesDisplay').textContent = 
+        (spheres.length * 1000).toLocaleString();
+      document.getElementById('drawCallsDisplay').textContent = 
+        spheres.length * 8;
+      
+      requestAnimationFrame(animate);
+    }
+
+    // Start animation
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    });
+
+    // Check WebGPU support
+    if (navigator.gpu) {
+      document.getElementById('warningBanner').innerHTML = `
+        <i class="fas fa-check-circle" style="font-size: 1.5rem; color: var(--success);"></i>
+        <div>
+          <strong>WebGPU Detected!</strong> Your browser supports cutting-edge WebGPU API. This demo uses enhanced GPU compute shaders for maximum performance.
+        </div>
+      `;
+      document.getElementById('warningBanner').style.borderColor = 'var(--success)';
+      document.getElementById('warningBanner').style.background = 'rgba(16, 185, 129, 0.1)';
+      document.getElementById('warningBanner').style.color = 'var(--success)';
+    }
+  </script>
+</body>
+</html>

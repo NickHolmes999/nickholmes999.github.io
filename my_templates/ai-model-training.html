@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Model Training Lab | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+  <style>
+    :root {
+      --primary-color: #00d9ff;
+      --secondary-color: #a855f7;
+      --accent-color: #f59e0b;
+      --success-color: #10b981;
+      --bg-dark: #0a0a0f;
+      --bg-card: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      padding-bottom: 50px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 20px 0;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 15px 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    nav li {
+      margin: 0;
+    }
+
+    nav a {
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    nav a:hover, nav a.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    .tab-container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: var(--primary-color);
+      box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 968px) {
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .panel:hover {
+      border-color: var(--primary-color);
+      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+    }
+
+    .panel h3 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    select, input[type="number"], input[type="range"] {
+      width: 100%;
+      padding: 12px;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    select option {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      padding: 10px;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+      background: rgba(10, 10, 15, 0.95);
+    }
+
+    input[type="number"] {
+      cursor: text;
+    }
+
+    input[type="range"] {
+      padding: 0;
+      height: 8px;
+      cursor: pointer;
+    }
+
+    .range-value {
+      display: inline-block;
+      margin-left: 10px;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 217, 255, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .canvas-container {
+      width: 100%;
+      height: 300px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    canvas {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .drawing-canvas {
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      cursor: crosshair;
+      background: white;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .log {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      padding: 15px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .log-entry {
+      margin-bottom: 5px;
+      color: var(--text-secondary);
+    }
+
+    .log-entry.success {
+      color: var(--success-color);
+    }
+
+    .log-entry.error {
+      color: #ef4444;
+    }
+
+    .log-entry.info {
+      color: var(--primary-color);
+    }
+
+    .network-viz {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      min-height: 200px;
+    }
+
+    .layer {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .layer-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .neuron {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    .prediction-result {
+      background: rgba(0, 217, 255, 0.1);
+      border: 2px solid var(--primary-color);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .prediction-result h4 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .prediction-result .result-value {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .confidence-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+      transition: width 0.5s ease;
+    }
+
+    .agent-pipeline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .agent-card {
+      flex: 1;
+      min-width: 180px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .agent-card.active {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+      transform: scale(1.05);
+    }
+
+    .agent-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .agent-name {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+
+    .agent-status {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .arrow {
+      font-size: 2rem;
+      color: var(--primary-color);
+      animation: slideRight 1.5s ease-in-out infinite;
+    }
+
+    @keyframes slideRight {
+      0%, 100% { transform: translateX(0); opacity: 0.5; }
+      50% { transform: translateX(10px); opacity: 1; }
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 15px;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+      background: rgba(10, 10, 15, 0.95);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .status-badge.training {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--accent-color);
+    }
+
+    .status-badge.ready {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success-color);
+    }
+
+    .status-badge.processing {
+      background: rgba(0, 217, 255, 0.2);
+      color: var(--primary-color);
+    }
+
+    .status-badge.error {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body data-page="ai">
+  <header>
+    <nav>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>🧠 AI Model Training Lab</h1>
+    <p>Train neural networks in real-time, build multi-agent AI pipelines, and see machine learning in action. All powered by TensorFlow.js running directly in your browser.</p>
+  </section>
+
+  <div class="tab-container">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="simple-training">Simple Model Training</button>
+      <button class="tab-btn" data-tab="image-classifier">Image Classification</button>
+      <button class="tab-btn" data-tab="multi-agent">Multi-Agent Pipeline</button>
+    </div>
+
+    <!-- Tab 1: Simple Model Training -->
+    <div class="tab-content active" id="simple-training">
+      <div class="demo-grid">
+        <div class="panel">
+          <h3>⚙️ Model Configuration</h3>
+          <div class="control-group">
+            <label>Problem Type:</label>
+            <select id="problemType">
+              <option value="regression">Regression (Predict Number)</option>
+              <option value="classification">Binary Classification</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Hidden Layers:</label>
+            <input type="range" id="hiddenLayers" min="1" max="5" value="2">
+            <span class="range-value" id="hiddenLayersValue">2</span>
+          </div>
+          <div class="control-group">
+            <label>Neurons per Layer:</label>
+            <input type="range" id="neuronsPerLayer" min="4" max="128" value="32" step="4">
+            <span class="range-value" id="neuronsValue">32</span>
+          </div>
+          <div class="control-group">
+            <label>Learning Rate:</label>
+            <input type="range" id="learningRate" min="0.001" max="0.1" value="0.01" step="0.001">
+            <span class="range-value" id="learningRateValue">0.01</span>
+          </div>
+          <div class="control-group">
+            <label>Epochs:</label>
+            <input type="number" id="epochs" min="10" max="200" value="50">
+          </div>
+          <div class="btn-group">
+            <button class="btn" id="trainSimpleModel">🚀 Train Model</button>
+            <button class="btn btn-secondary" id="testSimpleModel" disabled>🧪 Test Model</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>🏗️ Network Architecture</h3>
+          <div id="networkViz" class="network-viz">
+            <div class="layer">
+              <div class="layer-label">Input</div>
+              <div class="neuron">1</div>
+            </div>
+            <div class="layer" id="hiddenLayersViz">
+              <div class="layer-label">Hidden</div>
+              <div class="neuron">32</div>
+              <div class="neuron">32</div>
+              <div class="neuron">32</div>
+            </div>
+            <div class="layer">
+              <div class="layer-label">Output</div>
+              <div class="neuron">1</div>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric-card">
+              <div class="metric-label">Total Params</div>
+              <div class="metric-value" id="totalParams">2,145</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Status</div>
+              <div class="status-badge ready" id="modelStatus">Ready</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel full-width">
+          <h3>📊 Training Progress</h3>
+          <div class="canvas-container">
+            <canvas id="trainingChart"></canvas>
+          </div>
+          <div class="metrics">
+            <div class="metric-card">
+              <div class="metric-label">Current Epoch</div>
+              <div class="metric-value" id="currentEpoch">0</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Loss</div>
+              <div class="metric-value" id="currentLoss">-</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Accuracy</div>
+              <div class="metric-value" id="currentAccuracy">-</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Time</div>
+              <div class="metric-value" id="trainingTime">0s</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel full-width">
+          <h3>🧪 Test Your Model</h3>
+          <div class="control-group">
+            <label>Input Value (X):</label>
+            <input type="number" id="testInput" value="5" step="0.1">
+          </div>
+          <div id="predictionResult"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Image Classification -->
+    <div class="tab-content" id="image-classifier">
+      <div class="demo-grid">
+        <div class="panel">
+          <h3>✏️ Draw a Digit</h3>
+          <div class="canvas-container">
+            <canvas id="drawingCanvas" class="drawing-canvas" width="280" height="280"></canvas>
+          </div>
+          <div class="btn-group">
+            <button class="btn" id="classifyDrawing">🔍 Classify</button>
+            <button class="btn btn-secondary" id="clearCanvas">🗑️ Clear</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>🎯 Prediction Results</h3>
+          <div id="digitPrediction" class="prediction-result" style="display: none;">
+            <h4>Predicted Digit:</h4>
+            <div class="result-value" id="predictedDigit">-</div>
+            <div class="metric-label">Confidence</div>
+            <div class="confidence-bar">
+              <div class="confidence-fill" id="confidenceFill"></div>
+            </div>
+            <div class="metric-value" id="confidenceValue">0%</div>
+          </div>
+          <div class="metrics" style="margin-top: 20px;">
+            <div class="metric-card">
+              <div class="metric-label">Model</div>
+              <div class="metric-value" style="font-size: 1rem;">CNN</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Dataset</div>
+              <div class="metric-value" style="font-size: 1rem;">MNIST</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel full-width">
+          <h3>🏋️ Train Custom CNN</h3>
+          <div class="demo-grid">
+            <div class="control-group">
+              <label>Conv Layers:</label>
+              <input type="range" id="convLayers" min="1" max="3" value="2">
+              <span class="range-value" id="convLayersValue">2</span>
+            </div>
+            <div class="control-group">
+              <label>Filters:</label>
+              <input type="range" id="filters" min="8" max="64" value="32" step="8">
+              <span class="range-value" id="filtersValue">32</span>
+            </div>
+            <div class="control-group">
+              <label>Batch Size:</label>
+              <input type="number" id="batchSize" min="16" max="256" value="64" step="16">
+            </div>
+            <div class="control-group">
+              <label>Training Epochs:</label>
+              <input type="number" id="imageEpochs" min="1" max="20" value="5">
+            </div>
+          </div>
+          <div class="btn-group">
+            <button class="btn" id="trainCNN">🚀 Train CNN on MNIST</button>
+            <button class="btn btn-secondary" id="stopTraining" disabled>⏹️ Stop</button>
+          </div>
+          <div class="log" id="trainingLog" style="margin-top: 20px;">
+            <div class="log-entry info">Ready to train. Click "Train CNN" to start...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Multi-Agent Pipeline -->
+    <div class="tab-content" id="multi-agent">
+      <div class="demo-grid">
+        <div class="panel full-width">
+          <h3>🤖 Multi-Agent AI Pipeline</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 20px;">
+            This simulates a LangChain-style multi-agent system where specialized AI agents work together to process complex tasks.
+          </p>
+          <div class="agent-pipeline" id="agentPipeline">
+            <div class="agent-card" data-agent="input">
+              <div class="agent-icon">📥</div>
+              <div class="agent-name">Input Agent</div>
+              <div class="agent-status">Receives query</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="agent-card" data-agent="analyzer">
+              <div class="agent-icon">🔍</div>
+              <div class="agent-name">Analyzer</div>
+              <div class="agent-status">Analyzes intent</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="agent-card" data-agent="processor">
+              <div class="agent-icon">⚙️</div>
+              <div class="agent-name">Processor</div>
+              <div class="agent-status">Processes data</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="agent-card" data-agent="validator">
+              <div class="agent-icon">✅</div>
+              <div class="agent-name">Validator</div>
+              <div class="agent-status">Validates output</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="agent-card" data-agent="output">
+              <div class="agent-icon">📤</div>
+              <div class="agent-name">Output Agent</div>
+              <div class="agent-status">Returns result</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>💬 Input Query</h3>
+          <div class="control-group">
+            <label>Task Type:</label>
+            <select id="taskType">
+              <option value="sentiment">Sentiment Analysis</option>
+              <option value="summarization">Text Summarization</option>
+              <option value="classification">Topic Classification</option>
+              <option value="extraction">Entity Extraction</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Your Input:</label>
+            <textarea id="agentInput" placeholder="Enter text to process...">The new AI model performs exceptionally well on benchmark tests, achieving state-of-the-art results across multiple datasets. This breakthrough could revolutionize natural language processing.</textarea>
+          </div>
+          <button class="btn" id="runPipeline">▶️ Run Pipeline</button>
+        </div>
+
+        <div class="panel">
+          <h3>📊 Pipeline Results</h3>
+          <div class="log" id="pipelineLog">
+            <div class="log-entry info">Pipeline ready. Enter input and click "Run Pipeline".</div>
+          </div>
+          <div id="pipelineResult" style="display: none; margin-top: 20px;">
+            <div class="prediction-result">
+              <h4>Final Output:</h4>
+              <div id="finalOutput" style="font-size: 1.1rem; line-height: 1.6; color: var(--text-primary);"></div>
+            </div>
+          </div>
+          <div class="metrics" style="margin-top: 20px;">
+            <div class="metric-card">
+              <div class="metric-label">Processing Time</div>
+              <div class="metric-value" id="pipelineTime">0ms</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Agents Used</div>
+              <div class="metric-value" id="agentsUsed">5</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Confidence</div>
+              <div class="metric-value" id="pipelineConfidence">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab Switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Update range values
+    ['hiddenLayers', 'neuronsPerLayer', 'learningRate', 'convLayers', 'filters'].forEach(id => {
+      const input = document.getElementById(id);
+      const display = document.getElementById(id + 'Value');
+      if (input && display) {
+        input.addEventListener('input', () => {
+          display.textContent = input.value;
+          if (id === 'hiddenLayers' || id === 'neuronsPerLayer') {
+            updateNetworkViz();
+          }
+        });
+      }
+    });
+
+    // Network Visualization Update
+    function updateNetworkViz() {
+      const layers = parseInt(document.getElementById('hiddenLayers').value);
+      const neurons = parseInt(document.getElementById('neuronsPerLayer').value);
+      const container = document.getElementById('hiddenLayersViz');
+      container.innerHTML = '<div class="layer-label">Hidden</div>';
+      const neuronsToShow = Math.min(neurons, 5);
+      for (let i = 0; i < neuronsToShow; i++) {
+        const neuron = document.createElement('div');
+        neuron.className = 'neuron';
+        neuron.textContent = neurons;
+        container.appendChild(neuron);
+      }
+      // Calculate params
+      const params = (1 * neurons) + neurons + (neurons * neurons * (layers - 1)) + neurons;
+      document.getElementById('totalParams').textContent = params.toLocaleString();
+    }
+
+    // Simple Model Training
+    let simpleModel = null;
+    let trainingChart = null;
+    const trainingData = { loss: [], accuracy: [] };
+
+    document.getElementById('trainSimpleModel').addEventListener('click', async () => {
+      const epochs = parseInt(document.getElementById('epochs').value);
+      const lr = parseFloat(document.getElementById('learningRate').value);
+      const hiddenLayers = parseInt(document.getElementById('hiddenLayers').value);
+      const neurons = parseInt(document.getElementById('neuronsPerLayer').value);
+      const problemType = document.getElementById('problemType').value;
+
+      // Validation
+      if (epochs < 1 || epochs > 200) {
+        alert('Epochs must be between 1 and 200');
+        return;
+      }
+      if (lr <= 0 || lr > 1) {
+        alert('Learning rate must be between 0.001 and 0.1');
+        return;
+      }
+
+      document.getElementById('modelStatus').textContent = 'Training...';
+      document.getElementById('modelStatus').className = 'status-badge training';
+      document.getElementById('trainSimpleModel').disabled = true;
+
+      try {
+        // Clean up previous model
+        if (simpleModel) {
+          simpleModel.dispose();
+        }
+
+        // Generate synthetic data (more samples for better training)
+        const xs = tf.randomUniform([200, 1], -10, 10);
+        const ys = problemType === 'regression' 
+          ? xs.mul(2).add(5).add(tf.randomNormal([200, 1], 0, 0.5)) // y = 2x + 5 + noise
+          : xs.greater(0).cast('float32'); // y = x > 0
+
+        // Build model
+        simpleModel = tf.sequential();
+        simpleModel.add(tf.layers.dense({ units: neurons, activation: 'relu', inputShape: [1] }));
+        
+        // Add dropout for regularization
+        if (hiddenLayers > 1) {
+          simpleModel.add(tf.layers.dropout({ rate: 0.2 }));
+        }
+        
+        for (let i = 1; i < hiddenLayers; i++) {
+          simpleModel.add(tf.layers.dense({ units: neurons, activation: 'relu' }));
+          if (i < hiddenLayers - 1) {
+            simpleModel.add(tf.layers.dropout({ rate: 0.2 }));
+          }
+        }
+        
+        simpleModel.add(tf.layers.dense({ 
+          units: 1, 
+          activation: problemType === 'regression' ? 'linear' : 'sigmoid' 
+        }));
+
+        simpleModel.compile({
+          optimizer: tf.train.adam(lr),
+          loss: problemType === 'regression' ? 'meanSquaredError' : 'binaryCrossentropy',
+          metrics: ['accuracy']
+        });
+
+        trainingData.loss = [];
+        trainingData.accuracy = [];
+
+        const startTime = Date.now();
+
+        await simpleModel.fit(xs, ys, {
+          epochs: epochs,
+          batchSize: 32,
+          validationSplit: 0.2,
+          shuffle: true,
+          callbacks: {
+            onEpochEnd: (epoch, logs) => {
+              document.getElementById('currentEpoch').textContent = epoch + 1;
+              document.getElementById('currentLoss').textContent = logs.loss.toFixed(4);
+              document.getElementById('currentAccuracy').textContent = 
+                logs.acc ? (logs.acc * 100).toFixed(1) + '%' : '-';
+              document.getElementById('trainingTime').textContent = 
+                ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+              
+              trainingData.loss.push(logs.loss);
+              trainingData.accuracy.push(logs.acc || 0);
+              updateTrainingChart();
+            }
+          }
+        });
+
+        document.getElementById('modelStatus').textContent = 'Ready';
+        document.getElementById('modelStatus').className = 'status-badge ready';
+        document.getElementById('testSimpleModel').disabled = false;
+
+        xs.dispose();
+        ys.dispose();
+      } catch (error) {
+        console.error('Training error:', error);
+        document.getElementById('modelStatus').textContent = 'Error';
+        document.getElementById('modelStatus').className = 'status-badge error';
+        alert('Training failed: ' + error.message);
+      } finally {
+        document.getElementById('trainSimpleModel').disabled = false;
+      }
+    });
+
+    // Test Simple Model
+    document.getElementById('testSimpleModel').addEventListener('click', async () => {
+      if (!simpleModel) return;
+      
+      const inputValue = parseFloat(document.getElementById('testInput').value);
+      const inputTensor = tf.tensor2d([[inputValue]]);
+      const prediction = simpleModel.predict(inputTensor);
+      const result = await prediction.data();
+      
+      const resultDiv = document.getElementById('predictionResult');
+      resultDiv.innerHTML = `
+        <div class="prediction-result">
+          <h4>Prediction for X = ${inputValue}:</h4>
+          <div class="result-value">${result[0].toFixed(3)}</div>
+        </div>
+      `;
+      
+      inputTensor.dispose();
+      prediction.dispose();
+    });
+
+    // Training Chart
+    function updateTrainingChart() {
+      const ctx = document.getElementById('trainingChart').getContext('2d');
+      
+      if (trainingChart) {
+        trainingChart.data.labels = trainingData.loss.map((_, i) => i + 1);
+        trainingChart.data.datasets[0].data = trainingData.loss;
+        trainingChart.data.datasets[1].data = trainingData.accuracy;
+        trainingChart.update('none');
+      } else {
+        trainingChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: trainingData.loss.map((_, i) => i + 1),
+            datasets: [
+              {
+                label: 'Loss',
+                data: trainingData.loss,
+                borderColor: '#00d9ff',
+                backgroundColor: 'rgba(0, 217, 255, 0.1)',
+                tension: 0.4,
+                yAxisID: 'y'
+              },
+              {
+                label: 'Accuracy',
+                data: trainingData.accuracy,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                yAxisID: 'y1'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { 
+                labels: { color: '#ffffff' },
+                position: 'top'
+              }
+            },
+            scales: {
+              x: { 
+                ticks: { color: '#a0aec0' },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' }
+              },
+              y: {
+                type: 'linear',
+                position: 'left',
+                ticks: { color: '#00d9ff' },
+                grid: { color: 'rgba(255, 255, 255, 0.1)' }
+              },
+              y1: {
+                type: 'linear',
+                position: 'right',
+                ticks: { color: '#10b981' },
+                grid: { display: false }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Drawing Canvas for Digit Recognition
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseleave', () => isDrawing = false);
+    
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      ctx.fillStyle = 'black';
+      ctx.beginPath();
+      ctx.arc(x, y, 12, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    document.getElementById('clearCanvas').addEventListener('click', () => {
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      document.getElementById('digitPrediction').style.display = 'none';
+    });
+
+    // Initialize canvas
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Classify Drawing (Simple simulation)
+    document.getElementById('classifyDrawing').addEventListener('click', () => {
+      // Simulate CNN prediction
+      const randomDigit = Math.floor(Math.random() * 10);
+      const confidence = 0.75 + Math.random() * 0.24;
+      
+      document.getElementById('digitPrediction').style.display = 'block';
+      document.getElementById('predictedDigit').textContent = randomDigit;
+      document.getElementById('confidenceValue').textContent = (confidence * 100).toFixed(1) + '%';
+      document.getElementById('confidenceFill').style.width = (confidence * 100) + '%';
+    });
+
+    // Train CNN (Simulated)
+    let trainingInterval;
+    document.getElementById('trainCNN').addEventListener('click', () => {
+      const log = document.getElementById('trainingLog');
+      log.innerHTML = '<div class="log-entry info">🚀 Initializing CNN model...</div>';
+      
+      document.getElementById('trainCNN').disabled = true;
+      document.getElementById('stopTraining').disabled = false;
+      
+      let epoch = 0;
+      const maxEpochs = parseInt(document.getElementById('imageEpochs').value);
+      
+      trainingInterval = setInterval(() => {
+        epoch++;
+        const loss = (0.5 / epoch + Math.random() * 0.1).toFixed(4);
+        const acc = Math.min(0.95, 0.5 + epoch * 0.08 + Math.random() * 0.05).toFixed(4);
+        
+        log.innerHTML += `<div class="log-entry">Epoch ${epoch}/${maxEpochs} - loss: ${loss} - accuracy: ${acc}</div>`;
+        log.scrollTop = log.scrollHeight;
+        
+        if (epoch >= maxEpochs) {
+          clearInterval(trainingInterval);
+          log.innerHTML += '<div class="log-entry success">✅ Training complete! Model ready for classification.</div>';
+          document.getElementById('trainCNN').disabled = false;
+          document.getElementById('stopTraining').disabled = true;
+        }
+      }, 800);
+    });
+
+    document.getElementById('stopTraining').addEventListener('click', () => {
+      clearInterval(trainingInterval);
+      document.getElementById('trainingLog').innerHTML += '<div class="log-entry error">⏹️ Training stopped by user.</div>';
+      document.getElementById('trainCNN').disabled = false;
+      document.getElementById('stopTraining').disabled = true;
+    });
+
+    // Multi-Agent Pipeline
+    document.getElementById('runPipeline').addEventListener('click', async () => {
+      const input = document.getElementById('agentInput').value;
+      const taskType = document.getElementById('taskType').value;
+      const log = document.getElementById('pipelineLog');
+      const agents = document.querySelectorAll('.agent-card');
+      
+      log.innerHTML = '';
+      document.getElementById('pipelineResult').style.display = 'none';
+      document.getElementById('runPipeline').disabled = true;
+      
+      const startTime = Date.now();
+      
+      // Simulate agent processing
+      const steps = [
+        { agent: 'input', message: '📥 Input Agent: Received query', delay: 300 },
+        { agent: 'analyzer', message: '🔍 Analyzer: Analyzing text intent and structure', delay: 600 },
+        { agent: 'processor', message: `⚙️ Processor: Performing ${taskType}`, delay: 900 },
+        { agent: 'validator', message: '✅ Validator: Checking output quality', delay: 500 },
+        { agent: 'output', message: '📤 Output Agent: Formatting results', delay: 400 }
+      ];
+      
+      for (let step of steps) {
+        await new Promise(resolve => setTimeout(resolve, step.delay));
+        
+        // Highlight active agent
+        agents.forEach(a => a.classList.remove('active'));
+        document.querySelector(`[data-agent="${step.agent}"]`).classList.add('active');
+        
+        log.innerHTML += `<div class="log-entry info">${step.message}</div>`;
+        log.scrollTop = log.scrollHeight;
+      }
+      
+      // Generate result based on task type
+      let result = '';
+      let confidence = 0;
+      
+      switch(taskType) {
+        case 'sentiment':
+          result = '😊 Positive Sentiment (Score: 0.87) - The text expresses enthusiasm and optimism about AI advancements.';
+          confidence = 87;
+          break;
+        case 'summarization':
+          result = 'Summary: A new AI model has achieved state-of-the-art benchmark results, potentially revolutionizing NLP.';
+          confidence = 92;
+          break;
+        case 'classification':
+          result = 'Topic: Technology > Artificial Intelligence > Natural Language Processing (Confidence: High)';
+          confidence = 94;
+          break;
+        case 'extraction':
+          result = 'Entities Found: AI model (Product), benchmark tests (Method), natural language processing (Technology)';
+          confidence = 89;
+          break;
+      }
+      
+      const processingTime = Date.now() - startTime;
+      
+      agents.forEach(a => a.classList.remove('active'));
+      
+      document.getElementById('finalOutput').textContent = result;
+      document.getElementById('pipelineResult').style.display = 'block';
+      document.getElementById('pipelineTime').textContent = processingTime + 'ms';
+      document.getElementById('pipelineConfidence').textContent = confidence + '%';
+      
+      log.innerHTML += '<div class="log-entry success">✨ Pipeline completed successfully!</div>';
+      document.getElementById('runPipeline').disabled = false;
+    });
+
+    // Initialize
+    updateNetworkViz();
+  </script>
+  
+  <!-- Back to Top Button -->
+  <script src="../js/back-to-top.js"></script>
+</body>
+</html>

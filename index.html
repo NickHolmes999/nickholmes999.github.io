@@ -2,27 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Nick Holmes | Full Stack Developer Portfolio</title>
+  <title>Nick Holmes | Full Stack Developer & AI Engineer Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Nick Holmes - Full Stack Developer, AI Engineer, and Software Developer Portfolio">
+  <meta name="description" content="Full Stack Developer & AI Engineer specializing in Machine Learning, Cloud Architecture, and Modern Web Development. Explore interactive demos, AI projects, and cutting-edge solutions.">
+  <meta name="keywords" content="Full Stack Developer, AI Engineer, Machine Learning, TensorFlow, React, Python, Cloud Architecture, Web Development, Portfolio">
+  <meta name="author" content="Nick Holmes">
+  
+  <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
+  <meta property="og:title" content="Nick Holmes | Full Stack Developer & AI Engineer">
+  <meta property="og:description" content="Explore my portfolio featuring advanced AI demos, interactive projects, and full-stack development expertise.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nickholmes999.github.io">
+  <meta property="og:image" content="https://nickholmes999.github.io/img/portfolio-preview.png">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nick Holmes | Full Stack Developer & AI Engineer">
+  <meta name="twitter:description" content="Explore my portfolio featuring advanced AI demos, interactive projects, and full-stack development expertise.">
+  <meta name="twitter:image" content="https://nickholmes999.github.io/img/portfolio-preview.png">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#00d9ff">
 
   <!-- Main styles -->
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 
   <!-- Font Awesome (for icons) -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    integrity="sha384-k6RqeWecC7o/muK72M6FazRvz8gXpCMLNV9H/1xIKz9vI4MqzV0n8JLpfaN9lFhJ"
-    crossorigin="anonymous"
-  >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <!-- Google Fonts for better typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Three.js for 3D Backgrounds -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Chart.js for Radar Chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <style>
+    /* Three.js Background Container */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3; /* Subtle background */
+      pointer-events: none;
+    }
+
     /* ===== CSS Variables for Easy Theming ===== */
     :root {
       --primary-color: #00d9ff;
@@ -95,45 +126,47 @@
     nav ul {
       list-style: none;
       display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
       margin: 0;
-      padding: 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      max-width: 1100px;
+      margin: 20px auto;
     }
     nav li {
-      margin-right: 20px;
-    }
-    nav li:last-child {
-      margin-right: 0;
+      margin: 0;
     }
     nav a {
       color: var(--text-primary);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      white-space: nowrap;
       position: relative;
-      padding: 8px 0;
-      transition: var(--transition-fast);
     }
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-      transition: width var(--transition-normal);
-    }
-    nav a:hover::after,
-    nav a.active::after {
-      width: 100%;
+    nav a:hover,
+    nav a.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+      transform: translateY(-2px);
     }
     nav a.active {
-      color: var(--primary-color);
+      color: white;
     }
 
     /* ===== Banner with GIF background (Enhanced) ===== */
     #banner {
       display: flex;
-      background-image: url('../img/coding.gif');
+      background-image: url('img/coding.gif');
       background-repeat: repeat;
       background-size: cover;
       background-position: center;
@@ -688,7 +721,8 @@
     }
   </style>
 </head>
-<body>
+<body data-page="home">
+<div id="canvas-container"></div>
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
   
@@ -704,6 +738,7 @@
         <li><a href="my_templates/services-faq.html">Services FAQ</a></li>
         <li><a href="my_templates/interactive-showcase.html">Showcase</a></li>
         <li><a href="my_templates/blog.html">Blog</a></li>
+        <li><a href="my_templates/performance-metrics.html">Performance</a></li>
       </ul>
     </nav>
   </header>
@@ -720,13 +755,63 @@
   <!-- CONTACT INFO SECTION -->
   <section id="contact-info" class="fade-in">
     <div class="contact-info-container">
-      <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank">
-        <img src="../img/qr-code.png" alt="LinkedIn QR Code" class="qr-code">
-        <span>LinkedIn</span>
-      </a>
-      <a href="../img/NickHolmesResumeApril2024.pdf" download class="resume-button">
-        Download Resume
-      </a>
+      <!-- Professional Contact Card -->
+      <div class="professional-card">
+        <div class="card-header">
+          <div class="avatar-section">
+            <div class="avatar-placeholder">NH</div>
+            <div class="status-indicator" title="Available for opportunities"></div>
+          </div>
+          <div class="card-title">
+            <h3>Nick Holmes</h3>
+            <p>Full Stack Developer & AI Engineer</p>
+            <span class="location"><i class="fa fa-map-marker"></i> United States</span>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <div class="contact-links">
+            <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank" class="contact-btn linkedin-btn">
+              <i class="fab fa-linkedin"></i>
+              <span>LinkedIn Profile</span>
+            </a>
+            <a href="https://github.com/NickHolmes999" target="_blank" class="contact-btn github-btn">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+            </a>
+            <a href="mailto:nick@example.com" class="contact-btn email-btn">
+              <i class="fa fa-envelope"></i>
+              <span>Email Me</span>
+            </a>
+            <a href="img/NickHolmesResumeApril2024.pdf" download class="contact-btn resume-btn">
+              <i class="fa fa-download"></i>
+              <span>Download Resume</span>
+            </a>
+          </div>
+          
+          <!-- Quick Stats -->
+          <div class="quick-stats">
+            <div class="stat-item">
+              <span class="stat-number" data-count="50">0</span>
+              <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="15">0</span>
+              <span class="stat-label">Certifications</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="5">0</span>
+              <span class="stat-label">Years Experience</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- QR Code Section -->
+      <div class="qr-section">
+        <img src="img/qr-code.png" alt="LinkedIn QR Code" class="qr-code">
+        <p>Scan for LinkedIn</p>
+      </div>
     </div>
   </section>
 
@@ -816,20 +901,230 @@
     </p>
   </section>
 
+  <!-- TECH STACK VISUALIZATION -->
+  <section id="tech-stack" class="fade-in">
+    <h2>Tech Stack Proficiency</h2>
+    <p class="section-subtitle">Interactive visualization of my technical expertise across different domains</p>
+    <div class="tech-stack-container">
+      <div class="radar-chart-container">
+        <canvas id="techRadarChart"></canvas>
+      </div>
+      <div class="tech-details">
+        <h3>Core Technologies</h3>
+        <div class="tech-category">
+          <h4><i class="fab fa-python"></i> Backend & AI</h4>
+          <div class="tech-tags">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">TensorFlow</span>
+            <span class="tech-tag">PyTorch</span>
+            <span class="tech-tag">Node.js</span>
+            <span class="tech-tag">FastAPI</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4><i class="fab fa-js"></i> Frontend</h4>
+          <div class="tech-tags">
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">Vue.js</span>
+            <span class="tech-tag">TypeScript</span>
+            <span class="tech-tag">Three.js</span>
+            <span class="tech-tag">WebGL</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4><i class="fas fa-database"></i> Data & Cloud</h4>
+          <div class="tech-tags">
+            <span class="tech-tag">PostgreSQL</span>
+            <span class="tech-tag">MongoDB</span>
+            <span class="tech-tag">AWS</span>
+            <span class="tech-tag">Docker</span>
+            <span class="tech-tag">Kubernetes</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4><i class="fas fa-tools"></i> Tools & Methods</h4>
+          <div class="tech-tags">
+            <span class="tech-tag">Git</span>
+            <span class="tech-tag">CI/CD</span>
+            <span class="tech-tag">Agile</span>
+            <span class="tech-tag">Testing</span>
+            <span class="tech-tag">DevOps</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAREER TIMELINE -->
+  <section id="career-timeline" class="fade-in">
+    <h2>Career Journey</h2>
+    <p class="section-subtitle">My professional evolution and key milestones</p>
+    <div class="timeline">
+      <div class="timeline-item" data-animate="left">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2020 - Present</span>
+          <h3>Data/AI Engineer</h3>
+          <h4>JOS Group</h4>
+          <p>Leading AI-driven solutions for federal government contracts, developing interactive Python labs for AI education, and performing advanced data analysis with AWS.</p>
+          <div class="timeline-tags">
+            <span>Python</span>
+            <span>AI/ML</span>
+            <span>AWS</span>
+            <span>Data Analysis</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="timeline-item" data-animate="right">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2019 - 2020</span>
+          <h3>Full Stack Developer</h3>
+          <h4>Freelance</h4>
+          <p>Built responsive web applications, implemented RESTful APIs, and created custom solutions for diverse clients across multiple industries.</p>
+          <div class="timeline-tags">
+            <span>React</span>
+            <span>Node.js</span>
+            <span>PostgreSQL</span>
+            <span>UI/UX</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="timeline-item" data-animate="left">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2018 - 2019</span>
+          <h3>Software Developer</h3>
+          <h4>Early Career</h4>
+          <p>Developed foundational skills in web development, database management, and software engineering principles through hands-on projects.</p>
+          <div class="timeline-tags">
+            <span>JavaScript</span>
+            <span>Python</span>
+            <span>SQL</span>
+            <span>Git</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="timeline-item" data-animate="right">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2017 - 2018</span>
+          <h3>Learning & Development</h3>
+          <h4>Self-Taught Journey</h4>
+          <p>Completed 460+ certifications and courses from LinkedIn Learning, AWS, Google, and other platforms. Built portfolio projects demonstrating full-stack capabilities.</p>
+          <div class="timeline-tags">
+            <span>Self-Learning</span>
+            <span>Certifications</span>
+            <span>Portfolio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer>
-    <div class="footer-content">
-      <p>
-        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/">LinkedIn</a> |
-        <a href="https://github.com/NickHolmes999">GitHub</a> |
-        <a href="../img/NickHolmesResumeApril2024.pdf" download>Resume</a>
-      </p>
-      <p class="footer-note">
-        © 2025 Nick Holmes - All rights reserved
-      </p>
-      <p class="footer-note">
-        Built by hand using HTML, CSS, JavaScript, and some Python.
-      </p>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- About Column -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Nick Holmes</h3>
+          <p class="footer-desc">Full Stack Developer & AI Engineer passionate about creating innovative solutions that make a difference.</p>
+          <div class="footer-social">
+            <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/NickHolmes999" target="_blank" class="social-icon github" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            
+            <!-- Email Split Button -->
+            <div class="footer-social-split">
+              <div class="social-icon email split-btn" onclick="toggleFooterSplit(this, 'email')" aria-label="Email">
+                <i class="fas fa-envelope main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="mailto:NickHolmes2003@gmail.com" class="footer-split-option send-btn">
+                  <i class="fas fa-paper-plane"></i>
+                  <span>Send</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('NickHolmes2003@gmail.com', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Phone Split Button -->
+            <div class="footer-social-split">
+              <div class="social-icon phone split-btn" onclick="toggleFooterSplit(this, 'phone')" aria-label="Phone">
+                <i class="fas fa-phone main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="tel:+13015005152" class="footer-split-option call-btn">
+                  <i class="fas fa-phone-alt"></i>
+                  <span>Call</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('(301) 500-5152', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="my_templates/about.html"><i class="fas fa-user"></i> About</a></li>
+            <li><a href="my_templates/projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+            <li><a href="my_templates/blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+            <li><a href="my_templates/contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Services -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Services</h3>
+          <ul class="footer-links">
+            <li><a href="my_templates/interactive-showcase.html"><i class="fas fa-flask"></i> Interactive Demos</a></li>
+            <li><a href="my_templates/certificates.html"><i class="fas fa-certificate"></i> Certifications</a></li>
+            <li><a href="my_templates/services-faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+            <li><a href="my_templates/performance-metrics.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+          </ul>
+        </div>
+        
+        <!-- Newsletter -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Stay Updated</h3>
+          <p class="footer-desc">Subscribe to get updates on new projects and articles.</p>
+          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+            <div class="newsletter-input-group">
+              <input type="email" placeholder="Your email address" required>
+              <button type="submit">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+          <p class="newsletter-note">🔒 No spam, unsubscribe anytime</p>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2025 <span class="gradient-text">Nick Holmes</span> - All rights reserved
+        </p>
+        <p class="footer-tech">
+          <i class="fas fa-code"></i> Built with HTML, CSS, JavaScript & Python
+        </p>
+      </div>
     </div>
   </footer>
 
@@ -972,5 +1267,287 @@
       chatbot.init();
     }
   </script>
+
+  <script>
+    // Three.js Background Animation - Particle Sphere (Home theme)
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    // Create floating cubes (Rising Data)
+    const cubes = [];
+    const geometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0x00d9ff, // Primary theme color
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15
+    });
+
+    const highlightMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0xa855f7, // Secondary theme color
+        wireframe: true,
+        transparent: true,
+        opacity: 0.25
+    });
+
+    for(let i=0; i<80; i++) {
+        const isHighlight = Math.random() > 0.8;
+        const cube = new THREE.Mesh(geometry, isHighlight ? highlightMaterial : material);
+        
+        // Random spread
+        cube.position.x = (Math.random() - 0.5) * 30;
+        cube.position.y = (Math.random() - 0.5) * 20;
+        cube.position.z = (Math.random() - 0.5) * 15;
+        
+        // Store individual rotation and movement speeds
+        cube.userData = {
+            rotX: (Math.random() - 0.5) * 0.02,
+            rotY: (Math.random() - 0.5) * 0.02,
+            speedY: Math.random() * 0.01 + 0.005
+        };
+
+        scene.add(cube);
+        cubes.push(cube);
+    }
+
+    camera.position.z = 8;
+    
+    function animate() {
+        requestAnimationFrame(animate);
+
+        cubes.forEach(cube => {
+            cube.rotation.x += cube.userData.rotX;
+            cube.rotation.y += cube.userData.rotY;
+            
+            // Float upwards
+            cube.position.y += cube.userData.speedY;
+
+            // Loop from bottom if it goes off top
+            if(cube.position.y > 10) {
+                cube.position.y = -10;
+                cube.position.x = (Math.random() - 0.5) * 30;
+            }
+        });
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // Animated Counter for Stats
+    function animateCounter(element, target) {
+      let current = 0;
+      const increment = target / 50;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = target + '+';
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(current);
+        }
+      }, 30);
+    }
+    
+    // Trigger counters on scroll
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = parseInt(entry.target.dataset.count);
+          animateCounter(entry.target, target);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    document.querySelectorAll('.stat-number').forEach(stat => {
+      statObserver.observe(stat);
+    });
+    
+    // Tech Stack Radar Chart
+    const ctx = document.getElementById('techRadarChart');
+    if (ctx) {
+      const radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Backend/AI', 'Frontend', 'Database', 'Cloud/DevOps', 'Data Science', 'Security'],
+          datasets: [{
+            label: 'Current Proficiency',
+            data: [95, 85, 75, 80, 90, 70],
+            backgroundColor: 'rgba(0, 217, 255, 0.2)',
+            borderColor: 'rgba(0, 217, 255, 1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(0, 217, 255, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(0, 217, 255, 1)',
+            pointRadius: 5,
+            pointHoverRadius: 7
+          }, {
+            label: '2 Years Ago',
+            data: [75, 65, 55, 50, 60, 40],
+            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+            borderColor: 'rgba(168, 85, 247, 0.6)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(168, 85, 247, 0.6)',
+            pointBorderColor: '#fff',
+            pointRadius: 4,
+            borderDash: [5, 5]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                stepSize: 20,
+                color: 'rgba(255, 255, 255, 0.6)',
+                backdropColor: 'transparent'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              pointLabels: {
+                color: 'rgba(255, 255, 255, 0.9)',
+                font: {
+                  size: 14,
+                  weight: '600'
+                }
+              },
+              angleLines: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                color: 'rgba(255, 255, 255, 0.9)',
+                padding: 20,
+                font: {
+                  size: 14
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(10, 10, 15, 0.9)',
+              titleColor: '#00d9ff',
+              bodyColor: '#fff',
+              borderColor: '#00d9ff',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.parsed.r + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // Newsletter Form Handler
+    function handleNewsletter(event) {
+      event.preventDefault();
+      const email = event.target.querySelector('input[type="email"]').value;
+      
+      // Show success notification
+      const notification = document.createElement('div');
+      notification.className = 'newsletter-notification';
+      notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>Thanks for subscribing! We'll keep you updated.</span>
+      `;
+      document.body.appendChild(notification);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+      
+      // Clear form
+      event.target.reset();
+      
+      // In production, send to your email service
+      console.log('Newsletter signup:', email);
+    }
+
+    // Footer Split Button Functions
+    function toggleFooterSplit(button, type) {
+      // Close other split buttons first
+      document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+        if (btn !== button) {
+          btn.classList.remove('split-active');
+        }
+      });
+      
+      // Toggle current button
+      button.classList.toggle('split-active');
+      
+      // Close on outside click
+      if (button.classList.contains('split-active')) {
+        setTimeout(() => {
+          document.addEventListener('click', function closeOnOutside(e) {
+            if (!e.target.closest('.footer-social-split')) {
+              document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+                btn.classList.remove('split-active');
+              });
+              document.removeEventListener('click', closeOnOutside);
+            }
+          });
+        }, 100);
+      }
+    }
+
+    function copyFooterContact(text, event) {
+      event.stopPropagation();
+      
+      navigator.clipboard.writeText(text).then(() => {
+        // Create notification
+        const notification = document.createElement('div');
+        notification.className = 'footer-copy-notification';
+        notification.innerHTML = `
+          <i class="fas fa-check-circle"></i>
+          <span>Copied: ${text}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.5s ease';
+          setTimeout(() => notification.remove(), 500);
+        }, 2500);
+        
+        // Close the split button
+        document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+          btn.classList.remove('split-active');
+        });
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+      });
+    }
+  </script>
+  
+  <!-- Back to Top Button -->
+  <script src="js/back-to-top.js"></script>
 </body>
 </html>

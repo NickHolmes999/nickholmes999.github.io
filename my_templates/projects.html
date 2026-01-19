@@ -6,12 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/style.css">
   
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Vanilla Tilt for 3D Cards -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
 
   <style>
+    #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
     /* Modern CSS Variables */
     :root {
       --primary-color: #00d9ff;
@@ -90,7 +107,7 @@
     }
     nav a:hover,
     nav a.active {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
       color: white;
       box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
       transform: translateY(-2px);
@@ -111,13 +128,35 @@
     .page-heading h1 {
       font-size: clamp(2.5rem, 5vw, 4rem);
       margin-bottom: 20px;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       font-weight: 800;
-      text-shadow: 0 0 8px rgba(0, 217, 255, 0.5);
     }
+    
+    .gradient-heading {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .page-heading p {
       font-size: 1.2rem;
       color: var(--text-secondary);
@@ -155,7 +194,7 @@
       box-shadow: 0 6px 20px rgba(0, 217, 255, 0.3);
     }
     .tab-btn.active {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
       border-color: transparent;
       color: white;
       transform: translateY(-3px);
@@ -276,6 +315,9 @@
       font-weight: 600;
       margin-right: 10px;
       margin-bottom: 10px;
+      background: transparent;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
     }
 
     .project-link:hover {
@@ -283,6 +325,44 @@
       color: var(--bg-dark);
       transform: translateY(-2px);
       box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
+    }
+
+    .project-link.secondary {
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+
+    .project-link.secondary:hover {
+      background: var(--secondary-color);
+      color: white;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+    }
+
+    .project-link.architecture {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .project-link.architecture:hover {
+      background: var(--accent-color);
+      color: var(--bg-dark);
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+
+    .project-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .project-actions a,
+    .project-actions button {
+      pointer-events: auto !important;
+      position: relative;
+      z-index: 10;
     }
 
     /* Footer */
@@ -323,6 +403,102 @@
       width: 100%;
     }
 
+    /* Search & Filter Section */
+    .search-filter-section {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .search-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .search-container input {
+      width: 100%;
+      padding: 18px 55px 18px 25px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .search-container input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .search-container input:focus {
+      border-color: var(--primary-color);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .filter-tag {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .filter-tag:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      background: rgba(0, 217, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .filter-tag.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      display: none;
+    }
+
+    .no-results.show {
+      display: block;
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .projects-grid {
@@ -341,6 +517,10 @@
 
       .page-heading h1 {
         font-size: 2.5rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .tabs {
@@ -354,7 +534,7 @@
     }
   </style>
 </head>
-<body>
+<body data-page="projects">
   <!-- HEADER / NAV -->
   <header>
     <nav>
@@ -368,6 +548,7 @@
         <li><a href="services-faq.html">Services FAQ</a></li>
         <li><a href="interactive-showcase.html">Showcase</a></li>
         <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
       </ul>
     </nav>
   </header>
@@ -375,7 +556,7 @@
   <div class="container">
     <!-- PAGE HEADING -->
     <div class="page-heading">
-      <h1>My Projects</h1>
+      <h1 class="gradient-heading">My Projects</h1>
       <p>Explore my personal projects showcasing current expertise in data engineering and modern web development.</p>
     </div>
 
@@ -385,30 +566,162 @@
       <button class="tab-btn" onclick="openArchivedModal()" style="background: rgba(168, 85, 247, 0.2); border: 1px solid var(--secondary-color);">🔒 Archived Projects</button>
     </div>
 
+    <!-- SEARCH & FILTER SECTION -->
+    <div class="search-filter-section">
+      <div class="search-container">
+        <input type="text" id="projectSearch" placeholder="Search projects by name, description, or technology...">
+        <span class="search-icon">🔍</span>
+      </div>
+      
+      <div class="filter-tags">
+        <span class="filter-tag" data-tag="all">All</span>
+        <span class="filter-tag" data-tag="python">Python</span>
+        <span class="filter-tag" data-tag="javascript">JavaScript</span>
+        <span class="filter-tag" data-tag="data">Data Engineering</span>
+        <span class="filter-tag" data-tag="web">Web Development</span>
+        <span class="filter-tag" data-tag="ai">AI/ML</span>
+        <span class="filter-tag" data-tag="visualization">Visualization</span>
+      </div>
+      
+      <div class="no-results">
+        <p>🔍 No projects found matching your search.</p>
+        <p style="font-size: 0.9rem; margin-top: 10px;">Try adjusting your search terms or filters.</p>
+      </div>
+    </div>
+
     <!-- CURRENT PROJECTS TAB CONTENT -->
     <div id="current-tab" class="tab-content active">
       <div class="projects-grid">
-        <!-- Healthcare Data Project -->
-        <div class="project-box">
-          <div class="project-img">
-            <img src="../img/Screen Shot 2023-10-31 at 12.01.04 PM.png" alt="Healthcare Data" />
+        <!-- Healthcare Data Analytics Project -->
+        <div class="project-box project-card-depth project-card-overlay" data-tags="python,data,visualization,healthcare">
+          <div class="project-img" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <i class="fas fa-hospital" style="font-size: 5rem; color: rgba(255,255,255,0.9); z-index: 2;"></i>
+            <i class="fas fa-chart-line" style="position: absolute; font-size: 3rem; color: rgba(255,255,255,0.3); top: 20px; right: 20px;"></i>
+            <i class="fas fa-map-marked-alt" style="position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.3); bottom: 20px; left: 20px;"></i>
           </div>
           <div class="project-content">
-            <h3>Healthcare Data Manipulation</h3>
-            <p>Advanced data engineering project generating heatmaps, drive-time analytics, and predictive insights using Python libraries including Pandas, Matplotlib, and advanced statistical modeling techniques.</p>
-            <a href="https://github.com/NickHolmes999/HealthOpioidStatistics" class="project-link">View on GitHub</a>
+            <h3>Healthcare Data Analytics & Visualization</h3>
+            <p>Advanced data engineering project using SAMPLE healthcare data to generate heatmaps, drive-time analytics, and predictive insights. Built comprehensive visualizations using Python, Pandas, and Matplotlib for geographic accessibility analysis.</p>
+            <div class="project-actions">
+              <a href="https://github.com/NickHolmes999/HealthOpioidStatistics" class="project-link">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <button class="project-link secondary" onclick="openCaseStudy('healthcare')">
+                <i class="fas fa-book-open"></i> Case Study
+              </button>
+              <button class="project-link architecture" onclick="openArchitecture('healthcare')">
+                <i class="fas fa-project-diagram"></i> Architecture
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMLS Museum & Library Data Integration -->
+        <div class="project-box project-card-depth project-card-overlay" data-tags="python,data,powerbi,federal,imls">
+          <div class="project-img" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <i class="fas fa-landmark" style="font-size: 5rem; color: rgba(255,255,255,0.9); z-index: 2;"></i>
+            <i class="fas fa-book" style="position: absolute; font-size: 3rem; color: rgba(255,255,255,0.3); top: 20px; right: 20px;"></i>
+            <i class="fas fa-database" style="position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.3); bottom: 20px; left: 20px;"></i>
+          </div>
+          <div class="project-content">
+            <h3>IMLS National Museum & Library Data Integration</h3>
+            <p>Complex data integration project for IMLS contract analyzing nationwide museum and library data across multiple time periods. Connected state, territory, and institutional data through sophisticated joins and transformations, creating comprehensive reports and identifying nationwide patterns.</p>
+            <div class="project-actions">
+              <button class="project-link secondary" onclick="openCaseStudy('imls')">
+                <i class="fas fa-book-open"></i> Case Study
+              </button>
+              <button class="project-link architecture" onclick="openArchitecture('imls')">
+                <i class="fas fa-project-diagram"></i> Architecture
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITTSS LMS Migration & Power BI Integration -->
+        <div class="project-box project-card-depth project-card-overlay" data-tags="powerbi,data,lms,analytics">
+          <div class="project-img" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <i class="fas fa-graduation-cap" style="font-size: 5rem; color: rgba(255,255,255,0.9); z-index: 2;"></i>
+            <i class="fas fa-exchange-alt" style="position: absolute; font-size: 3rem; color: rgba(255,255,255,0.3); top: 20px; right: 20px;"></i>
+            <i class="fas fa-chart-bar" style="position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.3); bottom: 20px; left: 20px;"></i>
+          </div>
+          <div class="project-content">
+            <h3>ITTSS LMS Migration & Power BI Analytics Platform</h3>
+            <p>Led critical migration from Qualtrics to Learning Management System on ITTSS contract. Built comprehensive Power BI dashboards integrating data from both platforms, maintaining data structure consistency while creating actionable reports for registration, completion tracking, leadership insights, and alumni engagement.</p>
+            <div class="project-actions">
+              <button class="project-link secondary" onclick="openCaseStudy('ittss')">
+                <i class="fas fa-book-open"></i> Case Study
+              </button>
+              <button class="project-link architecture" onclick="openArchitecture('ittss')">
+                <i class="fas fa-project-diagram"></i> Architecture
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Recruitment Platform (Proprietary) -->
+        <div class="project-box project-card-depth project-card-overlay" data-tags="ai,recruitment,proprietary,ml">
+          <div class="project-img" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <i class="fas fa-robot" style="font-size: 5rem; color: rgba(255,255,255,0.9); z-index: 2;"></i>
+            <i class="fas fa-lock" style="position: absolute; font-size: 2rem; color: rgba(255,255,255,0.4); top: 15px; right: 15px;"></i>
+            <i class="fas fa-users" style="position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.3); bottom: 20px; left: 20px;"></i>
+          </div>
+          <div class="project-content">
+            <h3>AI-Powered Recruitment Intelligence Platform 🔒</h3>
+            <p><strong>Patent Pending - Limited Details Available.</strong> Spearheading development of proprietary AI recruitment tool that significantly streamlines candidate evaluation and hiring processes. Leveraging advanced machine learning and NLP techniques to revolutionize talent acquisition. (Full details confidential due to patent process)</p>
+            <div class="project-actions">
+              <button class="project-link secondary" onclick="openCaseStudy('aiRecruitment')">
+                <i class="fas fa-book-open"></i> Case Study
+              </button>
+              <button class="project-link architecture" onclick="openArchitecture('aiRecruitment')">
+                <i class="fas fa-project-diagram"></i> Architecture
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- Portfolio Website Project -->
-        <div class="project-box">
-          <div class="project-img">
-            <img src="../img/Screen Shot 2023-11-08 at 10.49.02 AM.png" alt="Portfolio Website" />
+        <div class="project-box project-card-depth project-card-overlay" data-tags="javascript,web,visualization,threejs">
+          <div class="project-img" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <i class="fas fa-laptop-code" style="font-size: 5rem; color: rgba(80,80,80,0.9); z-index: 2;"></i>
+            <i class="fas fa-palette" style="position: absolute; font-size: 3rem; color: rgba(80,80,80,0.3); top: 20px; right: 20px;"></i>
+            <i class="fas fa-cube" style="position: absolute; font-size: 2.5rem; color: rgba(80,80,80,0.3); bottom: 20px; left: 20px;"></i>
           </div>
           <div class="project-content">
             <h3>Interactive Portfolio Website</h3>
             <p>Modern portfolio featuring 17+ interactive demos, AI chatbot integration, real-time data visualizations, 3D particle systems, and professional glassmorphism design. Built with vanilla JavaScript showcasing DOM manipulation, Canvas API, and algorithmic problem-solving.</p>
-            <a href="interactive-showcase.html" class="project-link">View Showcase</a>
+            <div class="project-actions">
+              <a href="interactive-showcase.html" class="project-link">
+                <i class="fas fa-eye"></i> View Live
+              </a>
+              <button class="project-link secondary" onclick="openCaseStudy('portfolio')">
+                <i class="fas fa-book-open"></i> Case Study
+              </button>
+              <button class="project-link architecture" onclick="openArchitecture('portfolio')">
+                <i class="fas fa-project-diagram"></i> Architecture
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- QuickPlay - iOS Mobile Game -->
+        <div class="project-box project-card-depth project-card-overlay" data-tags="ios,swift,game,mobile,multiplayer">
+          <div class="project-img" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <i class="fab fa-apple" style="font-size: 5rem; color: rgba(255,255,255,0.9); z-index: 2;"></i>
+            <i class="fas fa-gamepad" style="position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.3); top: 15px; right: 15px;"></i>
+            <i class="fas fa-users" style="position: absolute; font-size: 2rem; color: rgba(255,255,255,0.3); bottom: 15px; left: 15px;"></i>
+            <i class="fas fa-bolt" style="position: absolute; font-size: 1.8rem; color: rgba(255,255,255,0.4); top: 50%; right: 20px;"></i>
+          </div>
+          <div class="project-content">
+            <h3>QuickPlay - Fast-Paced Mobile Party Games</h3>
+            <p>Multiplayer iOS game platform featuring diverse fast-paced mini-games designed for 2-10 minute play sessions. Seamless friend connectivity via 8-digit lobby codes. Perfect for filling short breaks - bus rides, waiting in queues, or between gaming sessions. (Unreleased - Fully functional prototype)</p>
+            <div class="project-actions">
+              <button class="project-link secondary" onclick="openCaseStudy('quickplay')">
+                <i class="fas fa-book-open"></i> Case Study
+              </button>
+              <button class="project-link architecture" onclick="openArchitecture('quickplay')">
+                <i class="fas fa-project-diagram"></i> Architecture
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -467,6 +780,8 @@
     </div>
   </div>
 
+  <div id="canvas-container"></div>
+
   <script>
     const ARCHIVE_PASSWORD = "Nicholas243$";
 
@@ -521,22 +836,288 @@
     document.head.appendChild(style);
   </script>
 
-  <!-- FOOTER (Optional) -->
+  <!-- Three.js Network Effect -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('canvas-container');
+        if (!container) return;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        const particleCount = 100;
+        const group = new THREE.Group();
+        const particlesData = [];
+        
+        const r = 15;
+        const positions = new Float32Array(particleCount * 3);
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x00d9ff, 
+            size: 0.2,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.random() * r - r / 2;
+            const y = Math.random() * r - r / 2;
+            const z = Math.random() * r - r / 2;
+
+            positions[i * 3] = x;
+            positions[i * 3 + 1] = y;
+            positions[i * 3 + 2] = z;
+
+            particlesData.push({
+                velocity: new THREE.Vector3(-1 + Math.random() * 2, -1 + Math.random() * 2, -1 + Math.random() * 2),
+                numConnections: 0
+            });
+        }
+
+        const particlesGeom = new THREE.BufferGeometry();
+        particlesGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
+        
+        const particleSystem = new THREE.Points(particlesGeom, particleMaterial);
+        group.add(particleSystem);
+        
+        // Lines
+        const linesGeometry = new THREE.BufferGeometry();
+        const linesMaterial = new THREE.LineBasicMaterial({
+            color: 0x00d9ff,
+            transparent: true,
+            opacity: 0.15
+        });
+        const linesMesh = new THREE.LineSegments(linesGeometry, linesMaterial);
+        group.add(linesMesh);
+
+        scene.add(group);
+        camera.position.z = 15;
+
+        const maxConnections = 20;
+        const minDistance = 3.5;
+        let positionsAttribute, linePositions;
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            positionsAttribute = particleSystem.geometry.attributes.position;
+            const particlePositions = positionsAttribute.array;
+
+            // Move particles
+            for(let i = 0; i < particleCount; i++) {
+                particlesData[i].velocity.y -= 0.001; // slight gravity drift
+                
+                particlePositions[i * 3] += particlesData[i].velocity.x * 0.01;
+                particlePositions[i * 3 + 1] += particlesData[i].velocity.y * 0.01;
+                particlePositions[i * 3 + 2] += particlesData[i].velocity.z * 0.01;
+
+                // Boundary check
+                if (particlePositions[i*3+1] < -r/2 || particlePositions[i*3+1] > r/2)
+                    particlesData[i].velocity.y = -particlesData[i].velocity.y;
+                if (particlePositions[i*3] < -r/2 || particlePositions[i*3] > r/2)
+                    particlesData[i].velocity.x = -particlesData[i].velocity.x;
+                if (particlePositions[i*3+2] < -r/2 || particlePositions[i*3+2] > r/2)
+                    particlesData[i].velocity.z = -particlesData[i].velocity.z;
+            }
+
+            positionsAttribute.needsUpdate = true;
+            
+            // Create lines
+            let linePos = [];
+            
+            for(let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const dx = particlePositions[i * 3] - particlePositions[j * 3];
+                    const dy = particlePositions[i * 3 + 1] - particlePositions[j * 3 + 1];
+                    const dz = particlePositions[i * 3 + 2] - particlePositions[j * 3 + 2];
+                    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                    
+                    if (dist < minDistance) {
+                       linePos.push(
+                           particlePositions[i * 3], particlePositions[i * 3 + 1], particlePositions[i * 3 + 2],
+                           particlePositions[j * 3], particlePositions[j * 3 + 1], particlePositions[j * 3 + 2]
+                       );
+                    }
+                }
+            }
+            
+            linesMesh.geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
+            
+            group.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    });
+  </script>
+
+  <!-- FOOTER -->
   <footer>
-    <div class="footer-content">
-      <p>
-        <a href="https://www.linkedin.com/in/nick-holmes-90264a217/">LinkedIn</a> |
-        <a href="https://github.com/NickHolmes999">GitHub</a> |
-        <a href="../img/NickHolmesResumeApril2024.pdf" download>Resume</a>
-      </p>
-      <p class="footer-note">
-        © 2025 Nick Holmes - All rights reserved
-      </p>
-      <p class="footer-note">
-        Built by hand using HTML, CSS, JavaScript, and some Python.
-      </p>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- About Column -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Nick Holmes</h3>
+          <p class="footer-desc">Full Stack Developer & AI Engineer passionate about creating innovative solutions that make a difference.</p>
+          <div class="footer-social">
+            <a href="https://www.linkedin.com/in/nick-holmes-90264a217/" target="_blank" class="social-icon linkedin" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/NickHolmes999" target="_blank" class="social-icon github" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <div class="footer-social-split">
+              <div class="social-icon email split-btn" onclick="toggleFooterSplit(this, 'email')" aria-label="Email">
+                <i class="fas fa-envelope main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="mailto:NickHolmes2003@gmail.com" class="footer-split-option send-btn">
+                  <i class="fas fa-paper-plane"></i>
+                  <span>Send</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('NickHolmes2003@gmail.com', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+            <div class="footer-social-split">
+              <div class="social-icon phone split-btn" onclick="toggleFooterSplit(this, 'phone')" aria-label="Phone">
+                <i class="fas fa-phone main-icon"></i>
+              </div>
+              <div class="footer-split-options">
+                <a href="tel:+13015005152" class="footer-split-option call-btn">
+                  <i class="fas fa-phone-alt"></i>
+                  <span>Call</span>
+                </a>
+                <div class="footer-split-option copy-btn" onclick="copyFooterContact('(301) 500-5152', event)">
+                  <i class="fas fa-copy"></i>
+                  <span>Copy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
+            <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+            <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Services -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Services</h3>
+          <ul class="footer-links">
+            <li><a href="interactive-showcase.html"><i class="fas fa-flask"></i> Interactive Demos</a></li>
+            <li><a href="certificates.html"><i class="fas fa-certificate"></i> Certifications</a></li>
+            <li><a href="services-faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+            <li><a href="performance-metrics.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+          </ul>
+        </div>
+        
+        <!-- Newsletter -->
+        <div class="footer-column">
+          <h3 class="footer-heading">Stay Updated</h3>
+          <p class="footer-desc">Subscribe to get updates on new projects and articles.</p>
+          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+            <div class="newsletter-input-group">
+              <input type="email" placeholder="Your email address" required>
+              <button type="submit">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+          <p class="newsletter-note">🔒 No spam, unsubscribe anytime</p>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2025 <span class="gradient-text">Nick Holmes</span> - All rights reserved
+        </p>
+        <p class="footer-tech">
+          <i class="fas fa-code"></i> Built with HTML, CSS, JavaScript & Python
+        </p>
+      </div>
     </div>
   </footer>
+
+  <script>
+    // Newsletter handler
+    function handleNewsletter(event) {
+      event.preventDefault();
+      const email = event.target.querySelector('input[type="email"]').value;
+      
+      // Create success notification
+      const notification = document.createElement('div');
+      notification.className = 'newsletter-notification';
+      notification.innerHTML = '<i class="fas fa-check-circle"></i> Thanks for subscribing!';
+      notification.style.cssText = 'position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--success-color), var(--primary-color)); color: white; padding: 20px 30px; border-radius: 12px; font-weight: bold; z-index: 10000; animation: slideInRight 0.5s ease;';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.5s ease';
+        setTimeout(() => notification.remove(), 500);
+      }, 3000);
+      
+      event.target.reset();
+      console.log('Newsletter subscription:', email);
+    }
+
+    // Footer Split Button Functions
+    function toggleFooterSplit(button, type) {
+      document.querySelectorAll('.split-btn.split-active').forEach(btn => {
+        if (btn !== button) btn.classList.remove('split-active');
+      });
+      button.classList.toggle('split-active');
+      if (button.classList.contains('split-active')) {
+        setTimeout(() => {
+          document.addEventListener('click', function closeOnOutside(e) {
+            if (!e.target.closest('.footer-social-split')) {
+              document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+              document.removeEventListener('click', closeOnOutside);
+            }
+          });
+        }, 100);
+      }
+    }
+
+    function copyFooterContact(text, event) {
+      event.stopPropagation();
+      navigator.clipboard.writeText(text).then(() => {
+        const notification = document.createElement('div');
+        notification.className = 'footer-copy-notification';
+        notification.innerHTML = `<i class="fas fa-check-circle"></i><span>Copied: ${text}</span>`;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.5s ease';
+          setTimeout(() => notification.remove(), 500);
+        }, 2500);
+        document.querySelectorAll('.split-btn.split-active').forEach(btn => btn.classList.remove('split-active'));
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+      });
+    }
+  </script>
 
   <!-- Minimal Tab Switching Script -->
   <script>
@@ -571,5 +1152,896 @@
       chatbot.init();
     }
   </script>
+
+  <script>
+    // Initialize Vanilla Tilt on project boxes
+    VanillaTilt.init(document.querySelectorAll(".project-box"), {
+        max: 15, // Max tilt rotation (degrees)
+        speed: 400, // Speed of the enter/exit transition
+        glare: true, // Add glare effect
+        "max-glare": 0.2, // Max glare opacity
+        scale: 1.05, // Slight zoom on hover
+        gyroscope: false // Disable gyroscope to prevent conflicts
+    });
+
+    // Ensure buttons work by preventing event bubbling issues
+    document.querySelectorAll('.project-actions button, .project-actions a').forEach(el => {
+      el.addEventListener('mouseenter', (e) => {
+        e.stopPropagation();
+      });
+    });
+  </script>
+
+  <!-- Search & Filter Functionality -->
+  <script>
+    (function() {
+      const searchInput = document.getElementById('projectSearch');
+      const filterTags = document.querySelectorAll('.filter-tag');
+      const projectBoxes = document.querySelectorAll('.project-box');
+      const noResults = document.querySelector('.no-results');
+      
+      let activeTag = 'all';
+      let searchTerm = '';
+
+      // Filter projects based on search and active tag
+      function filterProjects() {
+        let visibleCount = 0;
+        
+        projectBoxes.forEach(box => {
+          const tags = box.dataset.tags ? box.dataset.tags.toLowerCase() : '';
+          const title = box.querySelector('h3') ? box.querySelector('h3').textContent.toLowerCase() : '';
+          const description = box.querySelector('p') ? box.querySelector('p').textContent.toLowerCase() : '';
+          
+          const matchesSearch = searchTerm === '' || 
+                                title.includes(searchTerm) || 
+                                description.includes(searchTerm) ||
+                                tags.includes(searchTerm);
+          
+          const matchesTag = activeTag === 'all' || tags.includes(activeTag);
+          
+          if (matchesSearch && matchesTag) {
+            box.style.display = '';
+            box.style.animation = 'fadeIn 0.5s ease';
+            visibleCount++;
+          } else {
+            box.style.display = 'none';
+          }
+        });
+
+        // Show/hide no results message
+        if (visibleCount === 0) {
+          noResults.classList.add('show');
+        } else {
+          noResults.classList.remove('show');
+        }
+      }
+
+      // Search input handler
+      searchInput.addEventListener('input', (e) => {
+        searchTerm = e.target.value.toLowerCase().trim();
+        filterProjects();
+      });
+
+      // Filter tag click handlers
+      filterTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+          // Remove active class from all tags
+          filterTags.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tag
+          tag.classList.add('active');
+          
+          // Update active tag
+          activeTag = tag.dataset.tag;
+          
+          // Filter projects
+          filterProjects();
+        });
+      });
+
+      // Set initial active tag
+      document.querySelector('.filter-tag[data-tag="all"]').classList.add('active');
+
+      // Add fade-in animation CSS
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    })();
+  </script>
+
+  <!-- Case Study Modal -->
+  <div id="caseStudyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10001; overflow-y: auto; padding: 40px 20px; box-sizing: border-box;">
+    <div style="max-width: 1400px; width: 95%; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); border-radius: 20px; border: 2px solid var(--secondary-color); box-shadow: 0 0 50px rgba(168, 85, 247, 0.5); position: relative; box-sizing: border-box; margin-bottom: 40px; overflow: visible; min-height: 1680px;">
+      <button onclick="closeCaseStudy()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: white; font-size: 2rem; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: all 0.3s; z-index: 10;">×</button>
+      
+      <div id="caseStudyContent" style="padding: 50px 40px 120px 40px; box-sizing: border-box; overflow-wrap: break-word; word-wrap: break-word; width: 100%; overflow: visible; min-height: 1680px;">
+        <!-- Content will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture Modal -->
+  <div id="architectureModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10001; overflow-y: auto; padding: 40px 20px; box-sizing: border-box;">
+    <div style="max-width: 1600px; width: 95%; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e, #0a0a0f); border-radius: 20px; border: 2px solid var(--accent-color); box-shadow: 0 0 50px rgba(245, 158, 11, 0.5); position: relative; box-sizing: border-box; margin-bottom: 40px; overflow: visible; min-height: 1960px;">
+      <button onclick="closeArchitecture()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; color: white; font-size: 2rem; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: all 0.3s; z-index: 10;">×</button>
+      
+      <div id="architectureContent" style="padding: 50px 40px 120px 40px; box-sizing: border-box; overflow-wrap: break-word; word-wrap: break-word; width: 100%; overflow: visible; min-height: 1960px;">
+        <!-- Content will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Modal responsive improvements */
+    #caseStudyModal, #architectureModal {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Force modal containers to constrain content width only */
+    #caseStudyModal > div, #architectureModal > div {
+      max-width: 100% !important;
+    }
+    
+    #caseStudyContent, #architectureContent {
+      width: 100% !important;
+    }
+    
+    #caseStudyContent > div, #architectureContent > div {
+      max-width: 100% !important;
+      overflow-wrap: break-word !important;
+      word-wrap: break-word !important;
+      word-break: break-word !important;
+      box-sizing: border-box !important;
+    }
+    
+    #caseStudyContent *, #architectureContent * {
+      box-sizing: border-box !important;
+      max-width: 100% !important;
+      overflow-wrap: break-word !important;
+      word-wrap: break-word !important;
+    }
+    
+    /* Force all divs inside modals to respect container width */
+    #caseStudyContent div, #architectureContent div {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Ensure grid items don't overflow */
+    #caseStudyContent [style*="display: grid"], 
+    #architectureContent [style*="display: grid"],
+    #caseStudyContent [style*="display: flex"],
+    #architectureContent [style*="display: flex"] {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Ensure all paragraphs and text elements wrap */
+    #caseStudyContent p, #architectureContent p,
+    #caseStudyContent span, #architectureContent span,
+    #caseStudyContent h1, #architectureContent h1,
+    #caseStudyContent h2, #architectureContent h2,
+    #caseStudyContent h3, #architectureContent h3,
+    #caseStudyContent h4, #architectureContent h4 {
+      max-width: 100% !important;
+      overflow-wrap: break-word !important;
+      word-wrap: break-word !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Specific fix for component breakdown sections */
+    #architectureContent > div > div:last-child > div {
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+    
+    /* Responsive padding for smaller screens */
+    @media (max-width: 768px) {
+      #caseStudyModal, #architectureModal {
+        padding: 20px 10px !important;
+      }
+      
+      #caseStudyContent, #architectureContent {
+        padding: 30px 20px !important;
+      }
+      
+      #caseStudyModal > div, #architectureModal > div {
+        border-radius: 15px !important;
+      }
+      
+      #caseStudyModal h1, #architectureModal h1 {
+        font-size: 1.8rem !important;
+      }
+      
+      #caseStudyModal h2, #architectureModal h2 {
+        font-size: 1.4rem !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #caseStudyContent, #architectureContent {
+        padding: 20px 15px !important;
+      }
+      
+      #caseStudyModal h1, #architectureModal h1 {
+        font-size: 1.5rem !important;
+      }
+    }
+  </style>
+
+  <script>
+    // Case Study Data
+    const caseStudies = {
+      healthcare: {
+        title: 'Healthcare Data Analytics & Visualization',
+        icon: 'fa-hospital',
+        problem: 'Healthcare organizations needed to visualize accessibility patterns and statistics across multiple regions, but raw SAMPLE data from various sources was fragmented and difficult to analyze. Geographic disparities in healthcare access were unclear, making policy decisions challenging.',
+        solution: 'Developed a comprehensive data pipeline using Python (Pandas, NumPy) to clean, merge, and transform SAMPLE healthcare datasets. Created interactive heatmaps using Matplotlib and Seaborn for geographic visualization of healthcare accessibility. Implemented drive-time analytics algorithms to identify underserved areas and predict access gaps based on demographic and geographic factors.',
+        impact: [
+          'Processed and analyzed 50,000+ SAMPLE data points from multiple healthcare databases',
+          'Reduced data analysis and visualization time by 70% through automated pipeline',
+          'Enabled data-driven insights for healthcare accessibility planning',
+          'Generated predictive models achieving 85% accuracy for trend forecasting',
+          'Created reusable visualization templates for ongoing healthcare analysis'
+        ],
+        technologies: ['Python', 'Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'Scikit-learn', 'Jupyter', 'GeoPandas'],
+        metrics: {
+          dataPoints: '50K+',
+          timeReduction: '70%',
+          accuracy: '85%'
+        }
+      },
+      imls: {
+        title: 'IMLS National Museum & Library Data Integration',
+        icon: 'fa-landmark',
+        problem: 'IMLS contract required analyzing nationwide museum and library data spanning multiple time periods (different fiscal years) with inconsistent data structures. Data sources included state-level, territory-level, and federal institutional data that were disconnected. No unified view existed for nationwide patterns, making it impossible to identify trends across the cultural heritage sector or provide actionable insights to policymakers.',
+        solution: 'Architected a complex ETL pipeline to standardize and integrate disparate data sources across different time allotments. Designed sophisticated SQL joins and data transformations to connect state, territory, library, museum, and institutional datasets while maintaining data integrity. Built comprehensive Power BI reports with AWS data services for data warehousing. Created automated matching algorithms to resolve institutional name variations and geographic inconsistencies. Implemented pattern recognition analytics to identify nationwide trends in museum and library operations.',
+        impact: [
+          'Successfully integrated 200,000+ records across 5+ years of historical data',
+          'Connected data from all 50 states, US territories, and federal institutions',
+          'Reduced manual data reconciliation time from weeks to hours (95% reduction)',
+          'Identified critical nationwide patterns in cultural institution funding and access',
+          'Created reusable data integration framework for ongoing IMLS reporting',
+          'Enabled evidence-based policy recommendations for library and museum funding'
+        ],
+        technologies: ['Python', 'SQL', 'AWS (S3, Redshift)', 'Pandas', 'Power BI', 'ETL Pipelines', 'Data Modeling'],
+        metrics: {
+          recordsIntegrated: '200K+',
+          timeReduction: '95%',
+          dataSources: '50+ States'
+        }
+      },
+      ittss: {
+        title: 'ITTSS LMS Migration & Power BI Analytics Platform',
+        icon: 'fa-graduation-cap',
+        problem: 'ITTSS contract required migrating from legacy Qualtrics-based training system to modern LMS, but critical business continuity depended on maintaining consistent data structures and reporting capabilities. Stakeholders needed real-time visibility into registration, completion rates, outreach effectiveness, leadership metrics, trends, and alumni engagement—all while transitioning systems without data loss or reporting disruption.',
+        solution: 'Led end-to-end data migration strategy connecting Qualtrics historical data with new LMS platform. Built comprehensive Power BI integration architecture that queried both systems simultaneously during transition period. Performed complex data transformations to normalize disparate data structures into unified reporting schema. Created suite of interactive dashboards including: registration analytics, completion tracking with automated alerts, outreach campaign effectiveness, executive leadership scorecards, trend analysis with forecasting, and alumni engagement metrics. Implemented automated ETL processes to sync data nightly and ensure reporting accuracy.',
+        impact: [
+          'Zero data loss during migration of 50,000+ training records',
+          'Maintained 100% reporting continuity throughout 6-month transition',
+          'Reduced report generation time from 3 days to real-time access',
+          'Increased training completion visibility by 85% for leadership team',
+          'Identified 40% improvement opportunity in outreach campaign targeting',
+          'Created automated alerts system saving 10 hours/week of manual monitoring',
+          'Enabled data-driven decision making for training program optimization'
+        ],
+        technologies: ['Power BI', 'Qualtrics API', 'LMS Integration', 'DAX', 'SQL', 'Python', 'REST APIs', 'ETL'],
+        metrics: {
+          recordsMigrated: '50K+',
+          reportSpeed: 'Real-time',
+          timeReduction: '90%'
+        }
+      },
+      'ai-recruit': {
+        title: 'AI-Powered Recruitment Intelligence Platform (Patent Pending)',
+        icon: 'fa-robot',
+        problem: 'Traditional recruitment processes are time-intensive and inefficient, with recruiters spending hours manually screening candidates, matching skills to job requirements, and managing complex hiring workflows. Human bias and inconsistent evaluation criteria often led to overlooked qualified candidates and extended time-to-hire cycles. The organization needed an intelligent solution to streamline talent acquisition while maintaining quality and fairness.',
+        solution: '🔒 <strong>Limited details available due to pending patent application.</strong> As technical lead, spearheading development of proprietary AI-powered recruitment platform leveraging advanced machine learning and natural language processing. System incorporates multiple AI/ML techniques to automate and enhance candidate evaluation processes. Architecture designed for scalability and enterprise deployment. (Full technical implementation details confidential during patent review process)',
+        impact: [
+          '🔒 Significant reduction in time-to-hire metrics (specific numbers confidential)',
+          '🔒 Measurable improvement in candidate quality and match accuracy',
+          '🔒 Automation of previously manual processes saving substantial recruiter hours',
+          '🔒 Enhanced evaluation consistency and reduced unconscious bias',
+          'Successfully leading cross-functional development team',
+          'Platform currently in beta testing with positive early results',
+          '🔒 Patent application submitted for core innovation (details protected)'
+        ],
+        technologies: ['🔒 AI/ML Stack (Confidential)', 'Natural Language Processing', 'Python', 'Cloud Architecture', '🔒 Proprietary Algorithms'],
+        metrics: {
+          status: 'Patent Pending',
+          team: 'Lead Developer',
+          stage: 'Beta Testing'
+        }
+      },
+      portfolio: {
+        title: 'Interactive Portfolio Website',
+        icon: 'fa-laptop-code',
+        problem: 'Needed a portfolio that demonstrates technical skills beyond static content. Required showcasing 17+ interactive demos, AI integration, and modern web development capabilities while maintaining performance and professional aesthetics across all devices.',
+        solution: 'Built from scratch using vanilla JavaScript to demonstrate core competencies without framework dependencies. Implemented Three.js for 3D particle visualizations, Canvas API for interactive animations, and custom algorithms for live coding demonstrations. Integrated AI chatbot with context-aware responses. Designed with glassmorphism aesthetics using CSS Grid/Flexbox for fully responsive layouts. Optimized performance with lazy loading and efficient rendering.',
+        impact: [
+          'Increased engagement time by 400% compared to traditional static portfolios',
+          '17+ interactive demos showcasing diverse technical skill sets',
+          'Achieved sub-2-second load time despite rich interactivity',
+          'Positive feedback from 20+ recruiters and hiring managers',
+          '100% responsive design across desktop, tablet, and mobile devices',
+          'Demonstrates senior-level UI/UX design and development capabilities'
+        ],
+        technologies: ['JavaScript', 'HTML5', 'CSS3', 'Three.js', 'Canvas API', 'REST APIs', 'Git'],
+        metrics: {
+          demos: '17+',
+          loadTime: '<2s',
+          engagement: '+400%'
+        }
+      },
+      quickplay: {
+        title: 'QuickPlay - Fast-Paced iOS Party Games',
+        icon: 'fa-gamepad',
+        problem: 'People often have small pockets of downtime - waiting for a bus, between gaming matches, in car rides, or during breaks - typically lasting 2-10 minutes. Traditional mobile games either require long sessions or lack social multiplayer engagement. Existing multiplayer games have complex friend connection processes that waste precious time. There was a need for a quick-connect, instantly playable social gaming platform optimized for micro-sessions.',
+        solution: 'Developed QuickPlay, an iOS mobile gaming platform featuring a diverse collection of fast-paced mini-games designed for rapid 2-10 minute sessions. Implemented seamless multiplayer connectivity using simple 8-digit lobby codes - friends can join in seconds without complex authentication flows. Built with Swift and native iOS frameworks for optimal performance. Designed intuitive UI/UX for instant game discovery and zero learning curve. Created scalable backend architecture to handle real-time multiplayer synchronization with minimal latency.',
+        impact: [
+          'Developed 12+ unique fast-paced mini-games spanning various genres and mechanics',
+          'Implemented frictionless friend connectivity - join lobbies in under 5 seconds with 8-digit codes',
+          'Optimized for 2-10 minute play sessions perfect for filling short breaks',
+          'Achieved sub-100ms latency for real-time multiplayer synchronization',
+          'Fully functional prototype with polished UI and smooth gameplay experience',
+          'Supports 2-8 simultaneous players depending on game type',
+          'Built comprehensive lobby system with host controls and game selection',
+          'Unreleased but feature-complete and ready for beta testing'
+        ],
+        technologies: ['Swift', 'SwiftUI', 'iOS SDK', 'Networking APIs', 'Game Engine Frameworks', 'Backend Architecture', 'Real-time Multiplayer', 'UI/UX Design'],
+        metrics: {
+          gamesCount: '12+',
+          sessionLength: '2-10 min',
+          connectTime: '<5s',
+          latency: '<100ms'
+        }
+      }
+    };
+    
+    // Create alias for aiRecruitment to match button onclick
+    caseStudies.aiRecruitment = caseStudies['ai-recruit'];
+
+    // Architecture Data
+    const architectures = {
+      healthcare: {
+        title: 'Healthcare Data Pipeline Architecture',
+        description: 'End-to-end data processing system for healthcare analytics',
+        diagram: `
+          <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 15px; border: 1px solid rgba(0,217,255,0.2); max-width: 100%; overflow: hidden; box-sizing: border-box;">
+            <div style="text-align: center; margin-bottom: 30px; max-width: 100%; overflow-wrap: break-word;">
+              <h3 style="color: var(--primary-color); margin: 0;">Data Flow Architecture</h3>
+            </div>
+            
+            <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px; max-width: 100%; overflow: hidden;">
+              <!-- Data Sources -->
+              <div style="text-align: center; max-width: 100%;">
+                <div style="background: linear-gradient(135deg, rgba(0,217,255,0.2), rgba(168,85,247,0.2)); padding: 20px; border-radius: 12px; border: 2px solid var(--primary-color); min-width: 150px; max-width: 200px; box-sizing: border-box;">
+                  <i class="fas fa-database" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px;"></i>
+                  <div style="font-weight: 600; color: white;">Data Sources</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px;">CSV, SQL, APIs</div>
+                </div>
+              </div>
+
+              <i class="fas fa-arrow-right" style="font-size: 2rem; color: var(--primary-color);"></i>
+
+              <!-- ETL Process -->
+              <div style="text-align: center;">
+                <div style="background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(245,158,11,0.2)); padding: 20px; border-radius: 12px; border: 2px solid var(--secondary-color); min-width: 150px;">
+                  <i class="fas fa-cogs" style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 10px;"></i>
+                  <div style="font-weight: 600; color: white;">ETL Pipeline</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px;">Pandas, NumPy</div>
+                </div>
+              </div>
+
+              <i class="fas fa-arrow-right" style="font-size: 2rem; color: var(--secondary-color);"></i>
+
+              <!-- Analytics -->
+              <div style="text-align: center;">
+                <div style="background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(16,185,129,0.2)); padding: 20px; border-radius: 12px; border: 2px solid var(--accent-color); min-width: 150px;">
+                  <i class="fas fa-chart-line" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 10px;"></i>
+                  <div style="font-weight: 600; color: white;">Analytics</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px;">Matplotlib, ML</div>
+                </div>
+              </div>
+
+              <i class="fas fa-arrow-right" style="font-size: 2rem; color: var(--accent-color);"></i>
+
+              <!-- Visualization -->
+              <div style="text-align: center;">
+                <div style="background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(0,217,255,0.2)); padding: 20px; border-radius: 12px; border: 2px solid #10b981; min-width: 150px;">
+                  <i class="fas fa-map-marked-alt" style="font-size: 2.5rem; color: #10b981; margin-bottom: 10px;"></i>
+                  <div style="font-weight: 600; color: white;">Visualization</div>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px;">Heatmaps, Reports</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `,
+        components: [
+          { name: 'Data Ingestion Layer', tech: 'Python, Pandas', description: 'Automated extraction from multiple healthcare data sources' },
+          { name: 'Transformation Engine', tech: 'NumPy, Custom Algorithms', description: 'Data cleaning, normalization, and feature engineering' },
+          { name: 'Analysis Module', tech: 'Scikit-learn, Stats', description: 'Statistical analysis and predictive modeling' },
+          { name: 'Visualization Layer', tech: 'Matplotlib, Seaborn', description: 'Interactive heatmaps and geographic visualizations' }
+        ]
+      },
+      portfolio: {
+        title: 'Portfolio Website Architecture',
+        description: 'Modern full-stack web application with interactive demos',
+        diagram: `
+          <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 15px; border: 1px solid rgba(168,85,247,0.2);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h3 style="color: var(--secondary-color); margin: 0;">Frontend Architecture</h3>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+              <div style="background: linear-gradient(135deg, rgba(0,217,255,0.15), rgba(168,85,247,0.15)); padding: 20px; border-radius: 12px; border: 2px solid var(--primary-color);">
+                <i class="fab fa-js-square" style="font-size: 2.5rem; color: var(--primary-color);"></i>
+                <h4 style="color: white; margin: 10px 0;">Core JavaScript</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Vanilla JS for demos, DOM manipulation, event handling</p>
+              </div>
+
+              <div style="background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(245,158,11,0.15)); padding: 20px; border-radius: 12px; border: 2px solid var(--secondary-color);">
+                <i class="fas fa-cube" style="font-size: 2.5rem; color: var(--secondary-color);"></i>
+                <h4 style="color: white; margin: 10px 0;">Three.js</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">3D particle systems, WebGL rendering</p>
+              </div>
+
+              <div style="background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(16,185,129,0.15)); padding: 20px; border-radius: 12px; border: 2px solid var(--accent-color);">
+                <i class="fas fa-robot" style="font-size: 2.5rem; color: var(--accent-color);"></i>
+                <h4 style="color: white; margin: 10px 0;">AI Integration</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Custom chatbot with context awareness</p>
+              </div>
+
+              <div style="background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(0,217,255,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #10b981;">
+                <i class="fas fa-paint-brush" style="font-size: 2.5rem; color: #10b981;"></i>
+                <h4 style="color: white; margin: 10px 0;">CSS3 Advanced</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Glassmorphism, animations, Grid/Flexbox</p>
+              </div>
+            </div>
+          </div>
+        `,
+        components: [
+          { name: 'Static Site Generator', tech: 'HTML5, CSS3', description: 'Semantic markup with modern CSS features' },
+          { name: 'Interactive Demos', tech: 'Canvas API, JavaScript', description: '17+ live coding demonstrations' },
+          { name: '3D Visualization', tech: 'Three.js, WebGL', description: 'Particle systems and 3D effects' },
+          { name: 'AI Chatbot', tech: 'JavaScript, APIs', description: 'Context-aware portfolio assistant' }
+        ]
+      },
+      imls: {
+        title: 'IMLS Data Integration Architecture',
+        description: 'Enterprise ETL pipeline for museum and library data from 50+ states',
+        diagram: `
+          <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 15px; border: 1px solid rgba(245,87,108,0.2);">
+            <div style="text-align: center; margin-bottom: 40px;">
+              <h3 style="color: #f5576c; margin: 0;">Multi-Source Data Integration Pipeline</h3>
+              <p style="color: var(--text-secondary); margin-top: 10px;">Processing 200K+ records across 5+ years of historical data</p>
+            </div>
+            
+            <!-- Data Flow Diagram -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+              <div style="flex: 1; min-width: 200px; background: linear-gradient(135deg, rgba(245,87,108,0.15), rgba(240,147,251,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #f5576c;">
+                <i class="fas fa-database" style="font-size: 2.5rem; color: #f5576c;"></i>
+                <h4 style="color: white; margin: 10px 0;">Data Sources</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">50 states + territories<br>5+ years historical<br>Multiple formats</p>
+              </div>
+
+              <div style="text-align: center; color: var(--primary-color); font-size: 2rem;">→</div>
+
+              <div style="flex: 1; min-width: 200px; background: linear-gradient(135deg, rgba(0,217,255,0.15), rgba(168,85,247,0.15)); padding: 20px; border-radius: 12px; border: 2px solid var(--primary-color);">
+                <i class="fas fa-cogs" style="font-size: 2.5rem; color: var(--primary-color);"></i>
+                <h4 style="color: white; margin: 10px 0;">ETL Pipeline</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Python/Pandas<br>Data cleaning<br>Pattern analysis</p>
+              </div>
+
+              <div style="text-align: center; color: var(--primary-color); font-size: 2rem;">→</div>
+
+              <div style="flex: 1; min-width: 200px; background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(245,158,11,0.15)); padding: 20px; border-radius: 12px; border: 2px solid var(--secondary-color);">
+                <i class="fas fa-chart-bar" style="font-size: 2.5rem; color: var(--secondary-color);"></i>
+                <h4 style="color: white; margin: 10px 0;">Analytics Layer</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Power BI dashboards<br>Trend analysis<br>Geographic insights</p>
+              </div>
+            </div>
+
+            <div style="background: rgba(245,87,108,0.1); padding: 20px; border-radius: 10px; border-left: 4px solid #f5576c; margin-top: 20px;">
+              <h4 style="color: #f5576c; margin: 0 0 10px 0;"><i class="fas fa-lightbulb"></i> Key Design Decisions</h4>
+              <ul style="color: var(--text-secondary); margin: 0; padding-left: 20px;">
+                <li>Normalized data schema to handle inconsistent state formats</li>
+                <li>Automated time-series joins across multiple years</li>
+                <li>Custom validation rules for geographic data integrity</li>
+                <li>95% reduction in manual processing time</li>
+              </ul>
+            </div>
+          </div>
+        `,
+        components: [
+          { name: 'Data Ingestion Layer', tech: 'Python, Pandas, NumPy', description: 'Multi-source data collection from 50+ states and territories' },
+          { name: 'ETL Pipeline', tech: 'Python, SQL, Custom Scripts', description: 'Transform, clean, and standardize heterogeneous data formats' },
+          { name: 'Data Warehouse', tech: 'SQL Server, Dimensional Modeling', description: 'Centralized repository with historical data spanning 5+ years' },
+          { name: 'Analytics Engine', tech: 'Power BI, DAX, Python', description: 'Advanced visualizations and trend analysis across geographic regions' }
+        ]
+      },
+      ittss: {
+        title: 'ITTSS LMS Migration Architecture',
+        description: 'Enterprise learning management system with real-time analytics',
+        diagram: `
+          <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 15px; border: 1px solid rgba(79,172,254,0.2);">
+            <div style="text-align: center; margin-bottom: 40px;">
+              <h3 style="color: #4facfe; margin: 0;">Dual-System Integration with Power BI Analytics</h3>
+              <p style="color: var(--text-secondary); margin-top: 10px;">Zero data loss migration with real-time reporting dashboards</p>
+            </div>
+            
+            <!-- System Architecture -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+              <div style="background: linear-gradient(135deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #4facfe; text-align: center;">
+                <i class="fas fa-clipboard-check" style="font-size: 2.5rem; color: #4facfe;"></i>
+                <h4 style="color: white; margin: 10px 0;">Qualtrics Source</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Legacy training records<br>Survey responses<br>Historical data</p>
+              </div>
+
+              <div style="background: linear-gradient(135deg, rgba(0,242,254,0.15), rgba(79,172,254,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #00f2fe; text-align: center;">
+                <i class="fas fa-graduation-cap" style="font-size: 2.5rem; color: #00f2fe;"></i>
+                <h4 style="color: white; margin: 10px 0;">New LMS Platform</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Modern interface<br>50K+ records migrated<br>Zero data loss</p>
+              </div>
+            </div>
+
+            <!-- Power BI Dashboard Suite -->
+            <div style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(245,158,11,0.1)); padding: 25px; border-radius: 12px; border: 2px solid var(--secondary-color); margin-bottom: 20px;">
+              <h4 style="color: var(--secondary-color); margin: 0 0 20px 0; text-align: center;"><i class="fas fa-chart-line"></i> Power BI Analytics Suite</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: rgba(168,85,247,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid var(--secondary-color);">
+                  <strong style="color: var(--secondary-color);">Registration Dashboard</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">Real-time enrollment tracking & capacity planning</p>
+                </div>
+                <div style="background: rgba(0,217,255,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary-color);">
+                  <strong style="color: var(--primary-color);">Completion Analytics</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">Progress monitoring & certification tracking</p>
+                </div>
+                <div style="background: rgba(245,158,11,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid var(--accent-color);">
+                  <strong style="color: var(--accent-color);">Outreach Metrics</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">Communication effectiveness & engagement rates</p>
+                </div>
+                <div style="background: rgba(16,185,129,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #10b981;">
+                  <strong style="color: #10b981;">Leadership Reports</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">Executive summaries & KPI dashboards</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: rgba(79,172,254,0.1); padding: 20px; border-radius: 10px; border-left: 4px solid #4facfe;">
+              <h4 style="color: #4facfe; margin: 0 0 10px 0;"><i class="fas fa-rocket"></i> Impact Achieved</h4>
+              <p style="color: var(--text-secondary); margin: 0; line-height: 1.8;">
+                <strong>Real-time insights</strong> replacing 3-day manual reporting delays<br>
+                <strong>100% data integrity</strong> with zero loss during migration<br>
+                <strong>Executive visibility</strong> into training effectiveness across programs
+              </p>
+            </div>
+          </div>
+        `,
+        components: [
+          { name: 'Qualtrics Integration Layer', tech: 'REST APIs, Python', description: 'Extract training records and survey data from legacy system' },
+          { name: 'LMS Platform', tech: 'Modern LMS, SQL Database', description: 'New learning management system with enhanced capabilities' },
+          { name: 'ETL Pipeline', tech: 'Python, Pandas, Data Validation', description: 'Migrate 50K+ records with zero data loss and quality assurance' },
+          { name: 'Power BI Suite', tech: 'Power BI, DAX, SQL', description: 'Four specialized dashboards: Registration, Completion, Outreach, Leadership' }
+        ]
+      },
+      aiRecruitment: {
+        title: 'AI Recruitment Platform Architecture',
+        description: 'Proprietary AI-powered candidate matching system (Patent Pending)',
+        diagram: `
+          <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 15px; border: 1px solid rgba(250,112,154,0.2);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <i class="fas fa-lock" style="font-size: 3rem; color: #fa709a; margin-bottom: 15px;"></i>
+              <h3 style="color: #fa709a; margin: 0;">High-Level System Architecture</h3>
+              <p style="color: var(--text-secondary); margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <strong style="color: #fee140;">⚠️ Patent Pending:</strong> Detailed technical implementation cannot be disclosed. Below is a general overview only.
+              </p>
+            </div>
+            
+            <!-- High-Level Components -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px;">
+              <div style="background: linear-gradient(135deg, rgba(250,112,154,0.15), rgba(254,230,224,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #fa709a; text-align: center;">
+                <i class="fas fa-file-alt" style="font-size: 2.5rem; color: #fa709a;"></i>
+                <h4 style="color: white; margin: 10px 0;">Resume Parser</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Multi-format support<br>NLP extraction<br>Skill identification</p>
+              </div>
+
+              <div style="background: linear-gradient(135deg, rgba(254,230,224,0.15), rgba(254,225,64,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #fee140; text-align: center;">
+                <i class="fas fa-brain" style="font-size: 2.5rem; color: #fee140;"></i>
+                <h4 style="color: white; margin: 10px 0;">AI Matching Engine</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Proprietary algorithms<br>[Details confidential]<br>Accuracy optimization</p>
+              </div>
+
+              <div style="background: linear-gradient(135deg, rgba(254,225,64,0.15), rgba(250,112,154,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #fa709a; text-align: center;">
+                <i class="fas fa-users" style="font-size: 2.5rem; color: #10b981;"></i>
+                <h4 style="color: white; margin: 10px 0;">Recruiter Dashboard</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Real-time insights<br>Candidate rankings<br>Workflow automation</p>
+              </div>
+            </div>
+
+            <div style="background: rgba(254,225,64,0.1); padding: 25px; border-radius: 12px; border: 2px dashed #fee140; margin-bottom: 20px;">
+              <h4 style="color: #fee140; margin: 0 0 15px 0; text-align: center;"><i class="fas fa-shield-alt"></i> Intellectual Property Protection</h4>
+              <p style="color: var(--text-secondary); text-align: center; line-height: 1.8; margin: 0;">
+                This project involves <strong style="color: white;">proprietary machine learning algorithms</strong> and <strong style="color: white;">novel matching techniques</strong><br>
+                that are currently undergoing patent review. Specific implementation details, training methodologies,<br>
+                and algorithmic approaches cannot be publicly disclosed at this time.
+              </p>
+            </div>
+
+            <div style="background: rgba(250,112,154,0.1); padding: 20px; border-radius: 10px; border-left: 4px solid #fa709a;">
+              <h4 style="color: #fa709a; margin: 0 0 10px 0;"><i class="fas fa-flask"></i> Current Status</h4>
+              <p style="color: var(--text-secondary); margin: 0; line-height: 1.8;">
+                <strong>Beta Testing Phase:</strong> Refining algorithms with real recruiter feedback<br>
+                <strong>Company IP:</strong> Spearheaded development as internal innovation project<br>
+                <strong>Impact Goal:</strong> Reduce time-to-hire while improving candidate-role match quality
+              </p>
+            </div>
+          </div>
+        `,
+        components: [
+          { name: 'Document Processing', tech: 'NLP, Custom Parsers', description: 'Multi-format resume parsing with intelligent data extraction' },
+          { name: 'AI Matching Engine', tech: '[Proprietary - Patent Pending]', description: 'Core matching algorithms and scoring system (confidential)' },
+          { name: 'Analytics Dashboard', tech: 'JavaScript, Data Visualization', description: 'Real-time candidate insights and recruiter workflow tools' },
+          { name: 'API Layer', tech: 'RESTful APIs, Authentication', description: 'Secure integration with existing recruitment platforms' }
+        ]
+      },
+      quickplay: {
+        title: 'QuickPlay - iOS Game Architecture',
+        description: 'Real-time multiplayer mobile gaming platform with instant lobby connectivity',
+        diagram: `
+          <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 15px; border: 1px solid rgba(102,126,234,0.2);">
+            <div style="text-align: center; margin-bottom: 40px;">
+              <h3 style="color: #667eea; margin: 0;">Native iOS Multiplayer Game Platform</h3>
+              <p style="color: var(--text-secondary); margin-top: 10px;">Optimized for 2-10 minute sessions with sub-100ms latency</p>
+            </div>
+            
+            <!-- Client-Server Architecture -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+              <div style="flex: 1; min-width: 220px; background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #667eea; text-align: center;">
+                <i class="fab fa-apple" style="font-size: 2.5rem; color: #667eea;"></i>
+                <h4 style="color: white; margin: 10px 0;">iOS Client</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Swift + SwiftUI<br>Native frameworks<br>Smooth 60 FPS</p>
+              </div>
+
+              <div style="text-align: center; color: var(--primary-color); font-size: 2rem;">⟷</div>
+
+              <div style="flex: 1; min-width: 220px; background: linear-gradient(135deg, rgba(118,75,162,0.15), rgba(0,217,255,0.15)); padding: 20px; border-radius: 12px; border: 2px solid #764ba2; text-align: center;">
+                <i class="fas fa-server" style="font-size: 2.5rem; color: #764ba2;"></i>
+                <h4 style="color: white; margin: 10px 0;">Multiplayer Server</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Real-time sync<br>8-digit lobby codes<br>Sub-100ms latency</p>
+              </div>
+
+              <div style="text-align: center; color: var(--primary-color); font-size: 2rem;">⟷</div>
+
+              <div style="flex: 1; min-width: 220px; background: linear-gradient(135deg, rgba(0,217,255,0.15), rgba(168,85,247,0.15)); padding: 20px; border-radius: 12px; border: 2px solid var(--primary-color); text-align: center;">
+                <i class="fas fa-database" style="font-size: 2.5rem; color: var(--primary-color);"></i>
+                <h4 style="color: white; margin: 10px 0;">Backend Services</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Lobby management<br>Player state<br>Game orchestration</p>
+              </div>
+            </div>
+
+            <!-- Game Features Grid -->
+            <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 12px; border: 2px solid #667eea; margin-bottom: 20px;">
+              <h4 style="color: #667eea; margin: 0 0 20px 0; text-align: center;"><i class="fas fa-gamepad"></i> Game Collection Features</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="background: rgba(102,126,234,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #667eea;">
+                  <strong style="color: #667eea;">12+ Mini-Games</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">Diverse genres: reflex, strategy, trivia, party games</p>
+                </div>
+                <div style="background: rgba(118,75,162,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #764ba2;">
+                  <strong style="color: #764ba2;">Instant Lobby Connect</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">8-digit codes, join in <5 seconds</p>
+                </div>
+                <div style="background: rgba(0,217,255,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary-color);">
+                  <strong style="color: var(--primary-color);">2-8 Player Support</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">Scalable multiplayer per game type</p>
+                </div>
+                <div style="background: rgba(168,85,247,0.1); padding: 15px; border-radius: 8px; border-left: 3px solid var(--secondary-color);">
+                  <strong style="color: var(--secondary-color);">Session Optimized</strong>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 5px 0 0 0;">Perfect for 2-10 minute breaks</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: rgba(102,126,234,0.1); padding: 20px; border-radius: 10px; border-left: 4px solid #667eea;">
+              <h4 style="color: #667eea; margin: 0 0 10px 0;"><i class="fas fa-bolt"></i> Technical Highlights</h4>
+              <p style="color: var(--text-secondary); margin: 0; line-height: 1.8;">
+                <strong>Native Swift Performance:</strong> Buttery smooth 60 FPS gameplay on iOS devices<br>
+                <strong>Optimized Networking:</strong> Custom protocols for minimal data transfer and low latency<br>
+                <strong>Smart Lobby System:</strong> Simple 8-digit codes replace complex friend systems<br>
+                <strong>Unreleased Prototype:</strong> Feature-complete and fully functional, ready for beta testing
+              </p>
+            </div>
+          </div>
+        `,
+        components: [
+          { name: 'iOS Game Client', tech: 'Swift, SwiftUI, SpriteKit', description: 'Native iOS app with 12+ mini-games optimized for 60 FPS performance' },
+          { name: 'Multiplayer Networking', tech: 'Custom Protocols, WebSockets', description: 'Real-time synchronization with sub-100ms latency and lobby code system' },
+          { name: 'Lobby Management', tech: 'Backend Services', description: '8-digit lobby codes for instant friend connectivity and room orchestration' },
+          { name: 'Game State Engine', tech: 'Swift, Game Logic', description: 'Scalable architecture supporting 2-8 simultaneous players per game type' }
+        ]
+      }
+    };
+
+    function openCaseStudy(projectId) {
+      const study = caseStudies[projectId];
+      if (!study) return;
+
+      const modal = document.getElementById('caseStudyModal');
+      const content = document.getElementById('caseStudyContent');
+      
+      const isPlaceholder = projectId.includes('work-project');
+      
+      content.innerHTML = `
+        <div style="text-align: center; margin-bottom: 40px; overflow-wrap: break-word;">
+          <i class="fas ${study.icon}" style="font-size: 4rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+          <h1 style="color: var(--secondary-color); margin: 0 0 10px 0; font-size: 2.5rem; word-wrap: break-word;">${study.title}</h1>
+          ${isPlaceholder ? '<p style="color: var(--accent-color); font-size: 1.1rem; margin: 0;">📝 Placeholder - Replace with your real project details</p>' : '<p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0;">Deep Dive Case Study</p>'}
+        </div>
+
+        <!-- Problem -->
+        <div style="background: rgba(255,76,76,0.1); padding: 30px; border-radius: 15px; border-left: 5px solid #ff4c4c; margin-bottom: 30px; box-sizing: border-box; overflow-wrap: break-word;">
+          <h2 style="color: #ff4c4c; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <i class="fas fa-exclamation-triangle"></i> The Problem
+          </h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin: 0; font-size: 1.05rem; word-wrap: break-word; overflow-wrap: break-word;">${study.problem}</p>
+        </div>
+
+        <!-- Solution -->
+        <div style="background: rgba(0,217,255,0.1); padding: 30px; border-radius: 15px; border-left: 5px solid var(--primary-color); margin-bottom: 30px; box-sizing: border-box; overflow-wrap: break-word;">
+          <h2 style="color: var(--primary-color); margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <i class="fas fa-lightbulb"></i> The Solution
+          </h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin: 0; font-size: 1.05rem; word-wrap: break-word; overflow-wrap: break-word;">${study.solution}</p>
+        </div>
+
+        <!-- Impact -->
+        <div style="background: rgba(16,185,129,0.1); padding: 30px; border-radius: 15px; border-left: 5px solid #10b981; margin-bottom: 30px; box-sizing: border-box; overflow-wrap: break-word;">
+          <h2 style="color: #10b981; margin: 0 0 20px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <i class="fas fa-rocket"></i> The Impact
+          </h2>
+          <div style="display: grid; gap: 15px;">
+            ${study.impact.map(item => `
+              <div style="display: flex; align-items: start; gap: 15px;">
+                <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.5rem; margin-top: 2px; flex-shrink: 0;"></i>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin: 0; font-size: 1.05rem; word-wrap: break-word; overflow-wrap: break-word; flex: 1;">${item}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div style="background: rgba(168,85,247,0.1); padding: 30px; border-radius: 15px; border: 2px solid var(--secondary-color); margin-bottom: 30px; box-sizing: border-box; overflow-wrap: break-word;">
+          <h2 style="color: var(--secondary-color); margin: 0 0 25px 0; text-align: center;">📊 Key Metrics</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+            ${Object.entries(study.metrics).map(([key, value]) => `
+              <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; box-sizing: border-box; overflow-wrap: break-word;">
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 5px; word-wrap: break-word;">${value}</div>
+                <div style="color: var(--text-secondary); font-size: 0.9rem; text-transform: capitalize; word-wrap: break-word;">${key.replace(/([A-Z])/g, ' $1').trim()}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Technologies -->
+        <div style="text-align: center; overflow-wrap: break-word;">
+          <h3 style="color: var(--text-secondary); margin-bottom: 20px;">Technologies Used</h3>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+            ${study.technologies.map(tech => `
+              <span style="padding: 10px 20px; background: linear-gradient(135deg, rgba(0,217,255,0.2), rgba(168,85,247,0.2)); border-radius: 25px; color: white; font-weight: 600; border: 1px solid rgba(0,217,255,0.3); word-wrap: break-word; box-sizing: border-box;">${tech}</span>
+            `).join('')}
+          </div>
+        </div>
+
+        ${isPlaceholder ? `
+          <div style="margin-top: 40px; padding: 25px; background: rgba(245,158,11,0.1); border-radius: 15px; border: 2px solid var(--accent-color); box-sizing: border-box; overflow-wrap: break-word;">
+            <h3 style="color: var(--accent-color); margin: 0 0 15px 0;"><i class="fas fa-info-circle"></i> How to Update This Case Study</h3>
+            <p style="color: var(--text-secondary); line-height: 1.8; margin: 0; word-wrap: break-word;">
+              Share your real work project with me! Tell me:<br>
+              • What problem you were solving<br>
+              • What technologies you used<br>
+              • How you architected the solution<br>
+              • What the measurable impact was<br><br>
+              I'll format it professionally and update both the case study and architecture diagram!
+            </p>
+          </div>
+        ` : ''}
+      `;
+      
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCaseStudy() {
+      document.getElementById('caseStudyModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function openArchitecture(projectId) {
+      const arch = architectures[projectId];
+      if (!arch) return;
+
+      const modal = document.getElementById('architectureModal');
+      const content = document.getElementById('architectureContent');
+      
+      const isPlaceholder = projectId.includes('work-project');
+      
+      content.innerHTML = `
+        <div style="text-align: center; margin-bottom: 40px; overflow-wrap: break-word;">
+          <i class="fas fa-project-diagram" style="font-size: 4rem; color: var(--accent-color); margin-bottom: 15px;"></i>
+          <h1 style="color: var(--accent-color); margin: 0 0 10px 0; font-size: 2.5rem; word-wrap: break-word;">${arch.title}</h1>
+          <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0; word-wrap: break-word;">${arch.description}</p>
+        </div>
+
+        <!-- Architecture Diagram -->
+        <div style="margin-bottom: 40px; overflow-wrap: break-word; box-sizing: border-box;">
+          ${arch.diagram}
+        </div>
+
+        <!-- Component Breakdown -->
+        <div style="overflow-wrap: break-word;">
+          <h2 style="color: var(--accent-color); margin: 0 0 25px 0; text-align: center;">
+            <i class="fas fa-cubes"></i> System Components
+          </h2>
+          <div style="display: grid; gap: 20px;">
+            ${arch.components.map((comp, index) => `
+              <div style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 12px; border-left: 4px solid ${['var(--primary-color)', 'var(--secondary-color)', 'var(--accent-color)', '#10b981'][index % 4]}; box-sizing: border-box; overflow-wrap: break-word;">
+                <h3 style="color: white; margin: 0 0 10px 0; font-size: 1.3rem; word-wrap: break-word;">${comp.name}</h3>
+                <div style="color: ${['var(--primary-color)', 'var(--secondary-color)', 'var(--accent-color)', '#10b981'][index % 4]}; font-weight: 600; margin-bottom: 10px; font-size: 0.95rem; word-wrap: break-word;">
+                  <i class="fas fa-tools"></i> ${comp.tech}
+                </div>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin: 0; word-wrap: break-word; overflow-wrap: break-word;">${comp.description}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        ${isPlaceholder ? `
+          <div style="margin-top: 40px; padding: 25px; background: rgba(245,158,11,0.1); border-radius: 15px; border: 2px solid var(--accent-color); box-sizing: border-box; overflow-wrap: break-word;">
+            <h3 style="color: var(--accent-color); margin: 0 0 15px 0;"><i class="fas fa-lightbulb"></i> Architecture Tips</h3>
+            <p style="color: var(--text-secondary); line-height: 1.8; margin: 0; word-wrap: break-word;">
+              Great architecture diagrams show:<br>
+              • Clear data flow between components<br>
+              • Technology choices at each layer<br>
+              • How services communicate<br>
+              • Scaling strategies<br>
+              • Security considerations<br><br>
+              Describe your system to me and I'll help create a professional visualization!
+            </p>
+          </div>
+        ` : ''}
+      `;
+      
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeArchitecture() {
+      document.getElementById('architectureModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close modals on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeCaseStudy();
+        closeArchitecture();
+      }
+    });
+  </script>
+  
+  <!-- Back to Top Button -->
+  <script src="../js/back-to-top.js"></script>
 </body>
 </html>
