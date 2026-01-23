@@ -1928,7 +1928,29 @@
     }
   </style>
 </head>
-<body data-page="about">
+<body data-page="about" style="cursor: none;">
+  <!-- Stunning Preloader -->
+  <div id="preloader" class="preloader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%); display: flex; align-items: center; justify-content: center; z-index: 99999; transition: opacity 0.5s ease, visibility 0.5s ease;">
+    <div class="preloader-content" style="text-align: center;">
+      <div class="preloader-logo" style="position: relative; width: 150px; height: 150px; margin: 0 auto 30px;">
+        <div class="logo-ring" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 3px solid transparent; width: 150px; height: 150px; border-top-color: var(--primary-color); animation: rotate 2s linear infinite;"></div>
+        <div class="logo-ring" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 3px solid transparent; width: 120px; height: 120px; border-right-color: var(--secondary-color); animation: rotate 1.5s linear infinite reverse; animation-delay: 0.2s;"></div>
+        <div class="logo-ring" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 3px solid transparent; width: 90px; height: 90px; border-bottom-color: var(--accent-color); animation: rotate 1s linear infinite; animation-delay: 0.4s;"></div>
+        <div class="logo-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s ease-in-out infinite;">NH</div>
+      </div>
+      <div class="progress-text" style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">Loading <span id="progress-percent">0</span>%</div>
+    </div>
+  </div>
+
+  <!-- Custom Magnetic Cursor -->
+  <div class="custom-cursor" style="pointer-events: none; position: fixed; top: 0; left: 0; z-index: 99998; mix-blend-mode: difference;">
+    <div class="cursor-dot" style="width: 8px; height: 8px; background: var(--primary-color); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); transition: width 0.3s ease, height 0.3s ease; box-shadow: 0 0 20px var(--primary-color);"></div>
+    <div class="cursor-outline" style="width: 40px; height: 40px; border: 2px solid var(--primary-color); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); transition: all 0.15s ease-out; opacity: 0.5;"></div>
+  </div>
+
+  <!-- WebGL Fluid Canvas -->
+  <canvas id="fluid-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; opacity: 0.15;"></canvas>
+
   <div id="canvas-container"></div>
   
   <!-- Scroll Progress Bar -->
@@ -3616,6 +3638,11 @@
         alert('Failed to copy to clipboard');
       });
     }
+  </script>
+
+  <!-- Elite Features Scripts -->
+  <script>
+    (function(){const c=document.querySelector('.custom-cursor'),d=document.querySelector('.cursor-dot'),o=document.querySelector('.cursor-outline');let x=0,y=0,dx=0,dy=0,ox=0,oy=0;document.addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY});function animate(){dx+=(x-dx)*0.9;dy+=(y-dy)*0.9;ox+=(x-ox)*0.15;oy+=(y-oy)*0.15;d.style.left=dx+'px';d.style.top=dy+'px';o.style.left=ox+'px';o.style.top=oy+'px';requestAnimationFrame(animate)}animate();document.querySelectorAll('a,button,.card').forEach(el=>{el.addEventListener('mouseenter',()=>c.classList.add('hover'));el.addEventListener('mouseleave',()=>c.classList.remove('hover'))})})();window.addEventListener('load',()=>{const p=document.getElementById('preloader'),pc=document.getElementById('progress-percent');let pr=0;const i=setInterval(()=>{pr+=Math.random()*15;if(pr>100)pr=100;pc.textContent=Math.floor(pr);if(pr>=100){clearInterval(i);setTimeout(()=>p.style.display='none',500)}},150)});const fc=document.getElementById('fluid-canvas'),gl=fc?.getContext('webgl');if(gl){fc.width=window.innerWidth;fc.height=window.innerHeight;gl.viewport(0,0,fc.width,fc.height);const vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,'attribute vec2 position;void main(){gl_Position=vec4(position,0.0,1.0);}');gl.compileShader(vs);const fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision mediump float;uniform vec2 resolution;uniform float time;uniform vec2 mouse;void main(){vec2 uv=gl_FragCoord.xy/resolution.xy;vec2 m=mouse/resolution.xy;float d=length(uv-m);vec2 flow=(uv-m)/(d+0.1);uv+=flow*0.02*sin(time*2.0+d*10.0);vec3 col=0.5+0.5*cos(time+uv.xyx*2.0+vec3(0,2,4));col*=1.0-d*0.5;gl_FragColor=vec4(col*0.3,0.8);}');gl.compileShader(fs);const p=gl.createProgram();gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);gl.useProgram(p);const pos=new Float32Array([-1,-1,1,-1,-1,1,1,1]),buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,pos,gl.STATIC_DRAW);const pl=gl.getAttribLocation(p,'position');gl.enableVertexAttribArray(pl);gl.vertexAttribPointer(pl,2,gl.FLOAT,false,0,0);const rl=gl.getUniformLocation(p,'resolution'),tl=gl.getUniformLocation(p,'time'),ml=gl.getUniformLocation(p,'mouse');let mx=0,my=0;document.addEventListener('mousemove',e=>{mx=e.clientX;my=fc.height-e.clientY});const st=Date.now();function render(){const t=(Date.now()-st)*0.001;gl.uniform2f(rl,fc.width,fc.height);gl.uniform1f(tl,t);gl.uniform2f(ml,mx,my);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(render)}render()}
   </script>
   
   <!-- Back to Top Button -->
