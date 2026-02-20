@@ -1041,6 +1041,314 @@
   </div>
 
   <div class="showcase-grid">
+    <!-- Typing Speed Test -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-keyboard"></i></div>
+        <h3>Typing Speed Test</h3>
+      </div>
+      <p>Test your typing speed and accuracy!</p>
+      
+      <div class="demo-content">
+        <div class="typing-area" id="typingText">The quick brown fox jumps over the lazy dog. Programming requires practice and patience.</div>
+        <input type="text" class="typing-input" id="typingInput" placeholder="Start typing here...">
+        
+        <div class="typing-stats">
+          <div class="stat">
+            <div class="stat-value" id="wpm">0</div>
+            <div class="stat-label">WPM</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="accuracy">100%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="time">0s</div>
+            <div class="stat-label">Time</div>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="resetTypingTest()">Reset</button>
+      </div>
+    </div>
+
+    <!-- Color Mixer -->
+    <div class="demo-card" data-category="utilities creative">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-palette"></i></div>
+        <h3>Color Mixer</h3>
+      </div>
+      <p>Create and visualize custom colors!</p>
+      
+      <div class="demo-content">
+        <div class="color-display" id="colorDisplay"></div>
+        
+        <div class="color-input-group">
+          <div class="color-input-wrapper">
+            <label>Red (0-255)</label>
+            <input type="number" id="redInput" min="0" max="255" value="0" onchange="updateColor()">
+          </div>
+          <div class="color-input-wrapper">
+            <label>Green (0-255)</label>
+            <input type="number" id="greenInput" min="0" max="255" value="217" onchange="updateColor()">
+          </div>
+          <div class="color-input-wrapper">
+            <label>Blue (0-255)</label>
+            <input type="number" id="blueInput" min="0" max="255" value="255" onchange="updateColor()">
+          </div>
+        </div>
+        
+        <div style="text-align: center; color: var(--text-secondary); margin-top: 10px;">
+          <strong>HEX:</strong> <span id="hexOutput">#00d9ff</span>
+        </div>
+        
+        <button class="btn" onclick="copyColor()">Copy HEX Code</button>
+      </div>
+    </div>
+
+    <!-- Calculator -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-calculator"></i></div>
+        <h3>Calculator</h3>
+      </div>
+      <p>A functional calculator built with JavaScript!</p>
+      
+      <div class="demo-content">
+        <div class="calculator">
+          <div class="calc-display" id="calcDisplay">0</div>
+          <div class="calc-buttons">
+            <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+            <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+            <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+            <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
+            
+            <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+            <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+            <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+            <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+            
+            <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+            <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+            <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+            <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+            
+            <button class="calc-btn" onclick="appendToCalc('0')">0</button>
+            <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+            <button class="calc-btn operator" onclick="clearCalc()">C</button>
+            <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+            
+            <button class="calc-btn equals" onclick="calculateResult()">=</button>
+            <button class="calc-btn operator" onclick="backspace()">←</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Generator -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-lock"></i></div>
+        <h3>Password Generator</h3>
+      </div>
+      <p>Generate secure passwords with custom options!</p>
+      
+      <div class="demo-content">
+        <div class="password-display" id="passwordDisplay">Click generate to create a password</div>
+        
+        <div class="slider-group">
+          <label>Length: <span id="lengthValue">16</span></label>
+          <input type="range" id="lengthSlider" min="8" max="32" value="16" oninput="document.getElementById('lengthValue').textContent = this.value">
+        </div>
+        
+        <div class="password-options">
+          <div class="password-option">
+            <input type="checkbox" id="includeUpper" checked>
+            <label for="includeUpper">Include Uppercase Letters</label>
+          </div>
+          <div class="password-option">
+            <input type="checkbox" id="includeLower" checked>
+            <label for="includeLower">Include Lowercase Letters</label>
+          </div>
+          <div class="password-option">
+            <input type="checkbox" id="includeNumbers" checked>
+            <label for="includeNumbers">Include Numbers</label>
+          </div>
+          <div class="password-option">
+            <input type="checkbox" id="includeSymbols" checked>
+            <label for="includeSymbols">Include Symbols (!@#$%^&*)</label>
+          </div>
+        </div>
+        
+        <button class="btn" onclick="generatePassword()">Generate Password</button>
+        <button class="btn" onclick="copyPassword()">Copy to Clipboard</button>
+      </div>
+    </div>
+
+    <!-- Interactive Todo List -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-tasks"></i></div>
+        <h3>Todo List</h3>
+      </div>
+      <p>Manage tasks with this interactive todo list!</p>
+      
+      <div class="demo-content">
+        <div class="todo-input">
+          <input type="text" id="todoInput" placeholder="Add a new task...">
+          <button class="btn" onclick="addTodo()" style="width: auto; padding: 12px 25px; margin: 0;">Add</button>
+        </div>
+        
+        <ul class="todo-list" id="todoList">
+          <!-- Todos will be added here -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- Code Formatter -->
+    <div class="demo-card" data-category="utilities" style="grid-column: span 2;">
+      <div class="demo-header">
+        <div class="demo-icon"><i class="fas fa-code"></i></div>
+        <h3>JSON Formatter</h3>
+      </div>
+      <p>Format and validate JSON data!</p>
+      
+      <div class="demo-content">
+        <div class="code-editor">
+          <div class="editor-header">
+            <div class="editor-dot red"></div>
+            <div class="editor-dot yellow"></div>
+            <div class="editor-dot green"></div>
+            <span style="margin-left: 10px; color: var(--text-secondary); font-size: 0.9rem;">JSON Input</span>
+          </div>
+          <div class="editor-content">
+            <textarea id="jsonInput" placeholder='Enter JSON here... e.g., {"name": "Nick", "role": "Developer"}'></textarea>
+          </div>
+          <div class="editor-output" id="jsonOutput">Formatted JSON will appear here...</div>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+          <button class="btn" onclick="formatJSON()">Format JSON</button>
+          <button class="btn" onclick="minifyJSON()">Minify JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory Game Demo -->
+    <div class="demo-card" data-category="games">
+      <div class="demo-header">
+        <i class="fas fa-brain demo-icon"></i>
+        <h3>Memory Match Game</h3>
+      </div>
+      <div class="demo-content">
+        <p>Test your memory by matching pairs of cards!</p>
+        
+        <div style="margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div>Moves: <span id="memoryMoves" style="color: var(--primary-color); font-weight: bold;">0</span></div>
+            <div>Matches: <span id="memoryMatches" style="color: var(--secondary-color); font-weight: bold;">0/8</span></div>
+            <div>Time: <span id="memoryTime" style="color: var(--accent-color); font-weight: bold;">0s</span></div>
+          </div>
+          <div id="memoryGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 400px; margin: 0 auto;"></div>
+        </div>
+        
+        <button class="btn" onclick="resetMemoryGame()">Reset Game</button>
+      </div>
+    </div>
+
+    <!-- Stopwatch Demo -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <i class="fas fa-stopwatch demo-icon"></i>
+        <h3>Precision Stopwatch</h3>
+      </div>
+      <div class="demo-content">
+        <p>High-precision stopwatch with lap tracking.</p>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div id="stopwatchDisplay" style="font-size: 3rem; font-weight: bold; color: var(--primary-color); font-family: 'Courier New', monospace; margin: 20px 0;">00:00:00.000</div>
+          
+          <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+            <button class="btn" id="stopwatchStartBtn" onclick="startStopwatch()">Start</button>
+            <button class="btn" onclick="stopStopwatch()" style="background: var(--secondary-color);">Stop</button>
+            <button class="btn" onclick="lapStopwatch()" style="background: var(--accent-color);">Lap</button>
+            <button class="btn" onclick="resetStopwatch()">Reset</button>
+          </div>
+          
+          <div id="lapsContainer" style="max-height: 200px; overflow-y: auto; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unit Converter Demo -->
+    <div class="demo-card" data-category="utilities">
+      <div class="demo-header">
+        <i class="fas fa-exchange-alt demo-icon"></i>
+        <h3>Unit Converter</h3>
+      </div>
+      <div class="demo-content">
+        <p>Convert between different units of measurement.</p>
+        
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Category:</label>
+          <select id="converterCategory" onchange="updateConverterUnits()" style="width: 100%; padding: 10px; background: rgba(10,10,15,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 15px;">
+            <option value="length" style="background: #0a0a0f; color: white;">Length</option>
+            <option value="weight" style="background: #0a0a0f; color: white;">Weight</option>
+            <option value="temperature" style="background: #0a0a0f; color: white;">Temperature</option>
+            <option value="data" style="background: #0a0a0f; color: white;">Data Storage</option>
+          </select>
+          
+          <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: end;">
+            <div>
+              <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">From:</label>
+              <input type="number" id="converterInput" oninput="convertUnits()" placeholder="Enter value" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--text-primary);">
+              <select id="converterFromUnit" onchange="convertUnits()" style="width: 100%; padding: 10px; background: rgba(10,10,15,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-top: 5px;"></select>
+            </div>
+            
+            <div style="padding-bottom: 45px;">
+              <i class="fas fa-arrow-right" style="color: var(--primary-color); font-size: 1.5rem;"></i>
+            </div>
+            
+            <div>
+              <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">To:</label>
+              <input type="text" id="converterOutput" readonly placeholder="Result" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--primary-color); font-weight: bold;">
+              <select id="converterToUnit" onchange="convertUnits()" style="width: 100%; padding: 10px; background: rgba(10,10,15,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-top: 5px;"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawing Canvas Demo -->
+    <div class="demo-card" data-category="creative">
+      <div class="demo-header">
+        <i class="fas fa-paint-brush demo-icon"></i>
+        <h3>Drawing Canvas</h3>
+      </div>
+      <div class="demo-content">
+        <p>Express your creativity with this interactive drawing canvas.</p>
+        
+        <div style="margin-bottom: 15px;">
+          <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; align-items: center;">
+            <label style="color: var(--text-secondary);">Brush Size:</label>
+            <input type="range" id="brushSize" min="1" max="20" value="5" style="flex: 1; min-width: 150px;">
+            <span id="brushSizeValue" style="color: var(--primary-color); font-weight: bold;">5px</span>
+            
+            <label style="color: var(--text-secondary); margin-left: 20px;">Color:</label>
+            <input type="color" id="brushColor" value="#00d9ff" style="width: 50px; height: 35px; border: none; border-radius: 5px; cursor: pointer;">
+          </div>
+          
+          <canvas id="drawingCanvas" style="width: 100%; max-width: 600px; height: 400px; background: white; border-radius: 8px; cursor: crosshair; display: block; margin: 0 auto; touch-action: none;"></canvas>
+          
+          <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
+            <button class="btn" onclick="clearCanvas()">Clear Canvas</button>
+            <button class="btn" onclick="downloadDrawing()" style="background: var(--secondary-color);">Download</button>
+            <button class="btn" onclick="toggleEraser()" id="eraserBtn" style="background: var(--accent-color);">Eraser Mode</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 3D Particle System -->
     <div class="demo-card" data-category="creative">
       <div class="demo-header">
