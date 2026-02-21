@@ -61,7 +61,17 @@
       background-size: 60px 60px;
       mask-image: radial-gradient(circle at 50% 20%, rgba(0, 0, 0, 0.9), transparent 70%);
       opacity: 0.35;
-      animation: gridMove 18s linear infinite;
+      animation: gridMove 12s linear infinite;
+    }
+
+    .ai-nick-aurora {
+      position: absolute;
+      inset: -20%;
+      background: conic-gradient(from 180deg at 50% 50%, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.25), rgba(34, 197, 94, 0.2), rgba(0, 217, 255, 0.2));
+      filter: blur(80px);
+      opacity: 0.35;
+      animation: auroraSpin 20s linear infinite;
+      mix-blend-mode: screen;
     }
 
     @keyframes glowFloat {
@@ -78,7 +88,16 @@
         transform: translateY(0);
       }
       to {
-        transform: translateY(60px);
+        transform: translateY(120px);
+      }
+    }
+
+    @keyframes auroraSpin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
       }
     }
 
@@ -164,6 +183,7 @@
   <div class="ai-nick-background">
     <div class="ai-nick-glow one"></div>
     <div class="ai-nick-glow two"></div>
+    <div class="ai-nick-aurora"></div>
     <div class="ai-nick-grid"></div>
   </div>
   <header>

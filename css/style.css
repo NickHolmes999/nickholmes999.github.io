@@ -462,6 +462,7 @@ nav ul {
   padding: 15px 30px;
   box-shadow: var(--shadow-md);
   width: 100%;
+  position: relative;
 }
 
 nav li {
@@ -513,8 +514,11 @@ nav a.active {
 }
 
 nav li.ai-nick-nav {
-  margin-left: auto;
-  align-self: center;
+  position: absolute;
+  right: 12px;
+  top: -12px;
+  margin-left: 0;
+  z-index: 2;
 }
 
 nav a.ai-nick-link {
