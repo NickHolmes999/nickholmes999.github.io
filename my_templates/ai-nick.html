@@ -691,10 +691,30 @@
         radial-gradient(1px 1px at 30% 80%, rgba(255, 255, 255, 0.8), transparent 60%),
         radial-gradient(2px 2px at 70% 30%, rgba(255, 255, 255, 0.9), transparent 60%),
         radial-gradient(1.5px 1.5px at 85% 70%, rgba(255, 255, 255, 0.7), transparent 60%);
-      background-size: 240px 240px;
-      opacity: 0.6;
-      animation: warpRush 6s linear infinite;
+      background-size: 260px 260px;
+      opacity: 0.55;
+      animation: warpFlow 12s linear infinite;
       transform: translateZ(0);
+    }
+
+    .ai-nick-tour-warp::before,
+    .ai-nick-tour-warp::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 10%, rgba(255, 255, 255, 0.6), transparent 60%),
+        radial-gradient(1px 1px at 55% 45%, rgba(255, 255, 255, 0.5), transparent 60%),
+        radial-gradient(2px 2px at 75% 80%, rgba(255, 255, 255, 0.7), transparent 60%);
+      background-size: 320px 320px;
+      opacity: 0.5;
+      animation: warpFlow 18s linear infinite;
+    }
+
+    .ai-nick-tour-warp::after {
+      background-size: 420px 420px;
+      opacity: 0.35;
+      animation-duration: 24s;
     }
 
     .ai-nick-tour-ship {
@@ -766,17 +786,68 @@
     }
 
     .ai-nick-tour-bubble {
-      background: rgba(10, 12, 25, 0.75);
-      border: 1px solid rgba(0, 217, 255, 0.3);
-      border-radius: 18px;
-      padding: 12px 16px;
+      background: rgba(12, 16, 30, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 20px;
+      padding: 14px 18px;
       color: #f8fafc;
-      font-size: 0.95rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(10px);
-      transform: translateY(10px);
+      font-size: 0.98rem;
+      line-height: 1.6;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(14px);
+      transform: translateY(8px);
       opacity: 0;
-      animation: bubbleIn 0.7s ease forwards;
+      animation: bubbleIn 0.5s ease forwards;
+    }
+
+    .ai-nick-tour-bubble .word {
+      display: inline-block;
+      padding: 0 2px;
+      border-radius: 6px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .ai-nick-tour-bubble .word.active {
+      background: rgba(0, 217, 255, 0.18);
+      color: #ffffff;
+    }
+
+    .ai-nick-tour-streaks {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .ai-nick-tour-streak {
+      position: absolute;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), transparent);
+      filter: blur(1px);
+      opacity: 0;
+      animation: streakFly 7s linear infinite;
+    }
+
+    .ai-nick-tour-streak:nth-child(1) {
+      top: 25%;
+      left: -20%;
+      animation-delay: 1s;
+      transform: rotate(-25deg);
+    }
+
+    .ai-nick-tour-streak:nth-child(2) {
+      top: 55%;
+      left: -30%;
+      animation-delay: 3s;
+      transform: rotate(-18deg);
+    }
+
+    .ai-nick-tour-streak:nth-child(3) {
+      top: 70%;
+      left: -40%;
+      animation-delay: 5s;
+      transform: rotate(-32deg);
     }
 
     .ai-nick-tour-skip {
@@ -802,7 +873,7 @@
     }
 
     .ai-nick-tour-overlay.warp .ai-nick-tour-warp {
-      animation-duration: 2s;
+      animation-duration: 4s;
       opacity: 0.9;
     }
 
@@ -822,12 +893,14 @@
       }
     }
 
-    @keyframes warpRush {
+    @keyframes warpFlow {
       from {
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
+        background-position: 0 0;
       }
       to {
-        transform: translateY(180px);
+        transform: translate3d(0, 180px, 0);
+        background-position: 0 900px;
       }
     }
 
@@ -850,6 +923,20 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    @keyframes streakFly {
+      0% {
+        opacity: 0;
+        transform: translateX(-20vw) translateY(0) scaleX(0.6);
+      }
+      10% {
+        opacity: 0.9;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(140vw) translateY(-20vh) scaleX(1.1);
       }
     }
 
@@ -956,6 +1043,11 @@
 
   <div class="ai-nick-tour-overlay" id="ai-nick-tour">
     <div class="ai-nick-tour-warp"></div>
+    <div class="ai-nick-tour-streaks">
+      <div class="ai-nick-tour-streak"></div>
+      <div class="ai-nick-tour-streak"></div>
+      <div class="ai-nick-tour-streak"></div>
+    </div>
     <button class="ai-nick-tour-skip" type="button">Skip tour</button>
     <div class="ai-nick-tour-ship">
       <div class="ai-nick-ship-body">
@@ -1002,6 +1094,12 @@
       if (!tourBtn || !tourOverlay || !tourBubbles || !skipBtn) return;
 
       let timers = [];
+      let audioContext;
+      let noiseSource;
+      let noiseGain;
+      let padOscA;
+      let padOscB;
+      let padGain;
 
       const blurbs = [
         "Hey! I’m Nick — a builder who loves turning ambitious ideas into sleek, reliable experiences.",
@@ -1018,6 +1116,15 @@
 
       const hideTour = () => {
         clearTimers();
+        window.speechSynthesis?.cancel();
+        if (noiseSource) noiseSource.stop();
+        if (padOscA) padOscA.stop();
+        if (padOscB) padOscB.stop();
+        noiseSource = null;
+        padOscA = null;
+        padOscB = null;
+        if (audioContext) audioContext.close();
+        audioContext = null;
         tourOverlay.classList.remove('active', 'launch', 'warp');
         tourBubbles.classList.remove('active');
         tourBubbles.innerHTML = '';
@@ -1027,14 +1134,110 @@
       const addBubble = (text) => {
         const bubble = document.createElement('div');
         bubble.className = 'ai-nick-tour-bubble';
-        bubble.textContent = text;
+        bubble.setAttribute('data-text', text);
+
+        const words = text.split(' ');
+        words.forEach((word, index) => {
+          const span = document.createElement('span');
+          span.className = 'word';
+          span.textContent = word + (index < words.length - 1 ? ' ' : '');
+          bubble.appendChild(span);
+        });
+
         tourBubbles.appendChild(bubble);
+        return bubble;
+      };
+
+      const startAudio = () => {
+        if (audioContext) return;
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        const bufferSize = audioContext.sampleRate * 2;
+        const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i += 1) {
+          output[i] = (Math.random() * 2 - 1) * 0.2;
+        }
+        noiseSource = audioContext.createBufferSource();
+        noiseSource.buffer = noiseBuffer;
+        noiseSource.loop = true;
+
+        const noiseFilter = audioContext.createBiquadFilter();
+        noiseFilter.type = 'lowpass';
+        noiseFilter.frequency.value = 600;
+
+        noiseGain = audioContext.createGain();
+        noiseGain.gain.value = 0.08;
+
+        noiseSource.connect(noiseFilter).connect(noiseGain).connect(audioContext.destination);
+        noiseSource.start();
+
+        padOscA = audioContext.createOscillator();
+        padOscB = audioContext.createOscillator();
+        padOscA.type = 'sine';
+        padOscB.type = 'triangle';
+        padOscA.frequency.value = 196;
+        padOscB.frequency.value = 246.94;
+
+        padGain = audioContext.createGain();
+        padGain.gain.value = 0.04;
+
+        padOscA.connect(padGain);
+        padOscB.connect(padGain);
+        padGain.connect(audioContext.destination);
+
+        padOscA.start();
+        padOscB.start();
+      };
+
+      const speakBubble = (bubble) => {
+        return new Promise(resolve => {
+          const text = bubble.getAttribute('data-text') || '';
+          if (!text || !window.speechSynthesis) {
+            resolve();
+            return;
+          }
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.rate = 1.02;
+          utterance.pitch = 0.95;
+
+          const voices = window.speechSynthesis.getVoices();
+          const preferred = voices.find(v => /male|david|english/i.test(v.name)) || voices.find(v => /en/i.test(v.lang)) || voices[0];
+          if (preferred) utterance.voice = preferred;
+
+          const wordSpans = Array.from(bubble.querySelectorAll('.word'));
+          const wordStarts = [];
+          let cursor = 0;
+          text.split(' ').forEach(word => {
+            wordStarts.push(cursor);
+            cursor += word.length + 1;
+          });
+
+          utterance.onboundary = (event) => {
+            if (event.name !== 'word') return;
+            const index = wordStarts.findIndex((start, i) => event.charIndex >= start && event.charIndex < (wordStarts[i + 1] || text.length + 1));
+            if (index >= 0) {
+              wordSpans.forEach(span => span.classList.remove('active'));
+              if (wordSpans[index]) wordSpans[index].classList.add('active');
+            }
+          };
+
+          utterance.onend = () => {
+            wordSpans.forEach(span => span.classList.remove('active'));
+            resolve();
+          };
+
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+        });
       };
 
       const startTour = () => {
         hideTour();
         tourOverlay.classList.add('active');
         body.classList.add('ai-nick-tour-active');
+        startAudio();
 
         timers.push(setTimeout(() => {
           tourOverlay.classList.add('launch');
@@ -1046,11 +1249,14 @@
 
         timers.push(setTimeout(() => {
           tourBubbles.classList.add('active');
-        }, 7000));
+        }, 5200));
 
-        blurbs.forEach((text, index) => {
-          timers.push(setTimeout(() => addBubble(text), 7600 + index * 4200));
-        });
+        timers.push(setTimeout(async () => {
+          for (const text of blurbs) {
+            const bubble = addBubble(text);
+            await speakBubble(bubble);
+          }
+        }, 5600));
       };
 
       tourBtn.addEventListener('click', startTour);
