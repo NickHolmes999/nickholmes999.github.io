@@ -322,29 +322,45 @@
 
     .ai-nick-comet {
       position: absolute;
-      width: 4px;
-      height: 4px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, transparent 100%);
+      width: 5px;
+      height: 5px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 40%, transparent 100%);
       border-radius: 50%;
-      filter: blur(0.5px);
+      filter: blur(0.3px);
       opacity: 0;
-      box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
+      box-shadow: 
+        0 0 6px rgba(255, 255, 255, 0.95),
+        0 0 12px rgba(200, 230, 255, 0.6);
     }
 
     .ai-nick-comet::before {
       content: '';
       position: absolute;
       top: 50%;
-      left: 50%;
-      width: 120px;
-      height: 2px;
+      left: 100%;
+      width: 35px;
+      height: 3px;
       background: linear-gradient(90deg, 
-        rgba(255, 255, 255, 0.8) 0%, 
-        rgba(200, 230, 255, 0.5) 20%,
-        rgba(0, 217, 255, 0.25) 50%,
+        rgba(200, 230, 255, 0.7) 0%, 
+        rgba(150, 200, 255, 0.45) 25%,
+        rgba(100, 180, 255, 0.2) 60%,
         transparent 100%);
+      transform: translateY(-50%);
+      filter: blur(1.2px);
+      border-radius: 0 50% 50% 0;
+    }
+
+    .ai-nick-comet::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, rgba(200, 230, 255, 0.4) 0%, transparent 70%);
       transform: translate(-50%, -50%);
-      filter: blur(1.5px);
+      filter: blur(2px);
+      border-radius: 50%;
     }
 
     .ai-nick-comet.one {
@@ -352,35 +368,47 @@
     }
 
     .ai-nick-comet.two {
-      width: 5px;
-      height: 5px;
-      box-shadow: 0 0 5px rgba(255, 160, 50, 0.9);
+      width: 6px;
+      height: 6px;
+      box-shadow: 
+        0 0 7px rgba(255, 180, 80, 0.9),
+        0 0 14px rgba(255, 140, 30, 0.5);
       animation: comet2 12s ease-in infinite 4s;
     }
 
     .ai-nick-comet.two::before {
-      width: 140px;
+      width: 40px;
       background: linear-gradient(90deg, 
-        rgba(255, 240, 200, 0.85) 0%, 
-        rgba(255, 180, 80, 0.6) 20%,
-        rgba(255, 140, 30, 0.3) 50%,
+        rgba(255, 220, 150, 0.75) 0%, 
+        rgba(255, 180, 80, 0.5) 25%,
+        rgba(255, 140, 30, 0.25) 60%,
         transparent 100%);
     }
 
+    .ai-nick-comet.two::after {
+      background: radial-gradient(circle, rgba(255, 200, 120, 0.45) 0%, transparent 70%);
+    }
+
     .ai-nick-comet.three {
-      width: 4.5px;
-      height: 4.5px;
-      box-shadow: 0 0 4px rgba(150, 255, 200, 0.9);
+      width: 5.5px;
+      height: 5.5px;
+      box-shadow: 
+        0 0 6px rgba(180, 255, 220, 0.9),
+        0 0 12px rgba(120, 255, 200, 0.5);
       animation: comet3 10s ease-in infinite 7s;
     }
 
     .ai-nick-comet.three::before {
-      width: 130px;
+      width: 38px;
       background: linear-gradient(90deg, 
-        rgba(220, 255, 240, 0.8) 0%, 
-        rgba(150, 255, 200, 0.55) 20%,
-        rgba(100, 255, 180, 0.28) 50%,
+        rgba(200, 255, 230, 0.7) 0%, 
+        rgba(150, 255, 200, 0.48) 25%,
+        rgba(100, 240, 180, 0.22) 60%,
         transparent 100%);
+    }
+
+    .ai-nick-comet.three::after {
+      background: radial-gradient(circle, rgba(180, 255, 220, 0.4) 0%, transparent 70%);
     }
 
     @keyframes glowFloat {
