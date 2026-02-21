@@ -848,33 +848,34 @@
 
     .ai-nick-tour-streak {
       position: absolute;
-      width: 120px;
+      width: 140px;
       height: 2px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), transparent);
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 100%);
       filter: blur(1px);
       opacity: 0;
-      animation: streakFly 7s linear infinite;
+      transform-origin: left center;
+      animation: streakFly 6.5s linear infinite;
     }
 
     .ai-nick-tour-streak:nth-child(1) {
-      top: 25%;
+      top: 28%;
       left: -20%;
-      animation-delay: 1s;
-      transform: rotate(-25deg);
+      animation-delay: 0.8s;
+      transform: rotate(-20deg);
     }
 
     .ai-nick-tour-streak:nth-child(2) {
-      top: 55%;
+      top: 52%;
       left: -30%;
-      animation-delay: 3s;
-      transform: rotate(-18deg);
+      animation-delay: 2.6s;
+      transform: rotate(-14deg);
     }
 
     .ai-nick-tour-streak:nth-child(3) {
-      top: 70%;
-      left: -40%;
-      animation-delay: 5s;
-      transform: rotate(-32deg);
+      top: 68%;
+      left: -35%;
+      animation-delay: 4.4s;
+      transform: rotate(-28deg);
     }
 
     .ai-nick-tour-skip {
@@ -969,12 +970,6 @@
       text-align: center;
     }
 
-    .ai-nick-landing-title {
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
-      color: #0a0a0f;
-      font-weight: 800;
-      text-shadow: 0 10px 30px rgba(255, 255, 255, 0.6);
-    }
 
     .ai-nick-landing-cta {
       display: flex;
@@ -1087,10 +1082,10 @@
 
     @keyframes tourStarsDrift {
       from {
-        transform: translate3d(0, 0, 0);
+        transform: translate3d(0, -40px, 0);
       }
       to {
-        transform: translate3d(0, 120px, 0);
+        transform: translate3d(0, 140px, 0);
       }
     }
 
@@ -1258,7 +1253,6 @@
         <div class="ai-nick-ship-flame"></div>
       </div>
       <div class="ai-nick-landing-content">
-        <div class="ai-nick-landing-title">Planet Projects</div>
         <div class="ai-nick-tour-bubbles" id="ai-nick-landing-bubbles"></div>
         <div class="ai-nick-landing-cta">
           <button class="ai-nick-landing-btn primary" type="button" data-action="continue">Continue the tour</button>
@@ -1491,6 +1485,8 @@
           timers.push(setTimeout(async () => {
             landing.classList.add('active');
             landingBubbles.classList.add('active');
+            tourBubbles.classList.remove('active');
+            tourBubbles.style.display = 'none';
             for (const text of landingBlurbs) {
               const bubble = addBubble(text, landingBubbles);
               await speakBubble(bubble);
