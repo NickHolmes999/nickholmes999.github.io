@@ -642,6 +642,224 @@
       line-height: 1.7;
     }
 
+    .ai-nick-tour-btn {
+      margin-top: 18px;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #00d9ff, #a855f7, #22c55e);
+      color: #0a0a0f;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0, 217, 255, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ai-nick-tour-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0, 217, 255, 0.4);
+    }
+
+    .ai-nick-tour-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 20% 20%, rgba(0, 217, 255, 0.08), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(168, 85, 247, 0.1), transparent 45%),
+        #000000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      overflow: hidden;
+    }
+
+    .ai-nick-tour-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .ai-nick-tour-warp {
+      position: absolute;
+      inset: -20%;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.9), transparent 60%),
+        radial-gradient(1px 1px at 30% 80%, rgba(255, 255, 255, 0.8), transparent 60%),
+        radial-gradient(2px 2px at 70% 30%, rgba(255, 255, 255, 0.9), transparent 60%),
+        radial-gradient(1.5px 1.5px at 85% 70%, rgba(255, 255, 255, 0.7), transparent 60%);
+      background-size: 240px 240px;
+      opacity: 0.6;
+      animation: warpRush 6s linear infinite;
+      transform: translateZ(0);
+    }
+
+    .ai-nick-tour-ship {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(40px) scale(0.6);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .ai-nick-tour-overlay.active .ai-nick-tour-ship {
+      opacity: 1;
+    }
+
+    .ai-nick-ship-body {
+      width: 70px;
+      height: 90px;
+      border-radius: 50% 50% 45% 45%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(120, 200, 255, 0.9));
+      box-shadow: 0 20px 40px rgba(0, 217, 255, 0.35);
+      position: relative;
+      z-index: 2;
+    }
+
+    .ai-nick-ship-window {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      width: 32px;
+      height: 32px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(0, 217, 255, 0.6));
+      box-shadow: 0 0 18px rgba(0, 217, 255, 0.6);
+    }
+
+    .ai-nick-ship-flame {
+      position: absolute;
+      bottom: -26px;
+      left: 50%;
+      width: 14px;
+      height: 36px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.9), rgba(255, 140, 30, 0.7), transparent 70%);
+      filter: blur(1px);
+      border-radius: 50% 50% 60% 60%;
+      animation: flamePulse 1.2s ease-in-out infinite;
+    }
+
+    .ai-nick-tour-bubbles {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(90%, 740px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .ai-nick-tour-bubbles.active {
+      opacity: 1;
+    }
+
+    .ai-nick-tour-bubble {
+      background: rgba(10, 12, 25, 0.75);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      border-radius: 18px;
+      padding: 12px 16px;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+      transform: translateY(10px);
+      opacity: 0;
+      animation: bubbleIn 0.7s ease forwards;
+    }
+
+    .ai-nick-tour-skip {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #f8fafc;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .ai-nick-tour-skip:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .ai-nick-tour-overlay.launch .ai-nick-tour-ship {
+      animation: shipLaunch 2.4s ease forwards;
+    }
+
+    .ai-nick-tour-overlay.warp .ai-nick-tour-warp {
+      animation-duration: 2s;
+      opacity: 0.9;
+    }
+
+    .ai-nick-tour-overlay.warp .ai-nick-tour-ship {
+      transform: translateY(-140px) scale(0.9);
+    }
+
+    @keyframes shipLaunch {
+      0% {
+        transform: translateY(40px) scale(0.6);
+      }
+      60% {
+        transform: translateY(-60px) scale(0.8);
+      }
+      100% {
+        transform: translateY(-140px) scale(0.9);
+      }
+    }
+
+    @keyframes warpRush {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(180px);
+      }
+    }
+
+    @keyframes flamePulse {
+      0%, 100% {
+        transform: translateX(-50%) scaleY(0.8);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateX(-50%) scaleY(1.1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes bubbleIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .ai-nick-tour-active .ai-nick-chat-host {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
     .ai-nick-chat-host {
       width: 100%;
       min-height: 70vh;
@@ -730,10 +948,23 @@
     <div class="ai-nick-hero">
       <h1>AI Nick</h1>
       <p>Your full-page AI assistant for exploring Nick’s portfolio, experience, and projects. Ask anything and get instant guidance.</p>
+      <button class="ai-nick-tour-btn" type="button">Take a tour with AI Nick</button>
     </div>
 
     <div class="ai-nick-chat-host"></div>
   </main>
+
+  <div class="ai-nick-tour-overlay" id="ai-nick-tour">
+    <div class="ai-nick-tour-warp"></div>
+    <button class="ai-nick-tour-skip" type="button">Skip tour</button>
+    <div class="ai-nick-tour-ship">
+      <div class="ai-nick-ship-body">
+        <div class="ai-nick-ship-window"></div>
+      </div>
+      <div class="ai-nick-ship-flame"></div>
+    </div>
+    <div class="ai-nick-tour-bubbles" id="ai-nick-tour-bubbles"></div>
+  </div>
 
   <!-- AI Chatbot -->
   <script src="../js/ai-chatbot.js"></script>
@@ -758,6 +989,72 @@
       };
 
       moveAndOpenChat();
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tourBtn = document.querySelector('.ai-nick-tour-btn');
+      const tourOverlay = document.getElementById('ai-nick-tour');
+      const tourBubbles = document.getElementById('ai-nick-tour-bubbles');
+      const skipBtn = document.querySelector('.ai-nick-tour-skip');
+      const body = document.body;
+
+      if (!tourBtn || !tourOverlay || !tourBubbles || !skipBtn) return;
+
+      let timers = [];
+
+      const blurbs = [
+        "Hey! I’m Nick — a builder who loves turning ambitious ideas into sleek, reliable experiences.",
+        "We’ll cruise through my work, projects, and the systems I design for real-world impact.",
+        "I focus on clean UI, performance, and making complex tech feel effortless to use.",
+        "From AI demos to scalable web platforms, I care about craftsmanship and clarity.",
+        "Ready to explore? Let’s keep flying and I’ll guide you through everything."
+      ];
+
+      const clearTimers = () => {
+        timers.forEach(id => clearTimeout(id));
+        timers = [];
+      };
+
+      const hideTour = () => {
+        clearTimers();
+        tourOverlay.classList.remove('active', 'launch', 'warp');
+        tourBubbles.classList.remove('active');
+        tourBubbles.innerHTML = '';
+        body.classList.remove('ai-nick-tour-active');
+      };
+
+      const addBubble = (text) => {
+        const bubble = document.createElement('div');
+        bubble.className = 'ai-nick-tour-bubble';
+        bubble.textContent = text;
+        tourBubbles.appendChild(bubble);
+      };
+
+      const startTour = () => {
+        hideTour();
+        tourOverlay.classList.add('active');
+        body.classList.add('ai-nick-tour-active');
+
+        timers.push(setTimeout(() => {
+          tourOverlay.classList.add('launch');
+        }, 200));
+
+        timers.push(setTimeout(() => {
+          tourOverlay.classList.add('warp');
+        }, 2200));
+
+        timers.push(setTimeout(() => {
+          tourBubbles.classList.add('active');
+        }, 7000));
+
+        blurbs.forEach((text, index) => {
+          timers.push(setTimeout(() => addBubble(text), 7600 + index * 4200));
+        });
+      };
+
+      tourBtn.addEventListener('click', startTour);
+      skipBtn.addEventListener('click', hideTour);
     });
   </script>
   <script>
