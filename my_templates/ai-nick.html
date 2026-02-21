@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Nick | Nick Holmes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background: radial-gradient(circle at top, rgba(0, 217, 255, 0.12), transparent 45%),
+        radial-gradient(circle at bottom, rgba(168, 85, 247, 0.18), transparent 40%),
+        linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+      min-height: 100vh;
+    }
+
+    .ai-nick-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .ai-nick-hero {
+      text-align: center;
+    }
+
+    .ai-nick-hero h1 {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .ai-nick-hero p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 760px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .ai-nick-chat-host {
+      width: 100%;
+      min-height: 70vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .ai-nick-page #ai-chatbot-container {
+      position: static !important;
+      width: 100%;
+      height: 70vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .ai-nick-page #ai-chatbot-container .chatbot-toggle {
+      display: none !important;
+    }
+
+    .ai-nick-page #ai-chatbot-container .chatbot-window {
+      position: static !important;
+      display: flex !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 1100px;
+      max-height: none;
+      border-radius: 24px;
+    }
+
+    .ai-nick-page #ai-chatbot-container .chatbot-close-btn {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .ai-nick-page #ai-chatbot-container {
+        height: 75vh;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <h1></h1>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="certificates.html">Certificates</a></li>
+        <li><a href="services-faq.html">Services FAQ</a></li>
+        <li><a href="interactive-showcase.html">Showcase</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="performance-metrics.html">Performance</a></li>
+        <li class="ai-nick-nav"><a href="ai-nick.html" class="ai-nick-link active"><span class="ai-nick-ai">AI</span> Nick</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="ai-nick-page">
+    <div class="ai-nick-hero">
+      <h1>AI Nick</h1>
+      <p>Your full-page AI assistant for exploring Nick’s portfolio, experience, and projects. Ask anything and get instant guidance.</p>
+    </div>
+
+    <div class="ai-nick-chat-host"></div>
+  </main>
+
+  <!-- AI Chatbot -->
+  <script src="../js/ai-chatbot.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const chatbot = new PortfolioChatbot();
+      chatbot.init();
+
+      const moveAndOpenChat = () => {
+        const container = document.getElementById('ai-chatbot-container');
+        const host = document.querySelector('.ai-nick-chat-host');
+        const windowEl = document.getElementById('chatbot-window');
+
+        if (!container || !host || !windowEl) {
+          setTimeout(moveAndOpenChat, 100);
+          return;
+        }
+
+        host.appendChild(container);
+        chatbot.isOpen = true;
+        windowEl.classList.add('open');
+      };
+
+      moveAndOpenChat();
+    });
+  </script>
+</body>
+</html>

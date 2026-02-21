@@ -388,6 +388,53 @@
       color: white;
     }
 
+    nav ul {
+      width: 100%;
+    }
+
+    nav li.ai-nick-nav {
+      margin-left: auto;
+    }
+
+    nav a.ai-nick-link {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 217, 255, 0.35);
+      background: rgba(0, 0, 0, 0.25);
+      box-shadow: 0 0 12px rgba(0, 217, 255, 0.2);
+    }
+
+    nav a.ai-nick-link:hover {
+      background: rgba(0, 217, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    nav a.ai-nick-link .ai-nick-ai {
+      background: linear-gradient(90deg, #00d9ff, #a855f7, #f59e0b, #22c55e, #06b6d4, #00d9ff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 10px rgba(0, 217, 255, 0.6);
+      animation: aiNickGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes aiNickGlow {
+      0% {
+        background-position: 0% 50%;
+        text-shadow: 0 0 8px rgba(0, 217, 255, 0.6);
+      }
+      50% {
+        background-position: 100% 50%;
+        text-shadow: 0 0 12px rgba(168, 85, 247, 0.7);
+      }
+      100% {
+        background-position: 0% 50%;
+        text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+      }
+    }
+
     /* ===== Banner with GIF background (Enhanced) ===== */
     #banner {
       display: flex;
@@ -989,6 +1036,7 @@
         <li><a href="my_templates/interactive-showcase.html">Showcase</a></li>
         <li><a href="my_templates/blog.html">Blog</a></li>
         <li><a href="my_templates/performance-metrics.html">Performance</a></li>
+        <li class="ai-nick-nav"><a href="my_templates/ai-nick.html" class="ai-nick-link"><span class="ai-nick-ai">AI</span> Nick</a></li>
       </ul>
     </nav>
   </header>
