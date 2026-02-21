@@ -331,23 +331,23 @@
       box-shadow: 
         0 0 6px rgba(255, 255, 255, 0.95),
         0 0 12px rgba(200, 230, 255, 0.6);
+      --tail-length: 22px;
+      --tail-strong: rgba(200, 230, 255, 0.7);
+      --tail-mid: rgba(150, 200, 255, 0.45);
+      --tail-weak: rgba(100, 180, 255, 0.2);
+      --flame-color: rgba(200, 230, 255, 0.35);
     }
 
     .ai-nick-comet::before {
       content: '';
       position: absolute;
       top: 50%;
-      left: 100%;
-      width: 35px;
-      height: 3px;
-      background: linear-gradient(90deg, 
-        rgba(200, 230, 255, 0.7) 0%, 
-        rgba(150, 200, 255, 0.45) 25%,
-        rgba(100, 180, 255, 0.2) 60%,
-        transparent 100%);
+      width: var(--tail-length);
+      height: 2px;
       transform: translateY(-50%);
-      filter: blur(1.2px);
-      border-radius: 0 50% 50% 0;
+      filter: blur(0.9px);
+      opacity: 0.7;
+      animation: flameFlickerTail 1.1s ease-in-out infinite;
     }
 
     .ai-nick-comet::after {
@@ -357,13 +357,38 @@
       left: 50%;
       width: 8px;
       height: 8px;
-      background: radial-gradient(circle, rgba(200, 230, 255, 0.4) 0%, transparent 70%);
+      background: radial-gradient(circle, var(--flame-color) 0%, transparent 70%);
       transform: translate(-50%, -50%);
       filter: blur(2px);
       border-radius: 50%;
+      animation: flameFlickerGlow 0.9s ease-in-out infinite reverse;
+    }
+
+    .ai-nick-comet.tail-right::before {
+      left: 100%;
+      border-radius: 0 50% 50% 0;
+      background: linear-gradient(90deg,
+        var(--tail-strong) 0%,
+        var(--tail-mid) 40%,
+        var(--tail-weak) 70%,
+        transparent 100%);
+    }
+
+    .ai-nick-comet.tail-left::before {
+      right: 100%;
+      border-radius: 50% 0 0 50%;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--tail-weak) 30%,
+        var(--tail-mid) 60%,
+        var(--tail-strong) 100%);
     }
 
     .ai-nick-comet.one {
+      --tail-strong: rgba(200, 230, 255, 0.7);
+      --tail-mid: rgba(150, 200, 255, 0.45);
+      --tail-weak: rgba(100, 180, 255, 0.2);
+      --flame-color: rgba(200, 230, 255, 0.35);
       animation: comet1 8s ease-in infinite;
     }
 
@@ -373,20 +398,12 @@
       box-shadow: 
         0 0 7px rgba(255, 180, 80, 0.9),
         0 0 14px rgba(255, 140, 30, 0.5);
+      --tail-length: 24px;
+      --tail-strong: rgba(255, 220, 150, 0.75);
+      --tail-mid: rgba(255, 180, 80, 0.5);
+      --tail-weak: rgba(255, 140, 30, 0.25);
+      --flame-color: rgba(255, 200, 120, 0.45);
       animation: comet2 12s ease-in infinite 4s;
-    }
-
-    .ai-nick-comet.two::before {
-      width: 40px;
-      background: linear-gradient(90deg, 
-        rgba(255, 220, 150, 0.75) 0%, 
-        rgba(255, 180, 80, 0.5) 25%,
-        rgba(255, 140, 30, 0.25) 60%,
-        transparent 100%);
-    }
-
-    .ai-nick-comet.two::after {
-      background: radial-gradient(circle, rgba(255, 200, 120, 0.45) 0%, transparent 70%);
     }
 
     .ai-nick-comet.three {
@@ -395,20 +412,12 @@
       box-shadow: 
         0 0 6px rgba(180, 255, 220, 0.9),
         0 0 12px rgba(120, 255, 200, 0.5);
+      --tail-length: 20px;
+      --tail-strong: rgba(200, 255, 230, 0.7);
+      --tail-mid: rgba(150, 255, 200, 0.48);
+      --tail-weak: rgba(100, 240, 180, 0.22);
+      --flame-color: rgba(180, 255, 220, 0.4);
       animation: comet3 10s ease-in infinite 7s;
-    }
-
-    .ai-nick-comet.three::before {
-      width: 38px;
-      background: linear-gradient(90deg, 
-        rgba(200, 255, 230, 0.7) 0%, 
-        rgba(150, 255, 200, 0.48) 25%,
-        rgba(100, 240, 180, 0.22) 60%,
-        transparent 100%);
-    }
-
-    .ai-nick-comet.three::after {
-      background: radial-gradient(circle, rgba(180, 255, 220, 0.4) 0%, transparent 70%);
     }
 
     @keyframes glowFloat {
@@ -503,6 +512,28 @@
       }
       50% {
         transform: translate(40px, -30px) rotate(5deg);
+      }
+    }
+
+    @keyframes flameFlickerTail {
+      0%, 100% {
+        opacity: 0.5;
+        transform: translateY(-50%) scaleX(0.85);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translateY(-50%) scaleX(1.05);
+      }
+    }
+
+    @keyframes flameFlickerGlow {
+      0%, 100% {
+        opacity: 0.35;
+        transform: translate(-50%, -50%) scale(0.9);
+      }
+      50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.05);
       }
     }
 
@@ -669,9 +700,9 @@
     <div class="ai-nick-sparkle"></div>
     <div class="ai-nick-asteroid-belt"></div>
     <div class="ai-nick-twinkles"></div>
-    <div class="ai-nick-comet one"></div>
-    <div class="ai-nick-comet two"></div>
-    <div class="ai-nick-comet three"></div>
+    <div class="ai-nick-comet one tail-left"></div>
+    <div class="ai-nick-comet two tail-right"></div>
+    <div class="ai-nick-comet three tail-left"></div>
     <div class="ai-nick-grid"></div>
   </div>
   <header>
