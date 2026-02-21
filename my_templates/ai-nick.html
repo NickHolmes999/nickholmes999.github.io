@@ -22,6 +22,66 @@
       min-height: 100vh;
     }
 
+    .ai-nick-background {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .ai-nick-glow {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: glowFloat 12s ease-in-out infinite;
+    }
+
+    .ai-nick-glow.one {
+      background: rgba(0, 217, 255, 0.35);
+      top: -120px;
+      left: -120px;
+    }
+
+    .ai-nick-glow.two {
+      background: rgba(168, 85, 247, 0.35);
+      bottom: -140px;
+      right: -120px;
+      animation-delay: -4s;
+    }
+
+    .ai-nick-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(0, 217, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 85, 247, 0.08) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(circle at 50% 20%, rgba(0, 0, 0, 0.9), transparent 70%);
+      opacity: 0.35;
+      animation: gridMove 18s linear infinite;
+    }
+
+    @keyframes glowFloat {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(40px, -30px) scale(1.1);
+      }
+    }
+
+    @keyframes gridMove {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(60px);
+      }
+    }
+
     .ai-nick-page {
       max-width: 1200px;
       margin: 0 auto;
@@ -29,6 +89,8 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
+      position: relative;
+      z-index: 1;
     }
 
     .ai-nick-hero {
@@ -99,6 +161,11 @@
 </head>
 
 <body>
+  <div class="ai-nick-background">
+    <div class="ai-nick-glow one"></div>
+    <div class="ai-nick-glow two"></div>
+    <div class="ai-nick-grid"></div>
+  </div>
   <header>
     <nav>
       <h1></h1>
