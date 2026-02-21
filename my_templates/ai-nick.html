@@ -798,6 +798,7 @@
       transform: translateY(8px);
       opacity: 0;
       animation: bubbleIn 0.5s ease forwards;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
     }
 
     .ai-nick-tour-bubble .word {
@@ -808,8 +809,14 @@
     }
 
     .ai-nick-tour-bubble .word.active {
-      background: rgba(0, 217, 255, 0.18);
+      background: linear-gradient(120deg, rgba(0, 217, 255, 0.2), rgba(168, 85, 247, 0.25));
       color: #ffffff;
+      box-shadow: 0 0 12px rgba(0, 217, 255, 0.4);
+    }
+
+    .ai-nick-tour-bubble.speaking {
+      box-shadow: 0 18px 50px rgba(0, 217, 255, 0.25), inset 0 0 0 1px rgba(0, 217, 255, 0.15);
+      transform: translateY(0);
     }
 
     .ai-nick-tour-streaks {
@@ -879,6 +886,121 @@
 
     .ai-nick-tour-overlay.warp .ai-nick-tour-ship {
       transform: translateY(-140px) scale(0.9);
+    }
+
+    .ai-nick-tour-landing {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+      background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.95), rgba(240, 244, 255, 0.8) 40%, rgba(200, 230, 255, 0.6) 55%, transparent 70%);
+    }
+
+    .ai-nick-tour-landing.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .ai-nick-landing-planet {
+      position: absolute;
+      bottom: -30%;
+      width: 1400px;
+      height: 1400px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.95), rgba(0, 217, 255, 0.35), rgba(5, 20, 40, 0.9));
+      box-shadow: 0 -60px 140px rgba(0, 217, 255, 0.35);
+    }
+
+    .ai-nick-landing-ship {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .ai-nick-tour-landing.active .ai-nick-landing-ship {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .ai-nick-landing-content {
+      position: relative;
+      z-index: 2;
+      width: min(90%, 780px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .ai-nick-landing-title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: #0a0a0f;
+      font-weight: 800;
+      text-shadow: 0 10px 30px rgba(255, 255, 255, 0.6);
+    }
+
+    .ai-nick-landing-cta {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .ai-nick-landing-btn {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(10, 10, 15, 0.2);
+      background: rgba(255, 255, 255, 0.85);
+      color: #0a0a0f;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ai-nick-landing-btn.primary {
+      background: linear-gradient(135deg, #00d9ff, #a855f7, #22c55e);
+      color: #0a0a0f;
+      border: none;
+      box-shadow: 0 12px 30px rgba(0, 217, 255, 0.35);
+    }
+
+    .ai-nick-landing-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .ai-nick-question-box {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(10, 12, 20, 0.75);
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      color: #f8fafc;
+      backdrop-filter: blur(12px);
+    }
+
+    .ai-nick-question-box.active {
+      display: flex;
+    }
+
+    .ai-nick-question-input {
+      flex: 1;
+      min-width: 220px;
+      background: transparent;
+      border: none;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      outline: none;
     }
 
     @keyframes shipLaunch {
@@ -1056,6 +1178,27 @@
       <div class="ai-nick-ship-flame"></div>
     </div>
     <div class="ai-nick-tour-bubbles" id="ai-nick-tour-bubbles"></div>
+    <div class="ai-nick-tour-landing" id="ai-nick-tour-landing">
+      <div class="ai-nick-landing-planet"></div>
+      <div class="ai-nick-landing-ship">
+        <div class="ai-nick-ship-body">
+          <div class="ai-nick-ship-window"></div>
+        </div>
+        <div class="ai-nick-ship-flame"></div>
+      </div>
+      <div class="ai-nick-landing-content">
+        <div class="ai-nick-landing-title">Planet Projects</div>
+        <div class="ai-nick-tour-bubbles" id="ai-nick-landing-bubbles"></div>
+        <div class="ai-nick-landing-cta">
+          <button class="ai-nick-landing-btn primary" type="button" data-action="continue">Continue the tour</button>
+          <button class="ai-nick-landing-btn" type="button" data-action="ask">Ask a question</button>
+        </div>
+        <div class="ai-nick-question-box" id="ai-nick-question-box">
+          <input class="ai-nick-question-input" type="text" placeholder="Ask anything about Nick, projects, or experience..." />
+          <button class="ai-nick-landing-btn primary" type="button" data-action="send">Send</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- AI Chatbot -->
@@ -1089,9 +1232,13 @@
       const tourOverlay = document.getElementById('ai-nick-tour');
       const tourBubbles = document.getElementById('ai-nick-tour-bubbles');
       const skipBtn = document.querySelector('.ai-nick-tour-skip');
+      const landing = document.getElementById('ai-nick-tour-landing');
+      const landingBubbles = document.getElementById('ai-nick-landing-bubbles');
+      const landingCtas = tourOverlay.querySelectorAll('[data-action]');
+      const questionBox = document.getElementById('ai-nick-question-box');
       const body = document.body;
 
-      if (!tourBtn || !tourOverlay || !tourBubbles || !skipBtn) return;
+      if (!tourBtn || !tourOverlay || !tourBubbles || !skipBtn || !landing || !landingBubbles || !questionBox) return;
 
       let timers = [];
       let audioContext;
@@ -1107,6 +1254,11 @@
         "I focus on clean UI, performance, and making complex tech feel effortless to use.",
         "From AI demos to scalable web platforms, I care about craftsmanship and clarity.",
         "Ready to explore? Let’s keep flying and I’ll guide you through everything."
+      ];
+
+      const landingBlurbs = [
+        "We’ve arrived at Planet Projects — the place where I turn ideas into polished, real-world builds.",
+        "Want to ask a question before we continue, or should I keep the tour going?"
       ];
 
       const clearTimers = () => {
@@ -1128,10 +1280,13 @@
         tourOverlay.classList.remove('active', 'launch', 'warp');
         tourBubbles.classList.remove('active');
         tourBubbles.innerHTML = '';
+        landing.classList.remove('active');
+        landingBubbles.innerHTML = '';
+        questionBox.classList.remove('active');
         body.classList.remove('ai-nick-tour-active');
       };
 
-      const addBubble = (text) => {
+      const addBubble = (text, host = tourBubbles) => {
         const bubble = document.createElement('div');
         bubble.className = 'ai-nick-tour-bubble';
         bubble.setAttribute('data-text', text);
@@ -1144,7 +1299,7 @@
           bubble.appendChild(span);
         });
 
-        tourBubbles.appendChild(bubble);
+        host.appendChild(bubble);
         return bubble;
       };
 
@@ -1200,10 +1355,13 @@
 
           const utterance = new SpeechSynthesisUtterance(text);
           utterance.rate = 1.02;
-          utterance.pitch = 0.95;
+          utterance.pitch = 0.9;
 
           const voices = window.speechSynthesis.getVoices();
-          const preferred = voices.find(v => /male|david|english/i.test(v.name)) || voices.find(v => /en/i.test(v.lang)) || voices[0];
+          const preferred = voices.find(v => /en-(us|gb)/i.test(v.lang) && /male|david|microsoft|google/i.test(v.name))
+            || voices.find(v => /en-(us|gb)/i.test(v.lang))
+            || voices.find(v => /en/i.test(v.lang))
+            || voices[0];
           if (preferred) utterance.voice = preferred;
 
           const wordSpans = Array.from(bubble.querySelectorAll('.word'));
@@ -1220,6 +1378,8 @@
             if (index >= 0) {
               wordSpans.forEach(span => span.classList.remove('active'));
               if (wordSpans[index]) wordSpans[index].classList.add('active');
+              bubble.classList.add('speaking');
+              setTimeout(() => bubble.classList.remove('speaking'), 140);
             }
           };
 
@@ -1256,11 +1416,42 @@
             const bubble = addBubble(text);
             await speakBubble(bubble);
           }
+
+          timers.push(setTimeout(async () => {
+            landing.classList.add('active');
+            landingBubbles.classList.add('active');
+            for (const text of landingBlurbs) {
+              const bubble = addBubble(text, landingBubbles);
+              await speakBubble(bubble);
+            }
+          }, 800));
         }, 5600));
       };
 
       tourBtn.addEventListener('click', startTour);
       skipBtn.addEventListener('click', hideTour);
+
+      landingCtas.forEach(btn => {
+        btn.addEventListener('click', (event) => {
+          const action = event.currentTarget.getAttribute('data-action');
+          if (action === 'ask') {
+            questionBox.classList.add('active');
+            return;
+          }
+          if (action === 'continue') {
+            questionBox.classList.remove('active');
+            addBubble("Great! I’ll keep the tour going and show you the highlights next.", landingBubbles);
+            return;
+          }
+          if (action === 'send') {
+            const input = questionBox.querySelector('input');
+            if (!input || !input.value.trim()) return;
+            const bubble = addBubble(`Question received: ${input.value.trim()}`, landingBubbles);
+            speakBubble(bubble);
+            input.value = '';
+          }
+        });
+      });
     });
   </script>
   <script>
