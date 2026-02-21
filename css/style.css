@@ -515,7 +515,7 @@ nav a.active {
 
 nav li.ai-nick-nav {
   position: absolute;
-  right: 12px;
+  left: 12px;
   top: -12px;
   margin-left: 0;
   z-index: 2;
