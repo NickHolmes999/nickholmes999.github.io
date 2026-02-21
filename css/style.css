@@ -866,6 +866,19 @@ html {
   visibility: hidden;
 }
 
+/* Disable page load animations & preloaders */
+body,
+body[data-page] {
+  animation: none !important;
+}
+
+#preloader,
+#pageLoader {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 .loader-content {
   text-align: center;
 }
