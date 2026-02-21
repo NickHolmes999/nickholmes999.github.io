@@ -28,6 +28,11 @@
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
+      --mx: 0;
+      --my: 0;
+      --ms: 0;
+      transform: translate3d(calc(var(--mx) * 6px), calc(var(--my) * 6px), 0);
+      transition: transform 0.2s ease-out;
     }
 
     .ai-nick-glow {
@@ -38,6 +43,7 @@
       filter: blur(80px);
       opacity: 0.6;
       animation: glowFloat 9s ease-in-out infinite;
+      transform: translate3d(calc(var(--mx) * -14px), calc(var(--my) * -10px), 0);
     }
 
     .ai-nick-glow.one {
@@ -62,6 +68,7 @@
       mask-image: radial-gradient(circle at 50% 20%, rgba(0, 0, 0, 0.9), transparent 70%);
       opacity: 0.5;
       animation: gridMove 8s linear infinite;
+      transform: translate3d(calc(var(--mx) * 10px), calc(var(--my) * 14px), 0);
     }
 
     .ai-nick-aurora {
@@ -72,6 +79,7 @@
       opacity: 0.45;
       animation: auroraSpin 14s linear infinite, auroraPulse 6s ease-in-out infinite;
       mix-blend-mode: screen;
+      transform: translate3d(calc(var(--mx) * 18px), calc(var(--my) * -16px), 0);
     }
 
     .ai-nick-sparkle {
@@ -83,6 +91,7 @@
       opacity: 0.25;
       filter: blur(12px);
       animation: sparkleDrift 10s ease-in-out infinite;
+      transform: translate3d(calc(var(--mx) * -8px), calc(var(--my) * 12px), 0);
     }
 
     @keyframes glowFloat {
@@ -267,6 +276,54 @@
 
       moveAndOpenChat();
     });
+  </script>
+  <script>
+    (() => {
+      const background = document.querySelector('.ai-nick-background');
+      if (!background) return;
+
+      let lastX = window.innerWidth / 2;
+      let lastY = window.innerHeight / 2;
+      let lastTime = performance.now();
+      let targetX = 0;
+      let targetY = 0;
+      let speed = 0;
+
+      const updateVars = () => {
+        const dx = targetX - lastX;
+        const dy = targetY - lastY;
+        lastX += dx * 0.08;
+        lastY += dy * 0.08;
+
+        const now = performance.now();
+        const dt = Math.max(16, now - lastTime);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        speed = Math.min(1, distance / dt);
+        lastTime = now;
+
+        const nx = (lastX / window.innerWidth - 0.5) * 2;
+        const ny = (lastY / window.innerHeight - 0.5) * 2;
+        background.style.setProperty('--mx', nx.toFixed(3));
+        background.style.setProperty('--my', ny.toFixed(3));
+        background.style.setProperty('--ms', speed.toFixed(3));
+
+        requestAnimationFrame(updateVars);
+      };
+
+      window.addEventListener('mousemove', (event) => {
+        targetX = event.clientX;
+        targetY = event.clientY;
+      });
+
+      window.addEventListener('touchmove', (event) => {
+        if (event.touches.length) {
+          targetX = event.touches[0].clientX;
+          targetY = event.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      updateVars();
+    })();
   </script>
 </body>
 </html>
